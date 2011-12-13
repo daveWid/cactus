@@ -28,6 +28,11 @@ abstract class DataMapper
 	protected $_object_class;
 
 	/**
+	 * @var   array   A list of all table relationships 
+	 */
+	protected $_relationship = array();
+
+	/**
 	 * Returns a row from the table with the given id for the primary key column
 	 *
 	 * @param   int   $id   The primary id value
@@ -47,7 +52,13 @@ abstract class DataMapper
 			->as_object($this->_object_class)
 			->execute();
 
-		return (count($result) == 1) ? $result->current()->clean() : null;
+		if (count($result) == 0)
+		{
+			return null;
+		}
+
+		$result = $this->_add_relationships($result->current());
+		return $result->clean();
 	}
 
 	/**
@@ -110,7 +121,7 @@ abstract class DataMapper
 	 * Cleans a result set before returning it.
 	 *
 	 * @param   Database_Result   $result   A result array
-	 * @return  array
+	 * @return  DataMapper_Collection
 	 */
 	protected function _clean_result($result)
 	{
@@ -120,7 +131,7 @@ abstract class DataMapper
 			$data[] = $row->clean();
 		}
 
-		return $data;
+		return new DataMapper_Collection($data);
 	}
 
 	/**
@@ -253,6 +264,37 @@ abstract class DataMapper
 		}
 
 		return $filtered;
+	}
+
+	/**
+	 * Add in relationships for the result set.
+	 *
+	 * @param   mixed   $result   A DataMapper_Object or an array of them
+	 * @return  mixed
+	 */
+	protected function _add_relationships($result)
+	{
+		// If no relationships, then there is nothing to do
+		if (empty($this->_relationship))
+		{
+			return $result;
+		}
+
+		if (is_array($result))
+		{
+			
+		}
+		else
+		{
+			// Just a single row
+			foreach ($this->_relationship as $key => $row)
+			{
+				$class = "DataMapper_Relationship_{$row['type']}";
+				$result->{$key} = new $class($result->{$this->_primary_key}, $row['mapper'], $row['column']);
+			}
+
+			return $result;
+		}
 	}
 
 }
