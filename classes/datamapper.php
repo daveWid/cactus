@@ -95,8 +95,7 @@ abstract class DataMapper
 	 *
 	 * @param   DataMapper_Object   $object     The object to save
 	 * @param   boolean             $validate   Should the data be validated first??
-	 * @return  mixed                           DataMapper_Object
-	 *                                          invalid data?: false (boolean)
+	 * @return  mixed                           DataMapper_Object OR boolean false for failed validation
 	 */
 	public function save(Datamapper_Object & $object, $validate = true)
 	{
@@ -110,8 +109,7 @@ abstract class DataMapper
 	 *
 	 * @throws  Datamapper_Exception
 	 * @param   DataMapper_Object   $object    The object to create
-	 * @return  mixed                          array [insert_id, affected rows] OR
-	 *                                         boolean false for failed validateion
+	 * @return  mixed                          array [insert_id, affected rows] OR boolean false for failed validation
 	 */
 	public function create(Datamapper_Object & $object, $validate = true)
 	{
@@ -144,8 +142,7 @@ abstract class DataMapper
 	 * @throws  DataMapper_Exception
 	 * @param   DataMapper_Object   $object    The object to create
 	 * @param   boolean             $validate  Validate the object before saving?
-	 * @return  mixed                          (int) affected rows OR
-	 *                                         (boolean) false for failed validation
+	 * @return  mixed                          (int) affected rows OR boolean false for failed validation
 	 */
 	public function update(DataMapper_Object & $object, $validate = true)
 	{
