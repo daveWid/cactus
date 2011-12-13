@@ -180,11 +180,17 @@ abstract class DataMapper
 	/**
 	 * Deletes a record from the database
 	 *
+	 * @throws  Kohana_Exception
 	 * @param   DataMapper_Objecct   $object   The database object to delete
 	 * @return  int                            The number of affected rows 
 	 */
-	public function delete(DataMapper_Object & $object)
+	public function delete(& $object)
 	{
+		if ($object === null)
+		{
+			throw new Kohana_Exception("Cannot delete null object");
+		}
+
 		$affected = DB::delete($this->_table)
 			->where($this->_primary_key, '=', $object->{$this->_primary_key})
 			->limit(1)
