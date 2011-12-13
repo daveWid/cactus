@@ -64,19 +64,9 @@ abstract class DataMapper
 			$column = $this->_primary_key;
 		}
 
-		$result = DB::select()
-			->from($this->_table)
-			->as_object($this->_object_class)
-			->order_by($column, $direction)
-			->execute();
-
-		$data = array();
-		foreach ($result as $row)
-		{
-			$data[] = $row->clean();
-		}
-
-		return $data;
+		return $this->find(array(
+			'order_by' => array($column, $direction)
+		));
 	}
 
 	/**
@@ -87,7 +77,50 @@ abstract class DataMapper
 	 */
 	public function find($params = array())
 	{
-		
+		$query = DB::select()->from($this->_table)->as_object($this->_object_class);
+
+		// Loop through the params, all keys that aren't in the column list are converted to DB::select method calls.
+		foreach ($params as $key => $value)
+		{
+			if (in_array($key, $this->_columns))
+			{
+				if ( ! is_array($value))
+				{
+					$value = array($value, "=");
+				}
+
+				list($value, $op) = $value;
+				$query->where($key, $op, $value);
+			}
+			else
+			{
+				if ( ! is_array($value))
+				{
+					$value = array($value);
+				}
+
+				call_user_func_array(array($query, $key), $value);
+			}
+		}
+
+		return $this->_clean_result($query->execute());
+	}
+
+	/**
+	 * Cleans a result set before returning it.
+	 *
+	 * @param   Database_Result   $result   A result array
+	 * @return  array
+	 */
+	protected function _clean_result($result)
+	{
+		$data = array();
+		foreach ($result as $row)
+		{
+			$data[] = $row->clean();
+		}
+
+		return $data;
 	}
 
 	/**
