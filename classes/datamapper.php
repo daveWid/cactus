@@ -108,7 +108,7 @@ abstract class DataMapper
 	/**
 	 * Creates a new record in the database.
 	 *
-	 * @throws  Kohana_Exception
+	 * @throws  Datamapper_Exception
 	 * @param   DataMapper_Object   $object    The object to create
 	 * @return  mixed                          array [insert_id, affected rows] OR
 	 *                                         boolean false for failed validateion
@@ -118,7 +118,7 @@ abstract class DataMapper
 		// Make sure it is a new object
 		if ($object->is_new() !== true)
 		{
-			throw new Kohana_Exception("User DataMapper::update to save existing objects");
+			throw new DataMapper_Exception("User DataMapper::update to save existing objects");
 		}
 
 		// Check for validation and run it
@@ -141,7 +141,7 @@ abstract class DataMapper
 	/**
 	 * Updates a record
 	 *
-	 * @throws  Kohana_Exception
+	 * @throws  DataMapper_Exception
 	 * @param   DataMapper_Object   $object    The object to create
 	 * @param   boolean             $validate  Validate the object before saving?
 	 * @return  mixed                          (int) affected rows OR
@@ -152,7 +152,7 @@ abstract class DataMapper
 		// Make sure it is not a new object
 		if ($object->is_new() === true)
 		{
-			throw new Kohana_Exception("Use DataMapper::create to save a new object");
+			throw new DataMapper_Exception("Use DataMapper::create to save a new object");
 		}
 
 		// Check for validation and run it
@@ -180,7 +180,7 @@ abstract class DataMapper
 	/**
 	 * Deletes a record from the database
 	 *
-	 * @throws  Kohana_Exception
+	 * @throws  DataMapper_Exception
 	 * @param   DataMapper_Objecct   $object   The database object to delete
 	 * @return  int                            The number of affected rows 
 	 */
@@ -188,7 +188,7 @@ abstract class DataMapper
 	{
 		if ($object === null)
 		{
-			throw new Kohana_Exception("Cannot delete null object");
+			throw new DataMapper_Exception("Cannot delete null object");
 		}
 
 		$affected = DB::delete($this->_table)
