@@ -245,11 +245,35 @@ abstract class DataMapper
 	}
 
 	/**
+	 * Deletes all of the rows in a table where the column equals the value
+	 *
+	 * @param   string   $column    The column
+	 * @param   string   $value     The column value
+	 * @param   string   $op        The operator to use
+	 * @return  int                 The number of affected rows
+	 */
+	public function delete_on_column($column, $value, $op = "=")
+	{
+		return DB::delete($this->_table)
+			->where($column, $op, $value)
+			->execute();
+	}
+
+	/**
 	 * Runs a cascade delete.
 	 */
-	protected function _cascade()
+	protected function _cascade($object)
 	{
-		// DO Cascade here...
+		if(empty($this->_relationships))
+		{
+			return; // Nothing to do....
+		}
+
+		foreach ($this->_relationships as $row)
+		{
+			$mapper = new $row['mapper'];
+			$mapper->delete_on_column($row['column'], $object->{$row['column']});
+		}
 	}
 
 	/**
