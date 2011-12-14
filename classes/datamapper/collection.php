@@ -79,7 +79,7 @@ class DataMapper_Collection implements Iterator
 	 */
 	public function valid()
 	{
-		$key = $this->key($this->_collection);
+		$key = key($this->_collection);
         return ($key !== NULL AND $key !== FALSE); 
 	}
 
