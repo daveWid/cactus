@@ -161,6 +161,8 @@ abstract class DataMapper
 			throw new DataMapper_Exception("User DataMapper::update to save existing objects");
 		}
 
+		$this->_check_object($object);
+
 		// Check for validation and run it
 		if ($validate AND ! $object->validate())
 		{
@@ -194,6 +196,8 @@ abstract class DataMapper
 			throw new DataMapper_Exception("Use DataMapper::create to save a new object");
 		}
 
+		$this->_check_object($object);
+
 		// Check for validation and run it
 		if ($validate AND ! $object->validate())
 		{
@@ -223,12 +227,9 @@ abstract class DataMapper
 	 * @param   DataMapper_Objecct   $object   The database object to delete
 	 * @return  int                            The number of affected rows 
 	 */
-	public function delete(& $object)
+	public function delete(DataMapper_Object & $object)
 	{
-		if ($object === null)
-		{
-			throw new DataMapper_Exception("Cannot delete null object");
-		}
+		$this->_check_object($object);
 
 		$affected = DB::delete($this->_table)
 			->where($this->_primary_key, '=', $object->{$this->_primary_key})
@@ -304,6 +305,24 @@ abstract class DataMapper
 	protected function _default_query()
 	{
 		return DB::select()->from($this->_table)->as_object($this->_object_class);
+	}
+
+	/**
+	 * Checks to make sure the object passed in is of the correct type.
+	 *
+	 * @throws  DataMapper_Exception
+	 *
+	 * @param   DataMapper_Object   $object    The datamapper object to check
+	 */
+	protected function _check_object(DataMapper_Object $object)
+	{
+		if ( ! $object instanceof $this->_object_class)
+		{
+			throw new DataMapper_Exception(":mapper expects a :object object.", array(
+				':mapper' => get_called_class(),
+				':object' => $this->_object_class
+			));
+		}
 	}
 
 }
