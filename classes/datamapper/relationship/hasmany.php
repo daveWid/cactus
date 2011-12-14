@@ -5,15 +5,17 @@
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class DataMapper_Relationship_HasMany extends DataMapper_Relationship
+class DataMapper_Relationship_HasMany extends DataMapper_Relationship implements Countable, IteratorAggregate
 {
 	/**
 	 * Gets the result set.
 	 */
 	public function result()
 	{
-		if ($this->_result === null)
+		if ( ! $this->_has_result)
 		{
+			$this->_has_result = true;
+
 			$this->_result = $this->_mapper->find(array(
 				$this->_column => $this->_value
 			));

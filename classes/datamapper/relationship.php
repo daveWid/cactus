@@ -5,12 +5,27 @@
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class DataMapper_Relationship implements Countable, IteratorAggregate
+abstract class DataMapper_Relationship
 {
+	/**
+	 * A has one relationship
+	 */
+	const HAS_ONE = "hasone";
+
+	/**
+	 * A has may relationship
+	 */
+	const HAS_MANY = "hasmany";
+
 	/**
 	 * @var   mixed    The result set for the relationship
 	 */
 	protected $_result = null;
+
+	/**
+	 * @var   boolean  Has the result set been grabbed yet?
+	 */
+	protected $_has_result = false;
 
 	/**
 	 * @var   int   The value of the column that forms the relationship

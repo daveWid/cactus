@@ -30,7 +30,7 @@ abstract class DataMapper
 	/**
 	 * @var   array   A list of all table relationships 
 	 */
-	protected $_relationship = array();
+	protected $_relationships = array();
 
 	/**
 	 * Returns a row from the table with the given id for the primary key column
@@ -45,11 +45,9 @@ abstract class DataMapper
 			return new $this->_object_class(true);
 		}
 
-		$result = DB::select()
-			->from($this->_table)
+		$result = $this->_default_query()
 			->where($this->_primary_key, '=', $id)
 			->limit(1)
-			->as_object($this->_object_class)
 			->execute();
 
 		if (count($result) == 0)
@@ -57,7 +55,7 @@ abstract class DataMapper
 			return null;
 		}
 
-		$result = $this->_add_relationships($result->current());
+		$result = $this->_add_relationship($result->current());
 		return $result->clean();
 	}
 
@@ -88,7 +86,7 @@ abstract class DataMapper
 	 */
 	public function find($params = array())
 	{
-		$query = DB::select()->from($this->_table)->as_object($this->_object_class);
+		$query = $this->_default_query();
 
 		// Loop through the params, all keys that aren't in the column list are converted to DB::select method calls.
 		foreach ($params as $key => $value)
@@ -128,7 +126,7 @@ abstract class DataMapper
 		$data = array();
 		foreach ($result as $row)
 		{
-			$data[] = $row->clean();
+			$data[] = $this->_add_relationship($row->clean());
 		}
 
 		return new DataMapper_Collection($data);
@@ -208,7 +206,7 @@ abstract class DataMapper
 		if ( ! empty($data))
 		{
 			$affected = DB::update($this->_table)
-				->set()
+				->set($data)
 				->where($this->_primary_key, '=', $object->{$this->_primary_key})
 				->limit(1)
 				->execute();
@@ -246,6 +244,14 @@ abstract class DataMapper
 	}
 
 	/**
+	 * Runs a cascade delete.
+	 */
+	protected function _cascade()
+	{
+		// DO Cascade here...
+	}
+
+	/**
 	 * Filters any data against the column list to make sure the insert/update functions work properly.
 	 *
 	 * @param   array   $data   The data to filter
@@ -267,34 +273,37 @@ abstract class DataMapper
 	}
 
 	/**
-	 * Add in relationships for the result set.
+	 * Adds a relationship to a result.
 	 *
-	 * @param   mixed   $result   A DataMapper_Object or an array of them
-	 * @return  mixed
+	 * @param   DataMapper_Object   $result   The DataMapper object to add relationships to
+	 * @return  DataMapper_Object
 	 */
-	protected function _add_relationships($result)
+	protected function _add_relationship($result)
 	{
 		// If no relationships, then there is nothing to do
-		if (empty($this->_relationship))
+		if (empty($this->_relationships))
 		{
 			return $result;
 		}
 
-		if (is_array($result))
+		// Just a single row
+		foreach ($this->_relationships as $key => $row)
 		{
-			
+			$class = "DataMapper_Relationship_{$row['type']}";
+			$result->{$key} = new $class($result->{$row['column']}, $row['mapper'], $row['column']);
 		}
-		else
-		{
-			// Just a single row
-			foreach ($this->_relationship as $key => $row)
-			{
-				$class = "DataMapper_Relationship_{$row['type']}";
-				$result->{$key} = new $class($result->{$this->_primary_key}, $row['mapper'], $row['column']);
-			}
 
-			return $result;
-		}
+		return $result;
+	}
+
+	/**
+	 * Gets the default query for selecting rows.
+	 *
+	 * @return   Database_Query_Builder_Select
+	 */
+	protected function _default_query()
+	{
+		return DB::select()->from($this->_table)->as_object($this->_object_class);
 	}
 
 }
