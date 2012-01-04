@@ -7,7 +7,7 @@ namespace DataMapper\Relationship;
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class HasMany extends \DataMapper\Relationship implements Countable, IteratorAggregate
+class HasMany extends \DataMapper\Relationship implements \Countable, \IteratorAggregate
 {
 	/**
 	 * Gets the result set.

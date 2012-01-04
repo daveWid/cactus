@@ -2,12 +2,12 @@
 namespace DataMapper;
 
 /**
- * A collection of DataMapper_Objects
+ * A collection of DataMapper Objects
  *
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class Collection implements Iterator
+class Collection implements \Iterator
 {
 	/**
 	 * @var   array    The internal collection array

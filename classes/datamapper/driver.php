@@ -79,14 +79,6 @@ interface Driver
 	public function relationships();
 
 	/**
-	 * Cleans a result set before returning it.
-	 *
-	 * @param   Database\Result   $result   A result array
-	 * @return  DataMapper\Collection
-	 */
-	public function clean_result(\DataMapper\Result $result);
-
-	/**
 	 * Adds a relationship to a result.
 	 *
 	 * @param   DataMapper\Object   $result   The DataMapper object to add relationships to

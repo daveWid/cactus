@@ -31,6 +31,7 @@ class DataMapper
 	public static function autoload($class)
 	{
 		$found = false;
+		$class = ltrim($class, "\\");
 
 		$base = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 		$file = $base . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';

@@ -7,7 +7,7 @@ namespace DataMapper;
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class Object implements ArrayAccess
+abstract class Object implements \ArrayAccess
 {
 	/**
 	 * @var   array   The data for this object

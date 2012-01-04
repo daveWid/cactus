@@ -1,5 +1,5 @@
 <?php
-namespace DataMapper;
+namespace DataMapper\Kohana;
 
 /**
  * A Base object that adds in Kohana specific validation.
@@ -7,7 +7,7 @@ namespace DataMapper;
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class DataMapper_Kohana_Object extends DataMapper_Object
+abstract class Object extends \DataMapper\Object
 {
 	/**
 	 * @var   Validation   The validation object
@@ -35,7 +35,7 @@ abstract class DataMapper_Kohana_Object extends DataMapper_Object
 	{
 		if ($this->validation === null)
 		{
-			$this->validation = $this->validation_rules(new Validation($this->data));
+			$this->validation = $this->validation_rules(new \Validation($this->data));
 		}
 
 		return $this->validation->check();
@@ -60,6 +60,6 @@ abstract class DataMapper_Kohana_Object extends DataMapper_Object
 	 * @param   Validation   $valid   The validation object to add rules to
 	 * @return  Validation            A validation object for this data structure
 	 */
-	abstract protected function validation_rules(Validation $valid);
+	abstract protected function validation_rules(\Validation $valid);
 
 }
