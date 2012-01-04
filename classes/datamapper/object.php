@@ -25,13 +25,22 @@ abstract class Object implements \ArrayAccess
 	protected $modified_data = array();
 
 	/**
-	 * Creates a new DataMapper_Object.
-	 *
-	 * @param   boolean   $is_new 
+	 * @var   mixed   The validation object
 	 */
-	public function __construct($is_new = false)
+	protected $validation = null;
+
+	/**
+	 * Creates a new DataMapper\Object.
+	 *
+	 * @param  array  Data for a new object.
+	 */
+	public function __construct(array $data = null)
 	{
-		$this->is_new = $is_new;
+		if ($data !== null)
+		{
+			$this->data = array();
+			$this->is_new = true;
+		}
 	}
 
 	/**
@@ -51,6 +60,7 @@ abstract class Object implements \ArrayAccess
 	 */
 	public function clean()
 	{
+		$this->validation = null;
 		$this->modified_data = array();
 		return $this;
 	}
@@ -74,6 +84,31 @@ abstract class Object implements \ArrayAccess
 	{
 		return $this->modified_data;
 	}
+
+	/**
+	 * Checks to see if the data is valid
+	 *
+	 * @return   boolean   Does this object contain valid data?
+	 */
+	abstract public function validate();
+
+	/**
+	 * Gets any validation errors
+	 *
+	 * @uses    Validation::errors
+	 * @param   type     $file        The path to the message file
+	 * @param   boolean  $translate   Translate the errors?
+	 * @return  array
+	 */
+	abstract public function errors($file = null, $translate = true);
+
+	/**
+	 * Sets and returns validation for this object
+	 *
+	 * @param   mixed   $valid   The validation object to add rules to
+	 * @return  mixed            A validation object for this data structure
+	 */
+	abstract protected function validation_rules($valid);
 
 	/**
 	 * Gets the value of an instance variable.
