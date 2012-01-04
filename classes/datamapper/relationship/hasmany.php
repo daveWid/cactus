@@ -1,11 +1,13 @@
 <?php
+namespace DataMapper\Relationship;
+
 /**
  * A HasMany relationship for DataMapper.
  *
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class DataMapper_Relationship_HasMany extends DataMapper_Relationship implements Countable, IteratorAggregate
+class HasMany extends \DataMapper\Relationship implements Countable, IteratorAggregate
 {
 	/**
 	 * Gets the result set.

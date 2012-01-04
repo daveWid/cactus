@@ -1,4 +1,6 @@
 <?php
+namespace DataMapper;
+
 /**
  * A Base object that adds in Kohana specific validation.
  *

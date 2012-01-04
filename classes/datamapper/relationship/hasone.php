@@ -1,11 +1,13 @@
 <?php
+namespace DataMapper\Relationship;
+
 /**
  * A HasOne relationship for DataMapper.
  *
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class DataMapper_Relationship_HasOne extends DataMapper_Relationship
+class HasOne extends \DataMapper\Relationship
 {
 	/**
 	 * Gets the result set.

@@ -1,11 +1,13 @@
 <?php
+namespace DataMapper;
+
 /**
  * The base Object class for data rows.
  *
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class DataMapper_Object implements ArrayAccess
+abstract class Object implements ArrayAccess
 {
 	/**
 	 * @var   array   The data for this object

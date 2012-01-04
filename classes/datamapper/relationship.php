@@ -1,11 +1,13 @@
 <?php
+namespace DataMapper;
+
 /**
  * A HasMany relationship for DataMapper.
  *
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class DataMapper_Relationship
+abstract class Relationship
 {
 	/**
 	 * A has one relationship
