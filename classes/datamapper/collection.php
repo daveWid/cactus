@@ -12,7 +12,7 @@ class Collection implements \Iterator
 	/**
 	 * @var   array    The internal collection array
 	 */
-	protected $_collection = array();
+	protected $collection = array();
 
 	/**
 	 * Creates a new DataMapper_Collection object
@@ -21,7 +21,7 @@ class Collection implements \Iterator
 	 */
 	public function __construct(array $data = array())
 	{
-		$this->_collection = $data;
+		$this->collection = $data;
 	}
 
 	/**
@@ -34,10 +34,10 @@ class Collection implements \Iterator
 	{
 		if ($data === null)
 		{
-			return $this->_collection;
+			return $this->collection;
 		}
 
-		$this->_collection = array_merge($this->_collection, $data);
+		$this->_collection = array_merge($this->collection, $data);
 		return $this;
 	}
 
@@ -49,7 +49,7 @@ class Collection implements \Iterator
 	 */
 	public function current()
 	{
-		return current($this->_collection);
+		return current($this->collection);
 	}
 
 	/**
@@ -59,7 +59,7 @@ class Collection implements \Iterator
 	 */
 	public function next()
 	{
-		next($this->_collection);
+		next($this->collection);
 	}
 
 	/**
@@ -70,7 +70,7 @@ class Collection implements \Iterator
 	 */
 	public function key()
 	{
-		return key($this->_collection);
+		return key($this->collection);
 	}
 
 	/**
@@ -81,7 +81,7 @@ class Collection implements \Iterator
 	 */
 	public function valid()
 	{
-		$key = key($this->_collection);
+		$key = key($this->collection);
         return ($key !== NULL AND $key !== FALSE); 
 	}
 
@@ -92,7 +92,7 @@ class Collection implements \Iterator
 	 */
 	public function rewind()
 	{
-		reset($this->_collection);
+		reset($this->collection);
 	}
 
 }

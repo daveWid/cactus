@@ -14,16 +14,16 @@ class HasMany extends \DataMapper\Relationship implements \Countable, \IteratorA
 	 */
 	public function result()
 	{
-		if ( ! $this->_has_result)
+		if ( ! $this->has_result)
 		{
-			$this->_has_result = true;
+			$this->has_result = true;
 
-			$this->_result = $this->_mapper->find(array(
-				$this->_column => $this->_value
+			$this->result = $this->mapper->find(array(
+				$this->column => $this->value
 			));
 		}
 
-		return $this->_result;
+		return $this->result;
 	}
 
 	/**

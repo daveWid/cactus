@@ -22,27 +22,27 @@ abstract class Relationship
 	/**
 	 * @var   mixed    The result set for the relationship
 	 */
-	protected $_result = null;
+	protected $result = null;
 
 	/**
 	 * @var   boolean  Has the result set been grabbed yet?
 	 */
-	protected $_has_result = false;
+	protected $has_result = false;
 
 	/**
 	 * @var   int   The value of the column that forms the relationship
 	 */
-	protected $_value;
+	protected $value;
 
 	/**
 	 * @var   DataMapper   The mapper to get results with
 	 */
-	protected $_mapper;
+	protected $mapper;
 
 	/**
 	 * @var   array    How the tables are connected
 	 */
-	protected $_column;
+	protected $column;
 
 	/**
 	 * Creates a new DataMapper_Relationship object
@@ -53,9 +53,9 @@ abstract class Relationship
 	 */
 	public function __construct($value, $mapper, $column)
 	{
-		$this->_value = $value;
+		$this->value = $value;
 		$this->mapper($mapper);
-		$this->_column = $column;
+		$this->column = $column;
 	}
 
 	/**
@@ -68,10 +68,10 @@ abstract class Relationship
 	{
 		if ($name === null)
 		{
-			return $this->_mapper;
+			return $this->mapper;
 		}
 
-		$this->_mapper = new $name;
+		$this->mapper = new $name;
 		return $this;
 	}
 
