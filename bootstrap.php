@@ -1,5 +1,5 @@
 <?php
 
 // Setup the autoloader
-require_once "classes/DataMapper.php";
-spl_autoload_register(array("\\DataMapper\\DataMapper", "autoload"));
+require_once "classes/Autoloader.php";
+\DataMapper\Autoloader::register();
