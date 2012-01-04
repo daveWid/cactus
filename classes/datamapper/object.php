@@ -10,23 +10,17 @@ abstract class DataMapper_Object implements ArrayAccess
 	/**
 	 * @var   array   The data for this object
 	 */
-	protected $_data = array();
+	protected $data = array();
 
 	/**
-	 * @var   Validation   The validation object
+	 * @var   boolean  Is this a new object?
 	 */
-	protected $_validation = null;
+	protected $is_new = false;
 
 	/**
-	 * @var   boolean     Is this a new object?
+	 * @var   array    An array of data that has been modified
 	 */
-	protected $_is_new = false;
-
-	/**
-	 *
-	 * @var   array     A list of columns that have been modified
-	 */
-	protected $_modified_columns = array();
+	protected $modified_data = array();
 
 	/**
 	 * Creates a new DataMapper_Object.
@@ -35,7 +29,7 @@ abstract class DataMapper_Object implements ArrayAccess
 	 */
 	public function __construct($is_new = false)
 	{
-		$this->_is_new = $is_new;
+		$this->is_new = $is_new;
 	}
 
 	/**
@@ -45,7 +39,7 @@ abstract class DataMapper_Object implements ArrayAccess
 	 */
 	public function is_new()
 	{
-		return $this->_is_new;
+		return $this->is_new;
 	}
 
 	/**
@@ -55,8 +49,7 @@ abstract class DataMapper_Object implements ArrayAccess
 	 */
 	public function clean()
 	{
-		$this->_modified_columns = array();
-		$this->_validation = null;
+		$this->modified_data = array();
 		return $this;
 	}
 
@@ -67,7 +60,7 @@ abstract class DataMapper_Object implements ArrayAccess
 	 */
 	public function data()
 	{
-		return $this->_data;
+		return $this->data;
 	}
 
 	/**
@@ -77,51 +70,8 @@ abstract class DataMapper_Object implements ArrayAccess
 	 */
 	public function modified()
 	{
-		$modified = array();
-		foreach ($this->_modified_columns as $key)
-		{
-			$modified[$key] = $this->_data[$key];
-		}
-
-		return $modified;
+		return $this->modified_data;
 	}
-
-	/**
-	 * Checks to see if the data is valid
-	 *
-	 * @uses     Validation::check
-	 * @return   boolean   Does this object contain valid data?
-	 */
-	public function validate()
-	{
-		if ($this->_validation === null)
-		{
-			$this->_validation = $this->_validation_rules(new Validation($this->_data));
-		}
-
-		return $this->_validation->check();
-	}
-
-	/**
-	 * Gets any validation errors
-	 *
-	 * @uses    Validation::errors
-	 * @param   type     $file        The path to the message file
-	 * @param   boolean  $translate   Translate the errors?
-	 * @return  array
-	 */
-	public function errors($file = null, $translate = true)
-	{
-		return $this->_validation->errors($file, $translate);
-	}
-
-	/**
-	 * Sets and returns validation for this object
-	 *
-	 * @param   Validation   $valid   The validation object to add rules to
-	 * @return  Validation            A validation object for this data structure
-	 */
-	abstract protected function _validation_rules(Validation $valid);
 
 	/**
 	 * Gets the value of an instance variable.
@@ -132,7 +82,7 @@ abstract class DataMapper_Object implements ArrayAccess
 	 */
 	public function get($name, $default = null)
 	{
-		return $this->offsetExists($name) ? $this->_data[$name] : $default;
+		return $this->offsetExists($name) ? $this->data[$name] : $default;
 	}
 
 	/**
@@ -151,12 +101,12 @@ abstract class DataMapper_Object implements ArrayAccess
 
 		foreach ($name as $key => $value)
 		{
-			if ( ! $this->get($key, false) OR $this->_data[$key] !== $value)
+			if ( ! $this->get($key, false) OR $this->data[$key] !== $value)
 			{
-				$this->_modified_columns[] = $key;
+				$this->modified_data[$key] = $value;
 			}
 
-			$this->_data[$key] = $value;
+			$this->data[$key] = $value;
 		}
 
 		return $this;
@@ -194,7 +144,7 @@ abstract class DataMapper_Object implements ArrayAccess
 	 */
 	public function offsetExists($offset)
 	{
-		return isset($this->_data[$offset]);
+		return isset($this->data[$offset]);
 	}
 
 	/**
@@ -207,7 +157,7 @@ abstract class DataMapper_Object implements ArrayAccess
 	 */
 	public function offsetGet($offset)
 	{
-		return $this->_data[$offset];
+		return $this->data[$offset];
 	}
 
 	/**
@@ -233,7 +183,7 @@ abstract class DataMapper_Object implements ArrayAccess
 	 */
 	public function offsetUnset($offset)
 	{
-		unset($this->_data[$offset]);
+		unset($this->data[$offset]);
 	}
 
 }
