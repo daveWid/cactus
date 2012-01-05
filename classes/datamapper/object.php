@@ -38,7 +38,7 @@ abstract class Object implements \ArrayAccess
 	{
 		if ($data !== null)
 		{
-			$this->data = array();
+			$this->set($data);
 			$this->is_new = true;
 		}
 	}
@@ -90,7 +90,10 @@ abstract class Object implements \ArrayAccess
 	 *
 	 * @return   boolean   Does this object contain valid data?
 	 */
-	abstract public function validate();
+	public function validate()
+	{
+		return true; // No validation by default
+	}
 
 	/**
 	 * Gets any validation errors
@@ -100,15 +103,21 @@ abstract class Object implements \ArrayAccess
 	 * @param   boolean  $translate   Translate the errors?
 	 * @return  array
 	 */
-	abstract public function errors($file = null, $translate = true);
+	public function errors($file = null, $translate = true)
+	{
+		return array(); // No validation by default, so no checking is done...
+	}
 
 	/**
-	 * Sets and returns validation for this object
+	 * Sets the validation rules for this object.
 	 *
-	 * @param   mixed   $valid   The validation object to add rules to
-	 * @return  mixed            A validation object for this data structure
+	 * @param   mixed   $valid   The current validation rules
+	 * @return  mixed
 	 */
-	abstract protected function validation_rules($valid);
+	protected function validation_rules($valid)
+	{
+		return $valid; // no default validation...
+	}
 
 	/**
 	 * Gets the value of an instance variable.
