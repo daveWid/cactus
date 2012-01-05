@@ -9,33 +9,8 @@ namespace DataMapper\Kohana;
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class Driver implements \DataMapper\Driver
+class Driver extends \DataMapper\Driver
 {
-	/**
-	 * @var   string   The name of the table
-	 */
-	protected $table;
-
-	/**
-	 * @var   string   The name of the primary key column
-	 */
-	protected $primary_key;
-
-	/**
-	 * @var   array    The list of columns in the table
-	 */
-	protected $columns = array();
-
-	/**
-	 * @var   string   The name of the object to return in operations
-	 */
-	protected $object_class;
-
-	/**
-	 * @var   array   A list of all table relationships 
-	 */
-	protected $relationships = array();
-
 	/**
 	 * Returns a row from the table with the given id for the primary key column
 	 *
@@ -112,20 +87,6 @@ class Driver implements \DataMapper\Driver
 		}
 
 		return $this->clean_result($query->execute());
-	}
-
-	/**
-	 * Saves an object.
-	 *
-	 * @param   DataMapper\Object   $object     The object to save
-	 * @param   boolean             $validate   Should the data be validated first??
-	 * @return  mixed                           DataMapper\Object OR boolean false for failed validation
-	 */
-	public function save(\Datamapper\Object & $object, $validate = true)
-	{
-		return ($object->is_new()) ?
-			$this->create($object, $validate) :
-			$this->update($object, $validate) ;
 	}
 
 	/**
@@ -227,71 +188,6 @@ class Driver implements \DataMapper\Driver
 	}
 
 	/**
-	 * Gets all of the relationships for the DataMapper
-	 *
-	 * @return  array  List of relationship
-	 */
-	public function relationships()
-	{
-		return $this->relationships;
-	}
-
-	/**
-	 * Cleans a result set before returning it.
-	 *
-	 * @param   \Database_Result   $result   A result array
-	 * @return  DataMapper\Collection
-	 */
-	public function clean_result(\Database_Result $result)
-	{
-		$data = array();
-		foreach ($result as $row)
-		{
-			$data[] = $this->add_relationship($row->clean());
-		}
-
-		return new \DataMapper\Collection($data);
-	}
-
-	/**
-	 * Adds a relationship to a result.
-	 *
-	 * @param   DataMapper\Object   $result   The DataMapper object to add relationships to
-	 * @return  DataMapper\Object
-	 */
-	public function add_relationship(\DataMapper\Object $result)
-	{
-		// If no relationships, then there is nothing to do
-		if (empty($this->relationships))
-		{
-			return $result;
-		}
-
-		// Just a single row
-		foreach ($this->relationships as $key => $row)
-		{
-			$class = "\\DataMapper\\Relationship\\{$row['type']}";
-			$result->{$key} = new $class($result->{$row['column']}, $row['mapper'], $row['column']);
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Checks to make sure the object passed in is of the correct type.
-	 *
-	 * @throws  DataMapper_Exception           The passed in object is not the correct type
-	 * @param   DataMapper_Object   $object    The datamapper object to check
-	 */
-	public function check_object(\DataMapper\Object $object)
-	{
-		if ( ! $object instanceof $this->object_class)
-		{	
-			throw new \DataMapper\Exception(get_called_class()." expects a {$this->object_class} object.");
-		}
-	}
-
-	/**
 	 * Deletes all of the rows in a table where the column equals the value
 	 *
 	 * @param   string   $column    The column
@@ -321,27 +217,6 @@ class Driver implements \DataMapper\Driver
 			$mapper = new $row['mapper'];
 			$mapper->delete_on_column($row['column'], $object->get($row['column']));
 		}
-	}
-
-	/**
-	 * Filters any data against the column list to make sure the insert/update functions work properly.
-	 *
-	 * @param   array   $data   The data to filter
-	 * @return  array           Filtered data
-	 */
-	public function filter(array $data)
-	{
-		$filtered = array();
-
-		foreach ($data as $key => $value)
-		{
-			if (in_array($key, $this->columns))
-			{
-				$filtered[$key] = $value;
-			}
-		}
-
-		return $filtered;
 	}
 
 	/**
