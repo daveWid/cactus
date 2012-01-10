@@ -117,10 +117,15 @@ abstract class Driver implements \Cactus\DriverInterface
 			$class = "\\Cactus\\Relationship\\{$row['type']}";
 			$relationship = new $class($result->{$row['column']}, $row['driver'], $row['column']);
 
-			// Check for eager or lazy loading
-			$result->{$key} = (isset($row['loading']) AND $row['loading'] === \Cactus\Loading::EAGER) ?
-				$relationship->result()->data() :
-				$relationship;
+			// Check for eager loading
+			if (isset($row['loading']) AND $row['loading'] === \Cactus\Loading::EAGER)
+			{
+				$relationship = ($row['type'] === \Cactus\Relationship::HAS_ONE) ?
+					$relationship->result() :
+					$relationship->result()->data();
+			}
+
+			$result->{$key} = $relationship;
 		}
 
 		return $result;
