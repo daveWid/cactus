@@ -12,7 +12,7 @@ use PDO;
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class Driver extends \DataMapper\Driver
+class Driver extends \Cactus\Driver
 {
 	/**
 	 * @var   PDO     The PDO object used in the queries
