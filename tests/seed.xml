@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<database name="cactus_test">
+	<table_structure name="user">
+		<field Field="user_id" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" />
+		<field Field="email" Type="varchar(128)" Null="NO" Key="" Extra="" />
+		<field Field="password" Type="varchar(64)" Null="YES" Key="" Extra="" />
+		<field Field="first_name" Type="varchar(50)" Null="NO" Key="" Extra="" />
+		<field Field="last_name" Type="varchar(50)" Null="NO" Key="" Extra="" />
+		<field Field="status" Type="tinyint(3) unsigned" Null="NO" Key="" Default="1" Extra="" />
+		<field Field="create_date" Type="timestamp" Null="NO" Key="" Default="CURRENT_TIMESTAMP" Extra="" />
+		<key Table="user" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="user_id" Collation="A" Cardinality="1" Null="" Index_type="BTREE" Comment="" />
+		<options Name="user" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="1" Avg_row_length="108" Data_length="612" Max_data_length="281474976710655" Index_length="2048" Data_free="504" Auto_increment="57" Create_time="2012-01-06 20:33:24" Update_time="2012-01-06 21:45:13" Collation="utf8_general_ci" Create_options="" Comment="" />
+	</table_structure>
+	<table_data name="user">
+	<row>
+		<field name="user_id">1</field>
+		<field name="email">test@example.com</field>
+		<field name="password">$2a$12$2a57a5a743894a0e4a801uNnapY3vDR7yxWUvkrjG3p9sQJTT6DzW</field>
+		<field name="first_name">Testy</field>
+		<field name="last_name">McTesterson</field>
+		<field name="status">1</field>
+		<field name="create_date">2011-12-02 17:06:33</field>
+	</row>
+	</table_data>
+	<table_structure name="role">
+		<field Field="role_id" Type="int(11)" Null="NO" Key="PRI" Extra="auto_increment" />
+		<field Field="name" Type="varchar(50)" Null="NO" Key="" Extra="" />
+		<key Table="role" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="role_id" Collation="A" Cardinality="2" Null="" Index_type="BTREE" Comment="" />
+		<options Name="role" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="2" Avg_row_length="20" Data_length="40" Max_data_length="281474976710655" Index_length="2048" Data_free="0" Auto_increment="3" Create_time="2011-12-02 18:35:12" Update_time="2011-12-14 15:11:11" Collation="utf8_general_ci" Create_options="" Comment="" />
+	</table_structure>
+	<table_data name="role">
+	<row>
+		<field name="role_id">1</field>
+		<field name="name">admin</field>
+	</row>
+	<row>
+		<field name="role_id">2</field>
+		<field name="name">developer</field>
+	</row>
+	</table_data>
+	<table_structure name="user_role">
+		<field Field="user_id" Type="int(10) unsigned" Null="NO" Key="MUL" Extra="" />
+		<field Field="role_id" Type="int(10) unsigned" Null="NO" Key="" Extra="" />
+		<key Table="user_role" Non_unique="1" Key_name="user_id" Seq_in_index="1" Column_name="user_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+		<key Table="user_role" Non_unique="1" Key_name="user_id" Seq_in_index="2" Column_name="role_id" Collation="A" Null="" Index_type="BTREE" Comment="" />
+		<options Name="user_role" Engine="MyISAM" Version="10" Row_format="Fixed" Rows="2" Avg_row_length="9" Data_length="18" Max_data_length="2533274790395903" Index_length="2048" Data_free="0" Create_time="2011-12-02 18:35:45" Update_time="2011-12-14 15:11:24" Collation="utf8_general_ci" Create_options="" Comment="" />
+	</table_structure>
+	<table_data name="user_role">
+	<row>
+		<field name="user_id">1</field>
+		<field name="role_id">1</field>
+	</row>
+	<row>
+		<field name="user_id">1</field>
+		<field name="role_id">2</field>
+	</row>
+	</table_data>
+
+</database>
+</mysqldump>

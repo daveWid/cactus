@@ -1,0 +1,11 @@
+<phpunit bootstrap="tests/bootstrap.php" colors="true" verbose="true">
+	<testsuites>
+		<testsuite name="Cactus ORM Test Suite">
+			<directory>tests/cactus</directory>
+		</testsuite>
+	</testsuites>
+
+	<logging>
+		<log type="coverage-html" target="coverage" charset="utf-8" />
+	</logging>
+</phpunit>
