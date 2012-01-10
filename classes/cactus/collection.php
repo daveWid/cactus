@@ -1,10 +1,11 @@
 <?php
-namespace DataMapper;
+
+namespace Cactus;
 
 /**
- * A collection of DataMapper Objects
+ * A collection of Cactus Entities
  *
- * @package    DataMapper
+ * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
 class Collection implements \Iterator
@@ -37,7 +38,7 @@ class Collection implements \Iterator
 			return $this->collection;
 		}
 
-		$this->_collection = array_merge($this->collection, $data);
+		$this->collection = array_merge($this->collection, $data);
 		return $this;
 	}
 

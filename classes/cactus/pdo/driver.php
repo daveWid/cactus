@@ -1,5 +1,6 @@
 <?php
-namespace DataMapper\PDO;
+
+namespace Cactus\PDO;
 
 use PDO;
 
@@ -8,7 +9,7 @@ use PDO;
  *
  * @see        http://us3.php.net/manual/en/class.pdo.php
  *
- * @package    DataMapper
+ * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
 class Driver extends \DataMapper\Driver
@@ -135,16 +136,16 @@ class Driver extends \DataMapper\Driver
 	/**
 	 * Creates a new record in the database.
 	 *
-	 * @throws  \Datamapper\Exception           The passed in object is not the correct type
-	 * @param   \DataMapper\Object   $object    The object to create
-	 * @return  mixed                          array [insert_id, affected rows] OR boolean false for failed validation
+	 * @throws  \Cactus\Exception           The passed in object is not the correct type
+	 * @param   \Cactus\Entity   $object    The object to create
+	 * @return  mixed                       array [insert_id, affected rows] OR boolean false for failed validation
 	 */
-	public function create(\Datamapper\Object & $object, $validate = true)
+	public function create(\Cactus\Entity & $object, $validate = true)
 	{
 		// Make sure it is a new object
 		if ($object->is_new() !== true)
 		{
-			throw new \DataMapper\Exception("Use DataMapper::update to save existing objects");
+			throw new \Cactus\Exception("Use \Cactus\Driver::update to save existing objects");
 		}
 
 		$this->check_object($object);
@@ -184,17 +185,17 @@ class Driver extends \DataMapper\Driver
 	/**
 	 * Updates a record
 	 *
-	 * @throws  DataMapper\Exception           The passed in object is not the correct type
-	 * @param   DataMapper\Object   $object    The object to create
-	 * @param   boolean             $validate  Validate the object before saving?
-	 * @return  mixed                          (int) affected rows OR boolean false for failed validation
+	 * @throws  \Cactus\Exception           The passed in object is not the correct type
+	 * @param   \Cactus\Object   $object    The object to create
+	 * @param   boolean          $validate  Validate the object before saving?
+	 * @return  mixed                       (int) affected rows OR boolean false for failed validation
 	 */
-	public function update(\DataMapper\Object & $object, $validate = true)
+	public function update(\Cactus\Entity & $object, $validate = true)
 	{
 		// Make sure it is not a new object
 		if ($object->is_new() === true)
 		{
-			throw new \DataMapper\Exception("Use DataMapper::create to save a new object");
+			throw new \Cactus\Exception("Use \Cactus\Driver::create to save a new object");
 		}
 
 		$this->check_object($object);
@@ -237,11 +238,11 @@ class Driver extends \DataMapper\Driver
 	/**
 	 * Deletes a record from the database
 	 *
-	 * @throws  DataMapper\Exception           The passed in object is not the correct type
-	 * @param   DataMapper\Objecct   $object   The database object to delete
-	 * @return  int                            The number of affected rows 
+	 * @throws  \Cactus\Exception           The passed in object is not the correct type
+	 * @param   \Cactus\Objecct   $object   The database object to delete
+	 * @return  int                         The number of affected rows 
 	 */
-	public function delete(\DataMapper\Object & $object)
+	public function delete(\Cactus\Entity & $object)
 	{
 		$this->check_object($object);
 
@@ -335,13 +336,13 @@ class Driver extends \DataMapper\Driver
 	/**
 	 * Throws an error when there was a problem with the query
 	 *
-	 * @throws \DataMapper\Exeception
-	 * @param \PDOStatement $statement The PDOStatement that failed
+	 * @throws \Cactus\Exeception
+	 * @param  \PDOStatement $statement The PDOStatement that failed
 	 */
 	protected function throw_error(\PDOStatement $statement)
 	{
 		$error = $statement->errorInfo();
-		throw new \DataMapper\Exception($error[2], $error[1]);
+		throw new \Cactus\Exception($error[2], $error[1]);
 	}
 
 }

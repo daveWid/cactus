@@ -1,10 +1,11 @@
 <?php
-namespace DataMapper;
+
+namespace Cactus;
 
 /**
- * A HasMany relationship for DataMapper.
+ * Relationship class.
  *
- * @package    DataMapper
+ * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
 abstract class Relationship
@@ -35,9 +36,9 @@ abstract class Relationship
 	protected $value;
 
 	/**
-	 * @var   DataMapper   The mapper to get results with
+	 * @var   \Cactus\Driver   The driver used to fetch results
 	 */
-	protected $mapper;
+	protected $driver;
 
 	/**
 	 * @var   array    How the tables are connected
@@ -45,33 +46,33 @@ abstract class Relationship
 	protected $column;
 
 	/**
-	 * Creates a new DataMapper_Relationship object
+	 * Creates a new \Cactus\Relationship object
 	 *
 	 * @param   int      $value    The primary key value
-	 * @param   string   $mapper   The name of the DataMapper to use
+	 * @param   string   $driver   The name of the Driver to use
 	 * @param   string   $column   The column that holds the relationship
 	 */
-	public function __construct($value, $mapper, $column)
+	public function __construct($value, $driver, $column)
 	{
 		$this->value = $value;
-		$this->mapper($mapper);
+		$this->driver($driver);
 		$this->column = $column;
 	}
 
 	/**
-	 * Getter/Setter for the mapper.
+	 * Getter/Setter for the driver.
 	 *
-	 * @param   string   $name   The name of the mapper
+	 * @param   string   $name   The name of the driver
 	 * @return  $this
 	 */
-	public function mapper($name = null)
+	public function driver($name = null)
 	{
 		if ($name === null)
 		{
-			return $this->mapper;
+			return $this->driver;
 		}
 
-		$this->mapper = new $name;
+		$this->driver = new $name;
 		return $this;
 	}
 

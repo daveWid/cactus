@@ -1,15 +1,14 @@
 <?php
-namespace DataMapper;
+
+namespace Cactus;
 
 /**
- * The driver for the Kohana framework.
+ * An abstract implentation for the Driver interface.
  *
- * This class assumes that you have the Database module activated.
- *
- * @package    DataMapper
+ * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class Driver implements \DataMapper\DriverInterface
+abstract class Driver implements \Cactus\DriverInterface
 {
 	/**
 	 * @var   string   The name of the table
@@ -58,11 +57,11 @@ abstract class Driver implements \DataMapper\DriverInterface
 	/**
 	 * Saves an object.
 	 *
-	 * @param   DataMapper\Object   $object     The object to save
-	 * @param   boolean             $validate   Should the data be validated first??
-	 * @return  mixed                           DataMapper\Object OR boolean false for failed validation
+	 * @param   \Cactus\Entity   $object     The object to save
+	 * @param   boolean          $validate   Should the data be validated first??
+	 * @return  mixed                        \Cactus\Entity OR boolean false for failed validation
 	 */
-	public function save(\Datamapper\Object & $object, $validate = true)
+	public function save(\Cactus\Entity & $object, $validate = true)
 	{
 		return ($object->is_new()) ?
 			$this->create($object, $validate) :
@@ -83,7 +82,7 @@ abstract class Driver implements \DataMapper\DriverInterface
 	 * Cleans a result set before returning it.
 	 *
 	 * @param   mixed   $result   An iteratable object
-	 * @return  DataMapper\Collection
+	 * @return  \Cactus\Collection
 	 */
 	public function clean_result($result)
 	{
@@ -95,16 +94,16 @@ abstract class Driver implements \DataMapper\DriverInterface
 
 		$data = array_map($callback, $result);
 
-		return new \DataMapper\Collection($data);
+		return new \Cactus\Collection($data);
 	}
 
 	/**
 	 * Adds a relationship to a result.
 	 *
-	 * @param   DataMapper\Object   $result   The DataMapper object to add relationships to
-	 * @return  DataMapper\Object
+	 * @param   \Cactus\Entity   $result   The Cactus object to add relationships to
+	 * @return  \Cactus\Entity
 	 */
-	public function add_relationship(\DataMapper\Object $result)
+	public function add_relationship(\Cactus\Entity $result)
 	{
 		// If no relationships, then there is nothing to do
 		if (empty($this->relationships))
@@ -115,7 +114,7 @@ abstract class Driver implements \DataMapper\DriverInterface
 		// Just a single row
 		foreach ($this->relationships as $key => $row)
 		{
-			$class = "\\DataMapper\\Relationship\\{$row['type']}";
+			$class = "\\Cactus\\Relationship\\{$row['type']}";
 			$result->{$key} = new $class($result->{$row['column']}, $row['mapper'], $row['column']);
 		}
 
@@ -125,14 +124,14 @@ abstract class Driver implements \DataMapper\DriverInterface
 	/**
 	 * Checks to make sure the object passed in is of the correct type.
 	 *
-	 * @throws  DataMapper_Exception           The passed in object is not the correct type
-	 * @param   DataMapper_Object   $object    The datamapper object to check
+	 * @throws  \Cactus\Exception           The passed in object is not the correct type
+	 * @param   \Cactus\Entity   $object    The \Cactus\Entity to check
 	 */
-	public function check_object(\DataMapper\Object $object)
+	public function check_object(\Cactus\Entity $object)
 	{
 		if ( ! $object instanceof $this->object_class)
 		{
-			throw new \DataMapper\Exception(get_called_class()." expects a {$this->object_class} object.");
+			throw new \Cactus\Exception(get_called_class()." expects a {$this->object_class} object.");
 		}
 	}
 

@@ -1,10 +1,11 @@
 <?php
-namespace DataMapper;
+
+namespace Cactus;
 
 /**
- * The DataMapper autoloader
+ * Autoloading Cactus classes.
  *
- * @package    DataMapper
+ * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net> 
  */
 class Autoloader
@@ -22,7 +23,7 @@ class Autoloader
 		$found = false;
 		$class = ltrim($class, "\\");
 
-		if (strtolower(substr($class, 0, 10)) != "datamapper")
+		if (strtolower(substr($class, 0, 6)) != "cactus")
 		{
 			return false;
 		}
@@ -44,7 +45,7 @@ class Autoloader
 	 */
 	public static function register()
 	{
-		spl_autoload_register(array("\\DataMapper\\Autoloader", "load"));
+		spl_autoload_register(array("\\Cactus\\Autoloader", "load"));
 	}
 
 	/**
@@ -52,7 +53,7 @@ class Autoloader
 	 */
 	public static function unregister()
 	{
-		spl_autoload_unregister(array("\\DataMapper\\Autoloader", "load"));
+		spl_autoload_unregister(array("\\Cactus\\Autoloader", "load"));
 	}
 
 }

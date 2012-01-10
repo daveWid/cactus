@@ -1,13 +1,14 @@
 <?php
-namespace DataMapper\Relationship;
+
+namespace Cactus\Relationship;
 
 /**
- * A HasOne relationship for DataMapper.
+ * A HasOne relationship.
  *
- * @package    DataMapper
+ * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class HasOne extends \DataMapper\Relationship
+class HasOne extends \Cactus\Relationship
 {
 	/**
 	 * Gets the result set.
@@ -18,7 +19,7 @@ class HasOne extends \DataMapper\Relationship
 		{
 			$this->has_result = true;
 
-			$this->result = $this->mapper->find(array(
+			$this->result = $this->driver->find(array(
 				$this->column => $this->value
 			))->current();
 		}

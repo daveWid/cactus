@@ -1,13 +1,14 @@
 <?php
-namespace DataMapper\Relationship;
+
+namespace Cactus\Relationship;
 
 /**
- * A HasMany relationship for DataMapper.
+ * A HasMany relationship.
  *
- * @package    DataMapper
+ * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class HasMany extends \DataMapper\Relationship implements \Countable, \IteratorAggregate
+class HasMany extends \Cactus\Relationship implements \Countable, \IteratorAggregate
 {
 	/**
 	 * Gets the result set.
@@ -18,7 +19,7 @@ class HasMany extends \DataMapper\Relationship implements \Countable, \IteratorA
 		{
 			$this->has_result = true;
 
-			$this->result = $this->mapper->find(array(
+			$this->result = $this->driver->find(array(
 				$this->column => $this->value
 			));
 		}

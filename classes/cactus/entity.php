@@ -1,13 +1,14 @@
 <?php
-namespace DataMapper;
+
+namespace Cactus;
 
 /**
- * The base Object class for data rows.
+ * The base Entity class for data rows.
  *
  * @package    DataMapper
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class Object implements \ArrayAccess
+abstract class Entity implements \ArrayAccess
 {
 	/**
 	 * @var   array   The data for this object
@@ -30,7 +31,7 @@ abstract class Object implements \ArrayAccess
 	protected $validation = null;
 
 	/**
-	 * Creates a new DataMapper\Object.
+	 * Creates a new \Cactus\Entity.
 	 *
 	 * @param  array  Data for a new object.
 	 */
@@ -98,7 +99,6 @@ abstract class Object implements \ArrayAccess
 	/**
 	 * Gets any validation errors
 	 *
-	 * @uses    Validation::errors
 	 * @param   type     $file        The path to the message file
 	 * @param   boolean  $translate   Translate the errors?
 	 * @return  array

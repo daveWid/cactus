@@ -1,13 +1,14 @@
 <?php
-namespace DataMapper\Kohana;
+
+namespace Cactus\Kohana;
 
 /**
- * A Base object that adds in Kohana specific validation.
+ * A Kohana based Entity.
  *
- * @package    DataMapper
+ * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class Object extends \DataMapper\Object
+abstract class Entity extends \Cactus\Entity
 {
 	/**
 	 * Checks to see if the data is valid

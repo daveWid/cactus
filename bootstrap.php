@@ -1,5 +1,5 @@
 <?php
 
 // Setup the autoloader
-require_once "classes/Autoloader.php";
-\DataMapper\Autoloader::register();
+require_once "classes/cactus/Autoloader.php";
+\Cactus\Autoloader::register();

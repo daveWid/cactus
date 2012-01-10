@@ -1,10 +1,11 @@
 <?php
-namespace DataMapper;
+
+namespace Cactus;
 
 /**
- * Exceptions for DataMapper.
+ * Exceptions for the Cactus library.
  *
- * @package    DataMapper
+ * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
 class Exception extends \Exception{}
