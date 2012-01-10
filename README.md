@@ -1,6 +1,6 @@
-# DataMapper
+# Cactus
 
-The DataMapper module separates the database communication layer with the data object.
+Cactus is a ORM using the DataMapper pattern for PHP 5.3+
 
 TODO: Fill the rest of this out.
 
