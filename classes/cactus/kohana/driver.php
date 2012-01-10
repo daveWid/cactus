@@ -189,6 +189,17 @@ class Driver extends \Cactus\Driver
 	}
 
 	/**
+	 * Cleans a result set before returning it.
+	 *
+	 * @param   Database_Result   $result   An iteratable object
+	 * @return  \Cactus\Collection
+	 */
+	public function clean_result($result)
+	{
+		return parent::clean_result($result->as_array());
+	}
+
+	/**
 	 * Deletes all of the rows in a table where the column equals the value
 	 *
 	 * @param   string   $column    The column
