@@ -30,7 +30,7 @@ class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
 	 */
 	protected function getDataSet()
 	{
-		$path = dirname(__FILE__).DIRECTORY_SEPARATOR."seed.xml";
+		$path = realpath(dirname(__FILE__).DIRECTORY_SEPARATOR."..").DIRECTORY_SEPARATOR."seed.xml";
 		return $this->createMySQLXMLDataSet($path);
 	}
 }
