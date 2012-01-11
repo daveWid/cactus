@@ -20,6 +20,11 @@ class Driver extends \Cactus\Driver
 	protected static $pdo = null;
 
 	/**
+	 * @var  string   The identifier quote character
+	 */
+	protected static $quote_char = "";
+
+	/**
 	 * Getter/Setter for the PDO object.
 	 *
 	 * @param  PDO $pdo  The pdo object to set
@@ -33,6 +38,21 @@ class Driver extends \Cactus\Driver
 		}
 
 		static::$pdo = $pdo;
+
+		/**
+		 * Sets the default identfier quote character.
+		 *
+		 * @see   https://github.com/j4mie/idiorm
+		 */
+		$char = '`'; // Backtick is the default
+		$double = array("pgsql",'sqlsrv','dblib','mssql','sybase');
+
+		if (in_array($pdo->getAttribute(PDO::ATTR_DRIVER_NAME), $double))
+		{
+			$char = '"';
+		}
+
+		static::$quote_char = $char;
 	}
 
 	/**
@@ -43,7 +63,11 @@ class Driver extends \Cactus\Driver
 	 */
 	public function get($id)
 	{
-		$sql = "SELECT * FROM {$this->table} WHERE {$this->primary_key} = ? LIMIT 1";
+		$sql = "SELECT * ".
+			"FROM {$this->quote_identifier($this->table)} ".
+			"WHERE {$this->quote_identifier($this->primary_key)} = ? ".
+			"LIMIT 1";
+
 		$params = array(
 			$id
 		);
@@ -81,7 +105,7 @@ class Driver extends \Cactus\Driver
 				}
 
 				list($value, $op) = $value;
-				$where["{$key} {$op} ?"] = $value;
+				$where["{$this->quote_identifier($key)} {$op} ?"] = $value;
 			}
 			else
 			{
@@ -89,7 +113,7 @@ class Driver extends \Cactus\Driver
 			}
 		}
 
-		$sql = "SELECT * FROM {$this->table}";
+		$sql = "SELECT * FROM {$this->quote_identifier($this->table)}";
 		if ( ! empty($where))
 		{
 			$sql .= " WHERE ".implode(" AND ", array_keys($where));
@@ -131,7 +155,8 @@ class Driver extends \Cactus\Driver
 
 		$num = count($data);
 		$q = implode(",", array_fill(0, $num, "?"));
-		$sql = "INSERT INTO {$this->table} (".implode(",", array_keys($data)).") VALUES ({$q})";
+		$keys = array_map(array($this, "quote_identifier"), array_keys($data));
+		$sql = "INSERT INTO {$this->quote_identifier($this->table)} (".implode(",", $keys).") VALUES ({$q})";
 
 		$affected = $this->run($sql, array_values($data));
 
@@ -175,14 +200,17 @@ class Driver extends \Cactus\Driver
 
 			foreach ($data as $key => $value)
 			{
-				$set[] = "{$key} = ?";
+				$set[] = "{$this->quote_identifier($key)} = ?";
 				$params[] = $value;
 			}
 
 			// Tack on the primary key
 			$params[] = $object->get($this->primary_key);
 
-			$sql = "UPDATE {$this->table} SET ".implode(",", $set)." WHERE {$this->primary_key}  = ? LIMIT 1";
+			$sql = "UPDATE {$this->quote_identifier($this->table)}".
+				" SET ".implode(",", $set).
+				" WHERE {$this->quote_identifier($this->primary_key)} = ? LIMIT 1";
+
 			$affected = $this->run($sql, $params);
 		}
 
@@ -201,7 +229,8 @@ class Driver extends \Cactus\Driver
 	{
 		$this->check_object($object);
 
-		$sql = "DELETE FROM {$this->table} WHERE {$this->primary_key} = ? LIMIT 1";
+		$sql = "DELETE FROM {$this->quote_identifier($this->table)}".
+				" WHERE {$this->quote_identifier($this->primary_key)} = ? LIMIT 1";
 		$params = array(
 			$object->get($this->primary_key)
 		);
@@ -234,6 +263,20 @@ class Driver extends \Cactus\Driver
 		return ($select) ?
 			$statement->fetchAll(PDO::FETCH_CLASS, $this->object_class) :
 			$statement->rowCount();
+	}
+
+	/**
+	 * Quotes identifiers in the SQL statement.
+	 *
+	 * @param  string $name  The identifier to quote
+	 * @return string        The quoted string
+	 */
+	protected function quote_identifier($name)
+	{
+		$q = self::$quote_char;
+		$explode = explode('.', $name);
+
+		return $q.implode("{$q}.{$q}", $explode).$q;
 	}
 
 	/**
