@@ -27,7 +27,7 @@ class ModelUser extends \Cactus\PDO\Driver
 	protected $relationships = array(
 		// Roles
 		'role' => array(
-			'type' => \Cactus\Relationship::HAS_ONE,
+			'type' => \Cactus\Relationship::HAS_MANY,
 			//'loading' => \Cactus\Loading::EAGER,
 			'driver' => "\\Cactus\\Tests\\ModelUserRole",
 			'column' => 'user_id'

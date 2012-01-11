@@ -1,5 +1,5 @@
 <?php
 
 // Setup the autoloader
-require_once "classes/cactus/Autoloader.php";
+require_once "classes/Cactus/Autoloader.php";
 \Cactus\Autoloader::register();

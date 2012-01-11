@@ -32,6 +32,28 @@ class CactusTest extends \Cactus\Tests\DatabaseTest
 	}
 
 	/**
+	 * Test to see if null is returned when a row isn't found
+	 */
+	public function testNonExsitsIsNull()
+	{
+		$model = new \Cactus\Tests\ModelUser;
+		$user = $model->get(10);
+
+		$this->assertNull($user, "Null on no user found");
+	}
+
+	/**
+	 * Test to see if we can access the data using array notation.
+	 */
+	public function testArrayAccess()
+	{
+		$model = new \Cactus\Tests\ModelUser;
+		$user = $model->get(1);
+
+		$this->assertSame("Testy", $user['first_name'], "Using ArrayAccess to get value.");
+	}
+
+	/**
 	 * See if we can create a new Entity
 	 */
 	public function testCreate()
@@ -92,6 +114,87 @@ class CactusTest extends \Cactus\Tests\DatabaseTest
 
 		$this->assertSame(1, $model->delete($user), "One affected row on delete.");
 		$this->assertNull($user, "Row has been set to null");
+	}
+
+	/**
+	 * Tests a call for all records
+	 */
+	public function testAll()
+	{
+		$model = new \Cactus\Tests\ModelUser;
+		$users = $model->all();
+
+		$this->assertNotSame(0, count($users), "Fetching all records.");
+	}
+
+	/**
+	 * A sample test on the finder.
+	 */
+	public function testFind()
+	{
+		$model = new \Cactus\Tests\ModelUser;
+		$users = $model->find(array(
+			'first_name' => "Abe",
+			'ORDER BY' => "`user_id` DESC",
+			'LIMIT' => 1
+		));
+
+		$this->assertNotSame(0, count($users), "Finding records.");
+	}
+
+	/**
+	 * Testing a working relationship
+	 */
+	public function testIterateRelationship()
+	{
+		$model = new \Cactus\Tests\ModelUser;
+		$user = $model->get(1);
+
+		// There are 2 roles for the 1st user
+		$this->assertSame(2, count($user->role), "User has 2 roles");
+
+		foreach ($user->role as $role)
+		{
+			$this->assertInstanceOf("\\Cactus\\Tests\\UserRole", $role);
+		}
+	}
+
+	/**
+	 * Get the relationships array back
+	 */
+	public function testGetRelationships()
+	{
+		$model = new \Cactus\Tests\ModelUser;
+		$user = $model->get(1);
+
+		// There are 2 roles for the 1st user
+		$this->assertInstanceOf("\\Cactus\\PDO\\Driver", $user->role->driver());
+	}
+
+	/**
+	 * Testing a model with no relationships
+	 */
+	public function testNoRelationships()
+	{
+		$model = new \Cactus\Tests\ModelRole;
+		$role = $model->get(1); // not really needed, just want to test the add_relationships function.
+
+		$this->assertEmpty($model->relationships(), "Testing no relationships");
+	}
+
+	public function testEagerLoading()
+	{
+		
+	}
+
+	public function testFailedValidation()
+	{
+		
+	}
+
+	public function testDriverErrorOnBadQuery()
+	{
+		
 	}
 
 	/**
