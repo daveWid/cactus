@@ -20,11 +20,6 @@ class Driver extends \Cactus\Driver
 	protected static $pdo = null;
 
 	/**
-	 * @var  string   The identifier quote character
-	 */
-	protected static $quote_char = "";
-
-	/**
 	 * Getter/Setter for the PDO object.
 	 *
 	 * @param  PDO $pdo  The pdo object to set
@@ -38,28 +33,6 @@ class Driver extends \Cactus\Driver
 		}
 
 		static::$pdo = $pdo;
-		static::set_quote_character();
-	}
-
-	/**
-	 * Return the correct character used to quote identifiers (table
-	 * names, column names etc) by looking at the driver being used by PDO.
-	 *
-	 * This was taken from idiorm and updated...
-	 *
-	 * @see   https://github.com/j4mie/idiorm
-	 */
-	protected static function set_quote_character()
-	{
-		$char = '`'; // Backtick is the default
-		$double = array("pgsql",'sqlsrv','dblib','mssql','sybase');
-
-		if (in_array(static::$pdo->getAttribute(PDO::ATTR_DRIVER_NAME), $double))
-		{
-			$char = '"';
-		}
-
-		static::$quote_char = $char;
 	}
 
 	/**
@@ -70,15 +43,12 @@ class Driver extends \Cactus\Driver
 	 */
 	public function get($id)
 	{
-		$sql = "SELECT * FROM ? WHERE ?";
-
+		$sql = "SELECT * FROM {$this->table} WHERE {$this->primary_key} = ? LIMIT 1";
 		$params = array(
-			$this->quote_identifier($this->table),
-			$this->set_param($this->primary_key, $id, '=')
+			$id
 		);
 
-		$sql = $this->compile_query($sql, $params);
-		$result = $this->run($sql);
+		$result = $this->run($sql, $params, true);
 
 		if (count($result) == 0)
 		{
@@ -97,12 +67,10 @@ class Driver extends \Cactus\Driver
 	 */
 	public function find($params = array())
 	{
-		$sql = "SELECT * FROM ? ? ?";
-
 		$where = array();
 		$additional = array();
 
-		// Loop through the params, all keys that aren't in the column list are converted to DB::select method calls.
+		// Loop through the params, all keys that aren't in the column list are tacked on to the query
 		foreach ($params as $key => $value)
 		{
 			if (in_array($key, $this->columns))
@@ -113,23 +81,26 @@ class Driver extends \Cactus\Driver
 				}
 
 				list($value, $op) = $value;
-				$where[] = $this->set_param($key, $value, $op);
+				$where["{$key} {$op} ?"] = $value;
 			}
 			else
 			{
-				$additional[] = $key." ".$value;
+				$additional[] = "{$key} $value";
 			}
 		}
 
-		$params = array(
-			$this->quote_identifier($this->table),
-			empty($where) ? "" : "WHERE ".implode(" AND ", $where),
-			empty($additional) ? "" : implode(" ", $additional)
-		);
+		$sql = "SELECT * FROM {$this->table}";
+		if ( ! empty($where))
+		{
+			$sql .= " WHERE ".implode(" AND ", array_keys($where));
+		}
 
-		$query = $this->compile_query($sql, $params);
-		$result = $this->run($query);
+		if ( ! empty($additional))
+		{
+			$sql .= " ".implode(" ", $additional);
+		}
 
+		$result = $this->run($sql, array_values($where), true);
 		return $this->clean_result($result);
 	}
 
@@ -158,28 +129,16 @@ class Driver extends \Cactus\Driver
 
 		$data = $this->filter($object->data());
 
-		$sql = "INSERT INTO ? (?) VALUES (?)";
-		$columns = array_map(array($this, 'quote_identifier'), array_keys($data));
-		$values = array_map(array($this, 'quote'), array_values($data));
-		$params = array(
-			$this->quote_identifier($this->table),
-			implode(",", $columns),
-			implode(",", $values)
-		);
+		$num = count($data);
+		$q = implode(",", array_fill(0, $num, "?"));
+		$sql = "INSERT INTO {$this->table} (".implode(",", array_keys($data)).") VALUES ({$q})";
 
-		$query = $this->compile_query($sql, $params);
+		$affected = $this->run($sql, array_values($data));
 
-		$pdo = static::$pdo;
-		$statement = $pdo->prepare($query);
-		if ( ! $statement->execute())
-		{
-			$this->throw_error($statement);
-		}
-
-		$id = (int) $pdo->lastInsertId();
+		$id = (int) static::$pdo->lastInsertId();
 
 		$object = $this->get($id);
-		return array($id, 1);
+		return array($id, $affected);
 	}
 
 	/**
@@ -211,24 +170,20 @@ class Driver extends \Cactus\Driver
 
 		if ( ! empty($data))
 		{
-			$sql = "UPDATE ? SET ? WHERE ? LIMIT 1";
+			$params = array();
+			$set = array();
 
-			$set = array_map(array($this, "set_param"), array_keys($data), array_values($data));
-			$params = array(
-				$this->quote_identifier($this->table),
-				implode(",", $set),
-				$this->set_param($this->primary_key, $object->get($this->primary_key), "=")
-			);
-
-			$query = $this->compile_query($sql, $params);
-
-			$statement = static::$pdo->query($query);
-			if ( ! $statement->execute())
+			foreach ($data as $key => $value)
 			{
-				$this->throw_error($statement);
+				$set[] = "{$key} = ?";
+				$params[] = $value;
 			}
 
-			$affected = $statement->rowCount();
+			// Tack on the primary key
+			$params[] = $object->get($this->primary_key);
+
+			$sql = "UPDATE {$this->table} SET ".implode(",", $set)." WHERE {$this->primary_key}  = ? LIMIT 1";
+			$affected = $this->run($sql, $params);
 		}
 
 		$object->clean();
@@ -246,91 +201,39 @@ class Driver extends \Cactus\Driver
 	{
 		$this->check_object($object);
 
-		$sql = "DELETE FROM ? WHERE ? LIMIT 1";
+		$sql = "DELETE FROM {$this->table} WHERE {$this->primary_key} = ? LIMIT 1";
 		$params = array(
-			$this->quote_identifier($this->table),
-			$this->set_param($this->primary_key, $object->get($this->primary_key), "=")
+			$object->get($this->primary_key)
 		);
 
-		$query = $this->compile_query($sql, $params);
+		$affected = $this->run($sql, $params);
 
-		$statement = static::$pdo->query($query);
-
-		if ( ! $statement->execute())
+		if ($affected === 1)
 		{
-			$this->throw_error($statement);
+			$object = null;
 		}
 
-		$object = null;
-		return 1;
-	}
-
-	/**
-	 * Quotes a value.
-	 *
-	 * @param  string $name  The identifier to quote
-	 * @return string        The quoted string
-	 */
-	protected function quote($value)
-	{
-		return static::$pdo->quote($value);
-	}
-
-	/**
-	 * Quotes identifiers in the SQL statement.
-	 *
-	 * @param  string $name  The identifier to quote
-	 * @return string        The quoted string
-	 */
-	protected function quote_identifier($name)
-	{
-		$q = self::$quote_char;
-		$explode = explode('.', $name);
-
-		return $q.implode("{$q}.{$q}", $explode).$q;
+		return $affected;
 	}
 
 	/**
 	 * Runs a Select query.
 	 *
-	 * @param  \PDO   $pdo    The PDO object
-	 * @param  string $query  The query to run
-	 * @return array          The result set
+	 * @param  string    $query    The PDOStatement to run
+	 * @param  boolean   $select   Is this a select statement?
+	 * @return mixed               The result set on select, (int) affected rows otherwise
 	 */
-	protected function run($query)
+	protected function run($query, $params = array(), $select = false)
 	{
-		$sql = static::$pdo->prepare($query);
-		if ( ! $sql->execute())
+		$statement = static::$pdo->prepare($query);
+		if ( ! $statement->execute($params))
 		{
-			$this->throw_error($sql);
+			$this->throw_error($statement);
 		}
 
-		return $sql->fetchAll(PDO::FETCH_CLASS, $this->object_class);
-	}
-
-	/**
-	 * Debugs a prepared query.
-	 *
-	 * @param  string $sql     The SQL statement with placeholders
-	 * @param  array  $params  SQL parameters
-	 * @return string          The full query
-	 */
-	protected function compile_query($sql, array $params = array())
-	{
-		return vsprintf(str_replace("?", "%s", $sql), $params);
-	}
-
-	/**
-	 * Mapping function for the update function
-	 *
-	 * @param  string $key    The param key
-	 * @param  string $value  The value
-	 * @param  string $op     The operator
-	 * @return string         The parameter
-	 */
-	protected function set_param($key, $value, $op = "=")
-	{
-		return $this->quote_identifier($key)." {$op} ".$this->quote($value);
+		return ($select) ?
+			$statement->fetchAll(PDO::FETCH_CLASS, $this->object_class) :
+			$statement->rowCount();
 	}
 
 	/**
