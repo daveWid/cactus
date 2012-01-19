@@ -181,6 +181,17 @@ abstract class Entity implements \ArrayAccess
 	}
 
 	/**
+	 * Checking to see if a property exists.
+	 *
+	 * @param  string $name The property name
+	 * @return boolean
+	 */
+	public function __isset($name)
+	{
+		return $this->offsetExists($name);
+	}
+
+	/**
 	 * Whether a offset exists
 	 *
 	 * @link    http://php.net/manual/en/arrayaccess.offsetexists.php
