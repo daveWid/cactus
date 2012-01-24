@@ -182,9 +182,27 @@ class CactusTest extends \Cactus\Tests\DatabaseTest
 		$this->assertEmpty($model->relationships(), "Testing no relationships");
 	}
 
+	/**
+	 * Testing a Model with eager loading
+	 */
+	public function testHasOne()
+	{
+		$model = new \Cactus\Tests\ModelUserHasOne;
+		$user = $model->get(1);
+
+		$this->assertInstanceOf("\\Cactus\\Relationship\\HasOne", $user->role);
+	}
+
+	/**
+	 * Testing a Model with eager loading
+	 */
 	public function testEagerLoading()
 	{
-		
+		$model = new \Cactus\Tests\ModelUserEager;
+		$user = $model->get(1);
+
+		$this->assertInstanceOf("\\Cactus\\Relationship\\HasMany", $user->role);
+		$this->assertInstanceOf("\\Cactus\\Tests\\UserRole", $user->role[0]);
 	}
 
 	public function testFailedValidation()
