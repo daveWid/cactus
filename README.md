@@ -31,7 +31,9 @@ For this example we will be using the built in PDO driver. For the PDO driver yo
 need to set up your database credentials, which can be done with the following call
 anywhere in your code before you run a database query.
 
-```php
+```
+<?php
+
 \Cactus\PDO\Driver::pdo(new PDO(string $dsn [, string $username [, string $password [, array $driver_options ]]]));
 ```
 
@@ -40,7 +42,7 @@ information on creating a PDO connection._
 
 Here is a driver class for our `user` table.
 
-```php
+```
 <?php
 
 class ModelUser extends \Cactus\PDO\Driver
@@ -97,7 +99,8 @@ There are 3 types of queries built in, finding, saving and deleting.
 
 ### Find
 
-``` php
+```
+<?php
 $model = new ModelUser;
 
 // Find the user with a user_id of 1
@@ -113,7 +116,8 @@ $found = $model->find(array(
 ```
 
 ### Save
-``` php
+```
+<?php
 // New user assuming $post is posted form data
 $user = new User($post);
 $model->save($user);
@@ -125,15 +129,15 @@ $model->save($user);
 ```
 
 ### Delete
-``` php
+```
+<?php
 $user = $model->get(1);
 $model->delete($user);
 ```
 
 ## API
 
-There is a lot more you can dig into in this library. Please open up `api/index.html`
-for full documentation.
+Please open up `api/index.html` for full documentation on the Cactus library.
 
 ## Hacking
 
@@ -149,12 +153,12 @@ Since this is an ORM, you will need to test a database. To connect to the databa
 you will need to to modify the tests/bootstrap.php file with your settings.
 Before you commmit changes make sure you run...
 
-~~~ bash
+~~~
 git update-index --assume-unchanged tests/bootstrap.php
 ~~~
 
 This way your username/passwords don't get pushed into the repo.
 
---
+----
 
 Developed by [Dave Widmer](http://www.davewidmer.net)
