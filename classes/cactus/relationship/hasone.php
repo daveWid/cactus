@@ -35,8 +35,8 @@ class HasOne extends \Cactus\Relationship
 	 */
 	public function __get($name)
 	{
-		$data = $this->result();
-		return isset($data[$name]) ? $data[$name] : null;
+		$this->result();
+		return isset($this->result[$name]) ? $this->result[$name] : null;
 	}
 
 }
