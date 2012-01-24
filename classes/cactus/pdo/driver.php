@@ -79,8 +79,8 @@ class Driver extends \Cactus\Driver
 			return null;
 		}
 
-		$result = $this->add_relationship($result[0]);
-		return $result->clean();
+		$result = $this->process_result($result);
+		return $result->current();
 	}
 
 	/**
@@ -125,7 +125,7 @@ class Driver extends \Cactus\Driver
 		}
 
 		$result = $this->run($sql, array_values($where), true);
-		return $this->clean_result($result);
+		return $this->process_result($result);
 	}
 
 	/**
@@ -243,6 +243,29 @@ class Driver extends \Cactus\Driver
 		}
 
 		return $affected;
+	}
+
+	/**
+	 * Gets all of the records associated in the table.
+	 *
+	 * @param  array  $values The values to use in the IN() statement.
+	 * @param  string $table  The table to join
+	 * @param  string $column The column to join on
+	 * @return array
+	 */
+	public function join_in(array $values, $table, $column)
+	{
+		$q = implode(",", array_fill(0, count($values), "?"));
+		$join = $this->quote_identifier($table);
+		$table = $this->quote_identifier($this->table);
+		$column = $this->quote_identifier($column);
+
+		$query = "SELECT {$table}.* ".
+			"FROM {$table} ".
+			"LEFT JOIN {$join} ON {$join}.{$column} = {$table}.{$column} ".
+			"WHERE {$table}.{$column} IN ({$q})";
+
+		return $this->run($query, $values, true);
 	}
 
 	/**

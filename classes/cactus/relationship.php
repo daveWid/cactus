@@ -21,6 +21,19 @@ abstract class Relationship
 	const HAS_MANY = "hasmany";
 
 	/**
+	 * Creates a Relationship based on a configuration array.
+	 *
+	 * @param array  $config The relationship config
+	 * @param string $value  The value to join the relation tables
+	 * @return \Cactus\Relationship
+	 */
+	public static function factory(array $config, $value)
+	{
+		$class = "\\Cactus\\Relationship\\{$config['type']}";
+		return new $class($config['column'], $value, $config['driver']);
+	}
+
+	/**
 	 * @var   mixed    The result set for the relationship
 	 */
 	protected $result = null;
@@ -48,15 +61,15 @@ abstract class Relationship
 	/**
 	 * Creates a new \Cactus\Relationship object
 	 *
+	 * @param   string   $column   The column that holds the relationship
 	 * @param   int      $value    The primary key value
 	 * @param   string   $driver   The name of the Driver to use
-	 * @param   string   $column   The column that holds the relationship
 	 */
-	public function __construct($value, $driver, $column)
+	public function __construct($column, $value, $driver)
 	{
+		$this->column = $column;
 		$this->value = $value;
 		$this->driver($driver);
-		$this->column = $column;
 	}
 
 	/**
@@ -72,12 +85,25 @@ abstract class Relationship
 			return $this->driver;
 		}
 
-		$this->driver = new $name;
+		$this->driver = is_string($name) ? new $name : $name;
 		return $this;
 	}
 
 	/**
-	 * Gets the result set for the relationship
+	 * Sets the data for the result set. Useful for eager loading.
+	 *
+	 * @param mixed $data  The data to set the result to
+	 */
+	public function set_result($data)
+	{
+		$this->result = $data;
+		$this->has_result = true;
+	}
+
+	/**
+	 * Gets the result set for the relationship.
+	 *
+	 * @return mixed   The result data
 	 */
 	abstract public function result();
 

@@ -73,6 +73,16 @@ interface DriverInterface
 	public function delete(\Cactus\Entity & $object);
 
 	/**
+	 * Gets all of the records associated in the table.
+	 *
+	 * @param  array  $values  The values to join in
+	 * @param  string $table   The table to join
+	 * @param  string $column  The column to join on
+	 * @return array
+	 */
+	public function join_in(array $values, $table, $column);
+
+	/**
 	 * Gets all of the relationships for the DataMapper
 	 *
 	 * @return  array  List of relationship
@@ -82,10 +92,11 @@ interface DriverInterface
 	/**
 	 * Adds a relationship to a result.
 	 *
-	 * @param   \Cactus\Entity   $result   The DataMapper object to add relationships to
-	 * @return  \Cactus\Entity
+	 * @param  \Cactus\Entity $entity  The Cactus object to add relationships to
+	 * @param  array          $data    If an eager load, the eager load data.
+	 * @return \Cactus\Entity
 	 */
-	public function add_relationship(\Cactus\Entity $result);
+	public function add_relationship(\Cactus\Entity $result, array $data = array());
 
 	/**
 	 * Checks to make sure the object passed in is of the correct type.

@@ -36,6 +36,11 @@ abstract class Driver implements \Cactus\DriverInterface
 	protected $relationships = array();
 
 	/**
+	 * @var   array  The eager loaded data.
+	 */
+	private $eager = null;
+
+	/**
 	 * Gets all of the rows in the database. 
 	 *
 	 * @param   string   $column      The column to order on
@@ -79,31 +84,75 @@ abstract class Driver implements \Cactus\DriverInterface
 	}
 
 	/**
-	 * Cleans a result set before returning it.
+	 * Processes a result set before returning it.
 	 *
 	 * @param   mixed   $result   An iteratable object
 	 * @return  \Cactus\Collection
 	 */
-	public function clean_result($result)
+	public function process_result($result)
 	{
+		$eager = $this->get_eager_data($result);
 		$self = $this;
-		$callback = function($row) use ($self) {
-			$row = $self->add_relationship($row);
+
+		$process = function($row) use ($self, $eager){
+			$row = $self->add_relationship($row, $eager);
 			return $row->clean();
 		};
 
-		$data = array_map($callback, $result);
+		return new \Cactus\Collection(array_map($process, $result));
+	}
 
-		return new \Cactus\Collection($data);
+	/**
+	 * Gets query data from eagerly loaded relationships
+	 *
+	 * @param  mixed $result An iterable result set
+	 * @return array  The eagerly loaded associative array
+	 */
+	private function get_eager_data($result)
+	{
+		if ($this->eager !== null)
+		{
+			return $this->eager;
+		}
+
+		$eager = array();
+
+		if ( ! empty($this->relationships))
+		{
+			foreach ($this->relationships as $name => $config)
+			{
+				if (isset($config['loading']) AND $config['loading'] === \Cactus\Loading::EAGER)
+				{
+					$primary = $this->primary_key;
+					$data = array_map(function($row) use ($primary){
+						return $row->$primary;
+					}, $result);
+
+					$driver = new $config['driver'];
+
+					$tmp = array();
+					foreach ($driver->join_in($data, $this->table, $this->primary_key) as $row)
+					{
+						$tmp[$row->$primary][] = $row;
+					}
+
+					$eager[$name] = $tmp;
+				}
+			}
+		}
+
+		$this->eager = $eager;
+		return $this->eager;
 	}
 
 	/**
 	 * Adds a relationship to a result.
 	 *
-	 * @param   \Cactus\Entity   $result   The Cactus object to add relationships to
-	 * @return  \Cactus\Entity
+	 * @param  \Cactus\Entity $entity  The Cactus object to add relationships to
+	 * @param  array          $data    If an eager load, the eager load data.
+	 * @return \Cactus\Entity
 	 */
-	public function add_relationship(\Cactus\Entity $result)
+	public function add_relationship(\Cactus\Entity $result, array $data = array())
 	{
 		// If no relationships, then there is nothing to do
 		if (empty($this->relationships))
@@ -112,20 +161,25 @@ abstract class Driver implements \Cactus\DriverInterface
 		}
 
 		// Just a single row
-		foreach ($this->relationships as $key => $row)
+		foreach ($this->relationships as $name => $config)
 		{
-			$class = "\\Cactus\\Relationship\\{$row['type']}";
-			$relationship = new $class($result->{$row['column']}, $row['driver'], $row['column']);
+			$value = $result->{$config['column']};
+			$relationship = \Cactus\Relationship::factory($config, $value);
 
 			// Check for eager loading
-			if (isset($row['loading']) AND $row['loading'] === \Cactus\Loading::EAGER)
+			if (isset($data[$name]))
 			{
-				$relationship = ($row['type'] === \Cactus\Relationship::HAS_ONE) ?
-					$relationship->result() :
-					$relationship->result()->data();
+				$value = isset($data[$name][$value]) ? $data[$name][$value] : array();
+
+				if ($config['type'] === \Cactus\Relationship::HAS_ONE)
+				{
+					$value = isset($value[0]) ? $value[0] : null;
+				}
+
+				$relationship->set_result($value);
 			}
 
-			$result->{$key} = $relationship;
+			$result->{$name} = $relationship;
 		}
 
 		return $result;

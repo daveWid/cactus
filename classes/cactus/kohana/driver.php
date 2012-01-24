@@ -87,7 +87,7 @@ class Driver extends \Cactus\Driver
 			}
 		}
 
-		return $this->clean_result($query->execute());
+		return $this->process_result($query->execute());
 	}
 
 	/**
@@ -189,14 +189,14 @@ class Driver extends \Cactus\Driver
 	}
 
 	/**
-	 * Cleans a result set before returning it.
+	 * Processes a result set before returning it.
 	 *
 	 * @param   Database_Result   $result   An iteratable object
 	 * @return  \Cactus\Collection
 	 */
-	public function clean_result($result)
+	public function process_result($result)
 	{
-		return parent::clean_result($result->as_array());
+		return parent::process_result($result->as_array());
 	}
 
 	/**
