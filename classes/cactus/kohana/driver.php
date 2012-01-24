@@ -226,7 +226,7 @@ class Driver extends \Cactus\Driver
 
 		foreach ($this->relationships as $row)
 		{
-			$mapper = new $row['mapper'];
+			$mapper = new $row['driver'];
 			$mapper->delete_on_column($row['column'], $object->get($row['column']));
 		}
 	}
