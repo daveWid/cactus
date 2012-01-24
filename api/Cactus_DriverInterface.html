@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Cactus ORM API</title>
+
+	<!-- CSS -->
+	<link href="assets/css/normalize.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="assets/css/sunlight.liveapi.css" rel="stylesheet" type="text/css" media="screen" />
+
+	<!-- JS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="assets/js/sunlight-min.js"></script>
+	<script src="assets/js/sunlight.php-min.js"></script>
+	<script src="assets/js/jquery.sunlight.js"></script>
+	<script src="assets/js/liveapi.js"></script>
+</head>
+<body>
+	<header>
+		<h1>Cactus ORM API</h1>
+	</header>
+	<section id="search-bar"></section>
+
+	<section id="class-list">
+		<h3>Class List</h3>
+		<ul>
+			<li><a href="Cactus_Autoloader.html">Cactus\Autoloader</a></li>
+			<li><a href="Cactus_Collection.html">Cactus\Collection</a></li>
+			<li><a href="Cactus_Driver.html">Cactus\Driver</a></li>
+			<li><a href="Cactus_DriverInterface.html">Cactus\DriverInterface</a></li>
+			<li><a href="Cactus_Entity.html">Cactus\Entity</a></li>
+			<li><a href="Cactus_Exception.html">Cactus\Exception</a></li>
+			<li><a href="Cactus_Kohana_Driver.html">Cactus\Kohana\Driver</a></li>
+			<li><a href="Cactus_Kohana_Entity.html">Cactus\Kohana\Entity</a></li>
+			<li><a href="Cactus_Loading.html">Cactus\Loading</a></li>
+			<li><a href="Cactus_PDO_Driver.html">Cactus\PDO\Driver</a></li>
+			<li><a href="Cactus_Relationship_HasMany.html">Cactus\Relationship\HasMany</a></li>
+			<li><a href="Cactus_Relationship_HasOne.html">Cactus\Relationship\HasOne</a></li>
+			<li><a href="Cactus_Relationship.html">Cactus\Relationship</a></li>
+		</ul>
+	</section>
+	<section id="api">
+		<h1>Cactus\DriverInterface</h1>
+
+<div id="lineage"></div>
+
+<p>The interface for Cactus drivers.</p>
+
+
+<dl id="tags">
+	<dt>package</dt>
+	<dd>Cactus</dd>
+	<dt>author</dt>
+	<dd>Dave Widmer &lt;dave@davewidmer.net&gt;</dd>
+</dl>
+
+<div id="toc">
+	<div class="section">
+		<h3>Constants</h3>
+	</div>
+	
+	<div class="section">
+		<h3>Properties</h3>
+	</div>
+
+	<div class="section">
+		<h3>Methods</h3>
+		<ul>
+			<li><a href="#method:add_relationship">add_relationship()</a></li>
+			<li><a href="#method:all">all()</a></li>
+			<li><a href="#method:check_object">check_object()</a></li>
+			<li><a href="#method:create">create()</a></li>
+			<li><a href="#method:delete">delete()</a></li>
+			<li><a href="#method:find">find()</a></li>
+			<li><a href="#method:get">get()</a></li>
+			<li><a href="#method:relationships">relationships()</a></li>
+			<li><a href="#method:save">save()</a></li>
+			<li><a href="#method:update">update()</a></li>
+		</ul>
+	</div>
+</div>
+
+
+
+<div id="methods">
+	<h2>Methods</h2>
+
+	<section class="method">
+		<h4 id="method:add_relationship">abstract public function <span class="name">add_relationship</span>( <small>\Cactus\Entity</small> <span class="param" title="The DataMapper object to add relationships to">$result</span> )</h4>
+
+		<div class="description">
+			<p>Adds a relationship to a result.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code> <strong>$result</strong>  <small>Required</small> <small></small> - The DataMapper object to add relationships to</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code></li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function add_relationship(\Cactus\Entity $result);</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:all">abstract public function <span class="name">all</span>( [ <small>string</small> <span class="param" title="The column to order on">$column</span> <small>= NULL</small> , <small>string</small> <span class="param" title="The directory to sort">$direction</span> <small>= 'DESC'</small> ] )</h4>
+
+		<div class="description">
+			<p>Gets all of the rows in the database.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>string</code> <strong>$column</strong>  <small>NULL</small> - The column to order on</li>
+			<li><code>string</code> <strong>$direction</strong>  <small>'DESC'</small> - The directory to sort</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>array</code> - An array of DataMapper\Object items</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function all($column = null, $direction = 'DESC');</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:check_object">abstract public function <span class="name">check_object</span>( <small>\Cactus\Entity</small> <span class="param" title="The datamapper object to check">$object</span> )</h4>
+
+		<div class="description">
+			<p>Checks to make sure the object passed in is of the correct type.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code> <strong>$object</strong>  <small>Required</small> <small></small> - The datamapper object to check</li>
+		</ul>
+
+		<h5>Tags</h5>
+		<ul>
+			<li>throws - \Cactus\Exception           The passed in object is not the correct type</li>
+		</ul>
+
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function check_object(\Cactus\Entity $object);</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:create">abstract public function <span class="name">create</span>( <small>\Cactus\Object</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The object to create">$object</span> [, $validate <small>= true</small> ] )</h4>
+
+		<div class="description">
+			<p>Creates a new record in the database.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Object</code> <strong>$object</strong>  <small>Required</small> <small></small> - The object to create</li>
+			<li><code></code> <strong>$validate</strong>  <small>true</small> - &lt;p&gt;Creates a new record in the database.&lt;/p&gt;
+</li>
+		</ul>
+
+		<h5>Tags</h5>
+		<ul>
+			<li>throws - \Cactus\Exception         The passed in object is not the correct type</li>
+		</ul>
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>mixed</code> - array [insert_id, affected rows] OR boolean false for failed validation</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function create(\Cactus\Entity &amp; $object, $validate = true);</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:delete">abstract public function <span class="name">delete</span>( <small>\Cactus\Entity</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The database object to delete">$object</span> )</h4>
+
+		<div class="description">
+			<p>Deletes a record from the database</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code> <strong>$object</strong>  <small>Required</small> <small></small> - The database object to delete</li>
+		</ul>
+
+		<h5>Tags</h5>
+		<ul>
+			<li>throws - \Cactus\Exception          The passed in object is not the correct type</li>
+		</ul>
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>int</code> - The number of affected rows</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function delete(\Cactus\Entity &amp; $object);</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:find">abstract public function <span class="name">find</span>( [ <small>array</small> <span class="param" title="The database parameters to search on">$params</span> <small>= array (
+)</small> ] )</h4>
+
+		<div class="description">
+			<p>Finds records with the given parameters.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>array</code> <strong>$params</strong>  <small>array (
+)</small> - The database parameters to search on</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>array</code> - An array of \Cactus\Entity items</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function find($params = array());</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:get">abstract public function <span class="name">get</span>( <small>int</small> <span class="param" title="The primary id value">$id</span> )</h4>
+
+		<div class="description">
+			<p>Returns a row from the table with the given id for the primary key column</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>int</code> <strong>$id</strong>  <small>Required</small> <small></small> - The primary id value</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code></li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function get($id);</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:relationships">abstract public function <span class="name">relationships</span>()</h4>
+
+		<div class="description">
+			<p>Gets all of the relationships for the DataMapper</p>
+
+		</div>
+
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>array</code> - List of relationship</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function relationships();</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:save">abstract public function <span class="name">save</span>( <small>\Cactus\Entity</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The object to save">$object</span> [, <small>boolean</small> <span class="param" title="Should the data be validated first??">$validate</span> <small>= true</small> ] )</h4>
+
+		<div class="description">
+			<p>Saves an object.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code> <strong>$object</strong>  <small>Required</small> <small></small> - The object to save</li>
+			<li><code>boolean</code> <strong>$validate</strong>  <small>true</small> - Should the data be validated first??</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>mixed</code> - \Cactus\Entity OR boolean false for failed validation</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function save(\Cactus\Entity &amp; $object, $validate = true);</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:update">abstract public function <span class="name">update</span>( <small>\Cactus\Entity</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The object to create">$object</span> [, <small>boolean</small> <span class="param" title="Validate the object before saving?">$validate</span> <small>= true</small> ] )</h4>
+
+		<div class="description">
+			<p>Updates a record</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code> <strong>$object</strong>  <small>Required</small> <small></small> - The object to create</li>
+			<li><code>boolean</code> <strong>$validate</strong>  <small>true</small> - Validate the object before saving?</li>
+		</ul>
+
+		<h5>Tags</h5>
+		<ul>
+			<li>throws - \Cactus\Exception           The passed in object is not the correct type</li>
+		</ul>
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>mixed</code> - (int) affected rows OR boolean false for failed validation</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function update(\Cactus\Entity &amp; $object, $validate = true);</pre>
+	</section>
+</div>
+
+	</section>
+
+	<footer>
+		<p>
+			Documentation generated on January 24th, 2012.
+			Powered by <a href="https://github.com/BGSU-LITS/LiveAPI">LiveAPI</a>.
+		</p>
+	</footer>
+</body>
+</html>

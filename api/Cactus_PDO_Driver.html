@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Cactus ORM API</title>
+
+	<!-- CSS -->
+	<link href="assets/css/normalize.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="assets/css/sunlight.liveapi.css" rel="stylesheet" type="text/css" media="screen" />
+
+	<!-- JS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="assets/js/sunlight-min.js"></script>
+	<script src="assets/js/sunlight.php-min.js"></script>
+	<script src="assets/js/jquery.sunlight.js"></script>
+	<script src="assets/js/liveapi.js"></script>
+</head>
+<body>
+	<header>
+		<h1>Cactus ORM API</h1>
+	</header>
+	<section id="search-bar"></section>
+
+	<section id="class-list">
+		<h3>Class List</h3>
+		<ul>
+			<li><a href="Cactus_Autoloader.html">Cactus\Autoloader</a></li>
+			<li><a href="Cactus_Collection.html">Cactus\Collection</a></li>
+			<li><a href="Cactus_Driver.html">Cactus\Driver</a></li>
+			<li><a href="Cactus_DriverInterface.html">Cactus\DriverInterface</a></li>
+			<li><a href="Cactus_Entity.html">Cactus\Entity</a></li>
+			<li><a href="Cactus_Exception.html">Cactus\Exception</a></li>
+			<li><a href="Cactus_Kohana_Driver.html">Cactus\Kohana\Driver</a></li>
+			<li><a href="Cactus_Kohana_Entity.html">Cactus\Kohana\Entity</a></li>
+			<li><a href="Cactus_Loading.html">Cactus\Loading</a></li>
+			<li><a href="Cactus_PDO_Driver.html">Cactus\PDO\Driver</a></li>
+			<li><a href="Cactus_Relationship_HasMany.html">Cactus\Relationship\HasMany</a></li>
+			<li><a href="Cactus_Relationship_HasOne.html">Cactus\Relationship\HasOne</a></li>
+			<li><a href="Cactus_Relationship.html">Cactus\Relationship</a></li>
+		</ul>
+	</section>
+	<section id="api">
+		<h1>Cactus\PDO\Driver</h1>
+
+<div id="lineage"><br /><small>implements</small> Cactus\DriverInterface<br /><small>extends</small> Cactus\Driver</div>
+
+<p>The driver for PDO.</p>
+
+
+<dl id="tags">
+	<dt>see</dt>
+	<dd>&lt;a href=&quot;Array&quot;&gt;http://us3.php.net/manual/en/class.pdo.php&lt;/a&gt;</dd>
+	<dt>package</dt>
+	<dd>Cactus</dd>
+	<dt>author</dt>
+	<dd>Dave Widmer &lt;dave@davewidmer.net&gt;</dd>
+</dl>
+
+<div id="toc">
+	<div class="section">
+		<h3>Constants</h3>
+	</div>
+	
+	<div class="section">
+		<h3>Properties</h3>
+		<ul>
+			<li><a href="#property:columns">$columns</a></li>
+			<li><a href="#property:object_class">$object_class</a></li>
+			<li><a href="#property:pdo">$pdo</a></li>
+			<li><a href="#property:primary_key">$primary_key</a></li>
+			<li><a href="#property:quote_char">$quote_char</a></li>
+			<li><a href="#property:relationships">$relationships</a></li>
+			<li><a href="#property:table">$table</a></li>
+		</ul>
+	</div>
+
+	<div class="section">
+		<h3>Methods</h3>
+		<ul>
+			<li><a href="#method:create">create()</a></li>
+			<li><a href="#method:delete">delete()</a></li>
+			<li><a href="#method:find">find()</a></li>
+			<li><a href="#method:get">get()</a></li>
+			<li><a href="#method:pdo">pdo()</a></li>
+			<li><a href="#method:update">update()</a></li>
+			<li><a href="#method:add_relationship">add_relationship()</a></li>
+			<li><a href="#method:all">all()</a></li>
+			<li><a href="#method:check_object">check_object()</a></li>
+			<li><a href="#method:clean_result">clean_result()</a></li>
+			<li><a href="#method:filter">filter()</a></li>
+			<li><a href="#method:relationships">relationships()</a></li>
+			<li><a href="#method:save">save()</a></li>
+			<li><a href="#method:quote_identifier">quote_identifier()</a></li>
+			<li><a href="#method:run">run()</a></li>
+			<li><a href="#method:throw_error">throw_error()</a></li>
+		</ul>
+	</div>
+</div>
+
+
+<div id="properties">
+	<h2>Properties</h2>
+
+	<section class="property">
+		<h4 id="property:columns">protected <small>array</small> <span class="name">$columns</span> = array (
+)</h4>
+		<div class="description">
+			<p>The list of columns in the table</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:object_class">protected <small>string</small> <span class="name">$object_class</span></h4>
+		<div class="description">
+			<p>The name of the object to return in operations</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:pdo">protected static <small>PDO</small> <span class="name">$pdo</span></h4>
+		<div class="description">
+			<p>The PDO object used in the queries</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:primary_key">protected <small>string</small> <span class="name">$primary_key</span></h4>
+		<div class="description">
+			<p>The name of the primary key column</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:quote_char">protected static <small>string</small> <span class="name">$quote_char</span></h4>
+		<div class="description">
+			<p>The identifier quote character</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:relationships">protected <small>array</small> <span class="name">$relationships</span></h4>
+		<div class="description">
+			<p>A list of all table relationships</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:table">protected <small>string</small> <span class="name">$table</span></h4>
+		<div class="description">
+			<p>The name of the table</p>
+
+		</div>
+	</section>
+</div>
+
+<div id="methods">
+	<h2>Methods</h2>
+
+	<section class="method">
+		<h4 id="method:create">public function <span class="name">create</span>( <small>\Cactus\Entity</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The object to create">$object</span> [, $validate <small>= true</small> ] )</h4>
+
+		<div class="description">
+			<p>Creates a new record in the database.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code> <strong>$object</strong>  <small>Required</small> <small></small> - The object to create</li>
+			<li><code></code> <strong>$validate</strong>  <small>true</small> - &lt;p&gt;Creates a new record in the database.&lt;/p&gt;
+</li>
+		</ul>
+
+		<h5>Tags</h5>
+		<ul>
+			<li>throws - \Cactus\Exception           The passed in object is not the correct type</li>
+		</ul>
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>mixed</code> - array [insert_id, affected rows] OR boolean false for failed validation</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function create(\Cactus\Entity &amp; $object, $validate = true)
+{
+	// Make sure it is a new object
+	if ($object-&gt;is_new() !== true)
+	{
+		throw new \Cactus\Exception(&quot;Use \Cactus\Driver::update to save existing objects&quot;);
+	}
+
+	$this-&gt;check_object($object);
+
+	// Check for validation and run it
+	if ($validate AND ! $object-&gt;validate())
+	{
+		return false;
+	}
+
+	$data = $this-&gt;filter($object-&gt;data());
+
+	$num = count($data);
+	$q = implode(&quot;,&quot;, array_fill(0, $num, &quot;?&quot;));
+	$keys = array_map(array($this, &quot;quote_identifier&quot;), array_keys($data));
+	$sql = &quot;INSERT INTO {$this-&gt;quote_identifier($this-&gt;table)} (&quot;.implode(&quot;,&quot;, $keys).&quot;) VALUES ({$q})&quot;;
+
+	$affected = $this-&gt;run($sql, array_values($data));
+
+	$id = (int) static::$pdo-&gt;lastInsertId();
+
+	$object = $this-&gt;get($id);
+	return array($id, $affected);
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:delete">public function <span class="name">delete</span>( <small>\Cactus\Objecct</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The database object to delete">$object</span> )</h4>
+
+		<div class="description">
+			<p>Deletes a record from the database</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Objecct</code> <strong>$object</strong>  <small>Required</small> <small></small> - The database object to delete</li>
+		</ul>
+
+		<h5>Tags</h5>
+		<ul>
+			<li>throws - \Cactus\Exception           The passed in object is not the correct type</li>
+		</ul>
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>int</code> - The number of affected rows </li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function delete(\Cactus\Entity &amp; $object)
+{
+	$this-&gt;check_object($object);
+
+	$sql = &quot;DELETE FROM {$this-&gt;quote_identifier($this-&gt;table)}&quot;.
+			&quot; WHERE {$this-&gt;quote_identifier($this-&gt;primary_key)} = ? LIMIT 1&quot;;
+	$params = array(
+		$object-&gt;get($this-&gt;primary_key)
+	);
+
+	$affected = $this-&gt;run($sql, $params);
+
+	if ($affected === 1)
+	{
+		$object = null;
+	}
+
+	return $affected;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:find">public function <span class="name">find</span>( [ <small>array</small> <span class="param" title="The database parameters to search on">$params</span> <small>= array (
+)</small> ] )</h4>
+
+		<div class="description">
+			<p>Finds records with the given parameters.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>array</code> <strong>$params</strong>  <small>array (
+)</small> - The database parameters to search on</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>array</code> - An array of DataMapper\Object items</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function find($params = array())
+{
+	$where = array();
+	$additional = array();
+
+	// Loop through the params, all keys that aren't in the column list are tacked on to the query
+	foreach ($params as $key =&gt; $value)
+	{
+		if (in_array($key, $this-&gt;columns))
+		{
+			if ( ! is_array($value))
+			{
+				$value = array($value, &quot;=&quot;);
+			}
+
+			list($value, $op) = $value;
+			$where[&quot;{$this-&gt;quote_identifier($key)} {$op} ?&quot;] = $value;
+		}
+		else
+		{
+			$additional[] = &quot;{$key} $value&quot;;
+		}
+	}
+
+	$sql = &quot;SELECT * FROM {$this-&gt;quote_identifier($this-&gt;table)}&quot;;
+	if ( ! empty($where))
+	{
+		$sql .= &quot; WHERE &quot;.implode(&quot; AND &quot;, array_keys($where));
+	}
+
+	if ( ! empty($additional))
+	{
+		$sql .= &quot; &quot;.implode(&quot; &quot;, $additional);
+	}
+
+	$result = $this-&gt;run($sql, array_values($where), true);
+	return $this-&gt;clean_result($result);
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:get">public function <span class="name">get</span>( <small>int</small> <span class="param" title="The primary id value">$id</span> )</h4>
+
+		<div class="description">
+			<p>Returns a row from the table with the given id for the primary key column</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>int</code> <strong>$id</strong>  <small>Required</small> <small></small> - The primary id value</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>DataMapper\Object</code></li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function get($id)
+{
+	$sql = &quot;SELECT * &quot;.
+		&quot;FROM {$this-&gt;quote_identifier($this-&gt;table)} &quot;.
+		&quot;WHERE {$this-&gt;quote_identifier($this-&gt;primary_key)} = ? &quot;.
+		&quot;LIMIT 1&quot;;
+
+	$params = array(
+		$id
+	);
+
+	$result = $this-&gt;run($sql, $params, true);
+
+	if (count($result) == 0)
+	{
+		return null;
+	}
+
+	$result = $this-&gt;add_relationship($result[0]);
+	return $result-&gt;clean();
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:pdo">public static function <span class="name">pdo</span>( [ <small>PDO</small> <span class="param" title="The pdo object to set">$pdo</span> <small>= NULL</small> ] )</h4>
+
+		<div class="description">
+			<p>Getter/Setter for the PDO object.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>PDO</code> <strong>$pdo</strong>  <small>NULL</small> - The pdo object to set</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>PDO</code> - The current pdo object on get</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public static function pdo(PDO $pdo = null)
+{
+	if ($pdo === null)
+	{
+		return static::$pdo;
+	}
+
+	static::$pdo = $pdo;
+
+	/**
+	 * Sets the default identfier quote character.
+	 *
+	 * @see   https://github.com/j4mie/idiorm
+	 */
+	$char = '`'; // Backtick is the default
+	$double = array(&quot;pgsql&quot;,'sqlsrv','dblib','mssql','sybase');
+
+	if (in_array($pdo-&gt;getAttribute(PDO::ATTR_DRIVER_NAME), $double))
+	{
+		$char = '&quot;';
+	}
+
+	static::$quote_char = $char;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:update">public function <span class="name">update</span>( <small>\Cactus\Object</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The object to create">$object</span> [, <small>boolean</small> <span class="param" title="Validate the object before saving?">$validate</span> <small>= true</small> ] )</h4>
+
+		<div class="description">
+			<p>Updates a record</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Object</code> <strong>$object</strong>  <small>Required</small> <small></small> - The object to create</li>
+			<li><code>boolean</code> <strong>$validate</strong>  <small>true</small> - Validate the object before saving?</li>
+		</ul>
+
+		<h5>Tags</h5>
+		<ul>
+			<li>throws - \Cactus\Exception           The passed in object is not the correct type</li>
+		</ul>
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>mixed</code> - (int) affected rows OR boolean false for failed validation</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function update(\Cactus\Entity &amp; $object, $validate = true)
+{
+	// Make sure it is not a new object
+	if ($object-&gt;is_new() === true)
+	{
+		throw new \Cactus\Exception(&quot;Use \Cactus\Driver::create to save a new object&quot;);
+	}
+
+	$this-&gt;check_object($object);
+
+	// Check for validation and run it
+	if ($validate AND ! $object-&gt;validate())
+	{
+		return false;
+	}
+
+	$data = $this-&gt;filter($object-&gt;modified());
+	$affected = 0;
+
+	if ( ! empty($data))
+	{
+		$params = array();
+		$set = array();
+
+		foreach ($data as $key =&gt; $value)
+		{
+			$set[] = &quot;{$this-&gt;quote_identifier($key)} = ?&quot;;
+			$params[] = $value;
+		}
+
+		// Tack on the primary key
+		$params[] = $object-&gt;get($this-&gt;primary_key);
+
+		$sql = &quot;UPDATE {$this-&gt;quote_identifier($this-&gt;table)}&quot;.
+			&quot; SET &quot;.implode(&quot;,&quot;, $set).
+			&quot; WHERE {$this-&gt;quote_identifier($this-&gt;primary_key)} = ? LIMIT 1&quot;;
+
+		$affected = $this-&gt;run($sql, $params);
+	}
+
+	$object-&gt;clean();
+	return $affected;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:add_relationship">public function <span class="name">add_relationship</span>( <small>\Cactus\Entity</small> <span class="param" title="The Cactus object to add relationships to">$result</span> )</h4>
+
+		<div class="description">
+			<p>Adds a relationship to a result.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code> <strong>$result</strong>  <small>Required</small> <small></small> - The Cactus object to add relationships to</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code></li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function add_relationship(\Cactus\Entity $result)
+{
+	// If no relationships, then there is nothing to do
+	if (empty($this-&gt;relationships))
+	{
+		return $result;
+	}
+
+	// Just a single row
+	foreach ($this-&gt;relationships as $key =&gt; $row)
+	{
+		$class = &quot;\\Cactus\\Relationship\\{$row['type']}&quot;;
+		$relationship = new $class($result-&gt;{$row['column']}, $row['driver'], $row['column']);
+
+		// Check for eager loading
+		if (isset($row['loading']) AND $row['loading'] === \Cactus\Loading::EAGER)
+		{
+			$relationship = ($row['type'] === \Cactus\Relationship::HAS_ONE) ?
+				$relationship-&gt;result() :
+				$relationship-&gt;result()-&gt;data();
+		}
+
+		$result-&gt;{$key} = $relationship;
+	}
+
+	return $result;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:all">public function <span class="name">all</span>( [ <small>string</small> <span class="param" title="The column to order on">$column</span> <small>= NULL</small> , <small>string</small> <span class="param" title="The directory to sort">$direction</span> <small>= 'DESC'</small> ] )</h4>
+
+		<div class="description">
+			<p>Gets all of the rows in the database.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>string</code> <strong>$column</strong>  <small>NULL</small> - The column to order on</li>
+			<li><code>string</code> <strong>$direction</strong>  <small>'DESC'</small> - The directory to sort</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>array</code> - An array of DataMapper\Object items</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function all($column = null, $direction = 'DESC')
+{
+	if ($column === null)
+	{
+		$column = $this-&gt;primary_key;
+	}
+
+	return $this-&gt;find(array(
+		'ORDER BY' =&gt; $column.&quot; &quot;.$direction
+	));
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:check_object">public function <span class="name">check_object</span>( <small>\Cactus\Entity</small> <span class="param" title="The \Cactus\Entity to check">$object</span> )</h4>
+
+		<div class="description">
+			<p>Checks to make sure the object passed in is of the correct type.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code> <strong>$object</strong>  <small>Required</small> <small></small> - The \Cactus\Entity to check</li>
+		</ul>
+
+		<h5>Tags</h5>
+		<ul>
+			<li>throws - \Cactus\Exception           The passed in object is not the correct type</li>
+		</ul>
+
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function check_object(\Cactus\Entity $object)
+{
+	if ( ! $object instanceof $this-&gt;object_class)
+	{
+		throw new \Cactus\Exception(get_called_class().&quot; expects a {$this-&gt;object_class} object.&quot;);
+	}
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:clean_result">public function <span class="name">clean_result</span>( <small>mixed</small> <span class="param" title="An iteratable object">$result</span> )</h4>
+
+		<div class="description">
+			<p>Cleans a result set before returning it.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>mixed</code> <strong>$result</strong>  <small>Required</small> <small></small> - An iteratable object</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>\Cactus\Collection</code></li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function clean_result($result)
+{
+	$self = $this;
+	$callback = function($row) use ($self) {
+		$row = $self-&gt;add_relationship($row);
+		return $row-&gt;clean();
+	};
+
+	$data = array_map($callback, $result);
+
+	return new \Cactus\Collection($data);
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:filter">public function <span class="name">filter</span>( <small>array</small> <span class="param" title="The data to filter">$data</span> )</h4>
+
+		<div class="description">
+			<p>Filters any data against the column list to make sure the insert/update functions work properly.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>array</code> <strong>$data</strong>  <small>Required</small> <small></small> - The data to filter</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>array</code> - Filtered data</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function filter(array $data)
+{
+	$filtered = array();
+
+	foreach ($data as $key =&gt; $value)
+	{
+		if (in_array($key, $this-&gt;columns))
+		{
+			$filtered[$key] = $value;
+		}
+	}
+
+	return $filtered;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:relationships">public function <span class="name">relationships</span>()</h4>
+
+		<div class="description">
+			<p>Gets all of the relationships for the DataMapper</p>
+
+		</div>
+
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>array</code> - List of relationship</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function relationships()
+{
+	return $this-&gt;relationships;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:save">public function <span class="name">save</span>( <small>\Cactus\Entity</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The object to save">$object</span> [, <small>boolean</small> <span class="param" title="Should the data be validated first??">$validate</span> <small>= true</small> ] )</h4>
+
+		<div class="description">
+			<p>Saves an object.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code> <strong>$object</strong>  <small>Required</small> <small></small> - The object to save</li>
+			<li><code>boolean</code> <strong>$validate</strong>  <small>true</small> - Should the data be validated first??</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>mixed</code> - \Cactus\Entity OR boolean false for failed validation</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function save(\Cactus\Entity &amp; $object, $validate = true)
+{
+	return ($object-&gt;is_new()) ?
+		$this-&gt;create($object, $validate) :
+		$this-&gt;update($object, $validate) ;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:quote_identifier">protected function <span class="name">quote_identifier</span>( <small>string</small> <span class="param" title="The identifier to quote">$name</span> )</h4>
+
+		<div class="description">
+			<p>Quotes identifiers in the SQL statement.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>string</code> <strong>$name</strong>  <small>Required</small> <small></small> - The identifier to quote</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>string</code> - The quoted string</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">protected function quote_identifier($name)
+{
+	$q = self::$quote_char;
+	$explode = explode('.', $name);
+
+	return $q.implode(&quot;{$q}.{$q}&quot;, $explode).$q;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:run">protected function <span class="name">run</span>( <small>string</small> <span class="param" title="The PDOStatement to run">$query</span> [, <small>boolean</small> <span class="param" title="$select   Is this a select statement?">$params</span> <small>= array (
+)</small> , $select <small>= false</small> ] )</h4>
+
+		<div class="description">
+			<p>Runs a Select query.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>string</code> <strong>$query</strong>  <small>Required</small> <small></small> - The PDOStatement to run</li>
+			<li><code>boolean</code> <strong>$params</strong>  <small>array (
+)</small> - $select   Is this a select statement?</li>
+			<li><code></code> <strong>$select</strong>  <small>false</small> - &lt;p&gt;Runs a Select query.&lt;/p&gt;
+</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>mixed</code> - The result set on select, (int) affected rows otherwise</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">protected function run($query, $params = array(), $select = false)
+{
+	$statement = static::$pdo-&gt;prepare($query);
+	if ( ! $statement-&gt;execute($params))
+	{
+		$this-&gt;throw_error($statement);
+	}
+
+	return ($select) ?
+		$statement-&gt;fetchAll(PDO::FETCH_CLASS, $this-&gt;object_class) :
+		$statement-&gt;rowCount();
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:throw_error">protected function <span class="name">throw_error</span>( <small>\PDOStatement</small> <span class="param" title="The PDOStatement that failed">$statement</span> )</h4>
+
+		<div class="description">
+			<p>Throws an error when there was a problem with the query</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\PDOStatement</code> <strong>$statement</strong>  <small>Required</small> <small></small> - The PDOStatement that failed</li>
+		</ul>
+
+		<h5>Tags</h5>
+		<ul>
+			<li>throws - \Cactus\Exeception</li>
+		</ul>
+
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">protected function throw_error(\PDOStatement $statement)
+{
+	$error = $statement-&gt;errorInfo();
+	throw new \Cactus\Exception($error[2], $error[1]);
+}</pre>
+	</section>
+</div>
+
+	</section>
+
+	<footer>
+		<p>
+			Documentation generated on January 24th, 2012.
+			Powered by <a href="https://github.com/BGSU-LITS/LiveAPI">LiveAPI</a>.
+		</p>
+	</footer>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Cactus ORM API</title>
+
+	<!-- CSS -->
+	<link href="assets/css/normalize.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="assets/css/sunlight.liveapi.css" rel="stylesheet" type="text/css" media="screen" />
+
+	<!-- JS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="assets/js/sunlight-min.js"></script>
+	<script src="assets/js/sunlight.php-min.js"></script>
+	<script src="assets/js/jquery.sunlight.js"></script>
+	<script src="assets/js/liveapi.js"></script>
+</head>
+<body>
+	<header>
+		<h1>Cactus ORM API</h1>
+	</header>
+	<section id="search-bar"></section>
+
+	<section id="class-list">
+		<h3>Class List</h3>
+		<ul>
+			<li><a href="Cactus_Autoloader.html">Cactus\Autoloader</a></li>
+			<li><a href="Cactus_Collection.html">Cactus\Collection</a></li>
+			<li><a href="Cactus_Driver.html">Cactus\Driver</a></li>
+			<li><a href="Cactus_DriverInterface.html">Cactus\DriverInterface</a></li>
+			<li><a href="Cactus_Entity.html">Cactus\Entity</a></li>
+			<li><a href="Cactus_Exception.html">Cactus\Exception</a></li>
+			<li><a href="Cactus_Kohana_Driver.html">Cactus\Kohana\Driver</a></li>
+			<li><a href="Cactus_Kohana_Entity.html">Cactus\Kohana\Entity</a></li>
+			<li><a href="Cactus_Loading.html">Cactus\Loading</a></li>
+			<li><a href="Cactus_PDO_Driver.html">Cactus\PDO\Driver</a></li>
+			<li><a href="Cactus_Relationship_HasMany.html">Cactus\Relationship\HasMany</a></li>
+			<li><a href="Cactus_Relationship_HasOne.html">Cactus\Relationship\HasOne</a></li>
+			<li><a href="Cactus_Relationship.html">Cactus\Relationship</a></li>
+		</ul>
+	</section>
+	<section id="api">
+		<h1>Cactus\Relationship\HasMany</h1>
+
+<div id="lineage"><br /><small>implements</small> Countable, IteratorAggregate, Traversable<br /><small>extends</small> Cactus\Relationship</div>
+
+<p>A HasMany relationship.</p>
+
+
+<dl id="tags">
+	<dt>package</dt>
+	<dd>Cactus</dd>
+	<dt>author</dt>
+	<dd>Dave Widmer &lt;dave@davewidmer.net&gt;</dd>
+</dl>
+
+<div id="toc">
+	<div class="section">
+		<h3>Constants</h3>
+		<ul>
+			<li><a href="#constant:HAS_ONE">HAS_ONE</a></li>
+			<li><a href="#constant:HAS_MANY">HAS_MANY</a></li>
+		</ul>
+	</div>
+	
+	<div class="section">
+		<h3>Properties</h3>
+		<ul>
+			<li><a href="#property:column">$column</a></li>
+			<li><a href="#property:driver">$driver</a></li>
+			<li><a href="#property:has_result">$has_result</a></li>
+			<li><a href="#property:result">$result</a></li>
+			<li><a href="#property:value">$value</a></li>
+		</ul>
+	</div>
+
+	<div class="section">
+		<h3>Methods</h3>
+		<ul>
+			<li><a href="#method:count">count()</a></li>
+			<li><a href="#method:getIterator">getIterator()</a></li>
+			<li><a href="#method:result">result()</a></li>
+			<li><a href="#method:__construct">__construct()</a></li>
+			<li><a href="#method:driver">driver()</a></li>
+		</ul>
+	</div>
+</div>
+
+<div id="constants">
+	<h2>Constants</h2>
+
+	<section class="constant">
+		<h4 id="constant:HAS_ONE">HAS_ONE</h4>
+		<p><code>string</code> 'hasone'</p>
+	</section>
+	<section class="constant">
+		<h4 id="constant:HAS_MANY">HAS_MANY</h4>
+		<p><code>string</code> 'hasmany'</p>
+	</section>
+</div>
+
+<div id="properties">
+	<h2>Properties</h2>
+
+	<section class="property">
+		<h4 id="property:column">protected <small>array</small> <span class="name">$column</span></h4>
+		<div class="description">
+			<p>How the tables are connected</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:driver">protected <small>\Cactus\Driver</small> <span class="name">$driver</span></h4>
+		<div class="description">
+			<p>The driver used to fetch results</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:has_result">protected <small>boolean</small> <span class="name">$has_result</span></h4>
+		<div class="description">
+			<p>Has the result set been grabbed yet?</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:result">protected <small>mixed</small> <span class="name">$result</span></h4>
+		<div class="description">
+			<p>The result set for the relationship</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:value">protected <small>int</small> <span class="name">$value</span></h4>
+		<div class="description">
+			<p>The value of the column that forms the relationship</p>
+
+		</div>
+	</section>
+</div>
+
+<div id="methods">
+	<h2>Methods</h2>
+
+	<section class="method">
+		<h4 id="method:count">public function <span class="name">count</span>()</h4>
+
+		<div class="description">
+			<p>Count elements of an object</p>
+
+		</div>
+
+
+		<h5>Tags</h5>
+		<ul>
+			<li>link - <a href="Array">http://php.net/manual/en/countable.count.php</a></li>
+		</ul>
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>int</code> - The custom count as an integer.</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function count()
+{
+	return count($this-&gt;result()-&gt;data());
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:getIterator">public function <span class="name">getIterator</span>()</h4>
+
+		<div class="description">
+			<p>Retrieve an external iterator</p>
+
+		</div>
+
+
+		<h5>Tags</h5>
+		<ul>
+			<li>link - <a href="Array">http://php.net/manual/en/iteratoraggregate.getiterator.php</a></li>
+		</ul>
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>Traversable</code> - An instance of an object implementing Iterator or Traversable</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function getIterator()
+{
+	return $this-&gt;result();
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:result">public function <span class="name">result</span>()</h4>
+
+		<div class="description">
+			<p>Gets the result set.</p>
+
+		</div>
+
+
+
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function result()
+{
+	if ( ! $this-&gt;has_result)
+	{
+		$this-&gt;has_result = true;
+
+		$this-&gt;result = $this-&gt;driver-&gt;find(array(
+			$this-&gt;column =&gt; $this-&gt;value
+		));
+	}
+
+	return $this-&gt;result;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:__construct">public function <span class="name">__construct</span>( <small>int</small> <span class="param" title="The primary key value">$value</span> , <small>string</small> <span class="param" title="The name of the Driver to use">$driver</span> , <small>string</small> <span class="param" title="The column that holds the relationship">$column</span> )</h4>
+
+		<div class="description">
+			<p>Creates a new \Cactus\Relationship object</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>int</code> <strong>$value</strong>  <small>Required</small> <small></small> - The primary key value</li>
+			<li><code>string</code> <strong>$driver</strong>  <small>Required</small> <small></small> - The name of the Driver to use</li>
+			<li><code>string</code> <strong>$column</strong>  <small>Required</small> <small></small> - The column that holds the relationship</li>
+		</ul>
+
+
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function __construct($value, $driver, $column)
+{
+	$this-&gt;value = $value;
+	$this-&gt;driver($driver);
+	$this-&gt;column = $column;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:driver">public function <span class="name">driver</span>( [ <small>string</small> <span class="param" title="The name of the driver">$name</span> <small>= NULL</small> ] )</h4>
+
+		<div class="description">
+			<p>Getter/Setter for the driver.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>string</code> <strong>$name</strong>  <small>NULL</small> - The name of the driver</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>$this</code></li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function driver($name = null)
+{
+	if ($name === null)
+	{
+		return $this-&gt;driver;
+	}
+
+	$this-&gt;driver = new $name;
+	return $this;
+}</pre>
+	</section>
+</div>
+
+	</section>
+
+	<footer>
+		<p>
+			Documentation generated on January 24th, 2012.
+			Powered by <a href="https://github.com/BGSU-LITS/LiveAPI">LiveAPI</a>.
+		</p>
+	</footer>
+</body>
+</html>

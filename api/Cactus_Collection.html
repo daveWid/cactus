@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Cactus ORM API</title>
+
+	<!-- CSS -->
+	<link href="assets/css/normalize.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="assets/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="assets/css/sunlight.liveapi.css" rel="stylesheet" type="text/css" media="screen" />
+
+	<!-- JS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="assets/js/sunlight-min.js"></script>
+	<script src="assets/js/sunlight.php-min.js"></script>
+	<script src="assets/js/jquery.sunlight.js"></script>
+	<script src="assets/js/liveapi.js"></script>
+</head>
+<body>
+	<header>
+		<h1>Cactus ORM API</h1>
+	</header>
+	<section id="search-bar"></section>
+
+	<section id="class-list">
+		<h3>Class List</h3>
+		<ul>
+			<li><a href="Cactus_Autoloader.html">Cactus\Autoloader</a></li>
+			<li><a href="Cactus_Collection.html">Cactus\Collection</a></li>
+			<li><a href="Cactus_Driver.html">Cactus\Driver</a></li>
+			<li><a href="Cactus_DriverInterface.html">Cactus\DriverInterface</a></li>
+			<li><a href="Cactus_Entity.html">Cactus\Entity</a></li>
+			<li><a href="Cactus_Exception.html">Cactus\Exception</a></li>
+			<li><a href="Cactus_Kohana_Driver.html">Cactus\Kohana\Driver</a></li>
+			<li><a href="Cactus_Kohana_Entity.html">Cactus\Kohana\Entity</a></li>
+			<li><a href="Cactus_Loading.html">Cactus\Loading</a></li>
+			<li><a href="Cactus_PDO_Driver.html">Cactus\PDO\Driver</a></li>
+			<li><a href="Cactus_Relationship_HasMany.html">Cactus\Relationship\HasMany</a></li>
+			<li><a href="Cactus_Relationship_HasOne.html">Cactus\Relationship\HasOne</a></li>
+			<li><a href="Cactus_Relationship.html">Cactus\Relationship</a></li>
+		</ul>
+	</section>
+	<section id="api">
+		<h1>Cactus\Collection</h1>
+
+<div id="lineage"><br /><small>implements</small> Iterator, Traversable</div>
+
+<p>A collection of Cactus Entities</p>
+
+
+<dl id="tags">
+	<dt>package</dt>
+	<dd>Cactus</dd>
+	<dt>author</dt>
+	<dd>Dave Widmer &lt;dave@davewidmer.net&gt;</dd>
+</dl>
+
+<div id="toc">
+	<div class="section">
+		<h3>Constants</h3>
+	</div>
+	
+	<div class="section">
+		<h3>Properties</h3>
+		<ul>
+			<li><a href="#property:collection">$collection</a></li>
+		</ul>
+	</div>
+
+	<div class="section">
+		<h3>Methods</h3>
+		<ul>
+			<li><a href="#method:__construct">__construct()</a></li>
+			<li><a href="#method:current">current()</a></li>
+			<li><a href="#method:data">data()</a></li>
+			<li><a href="#method:key">key()</a></li>
+			<li><a href="#method:next">next()</a></li>
+			<li><a href="#method:rewind">rewind()</a></li>
+			<li><a href="#method:valid">valid()</a></li>
+		</ul>
+	</div>
+</div>
+
+
+<div id="properties">
+	<h2>Properties</h2>
+
+	<section class="property">
+		<h4 id="property:collection">protected <small>array</small> <span class="name">$collection</span> = array (
+)</h4>
+		<div class="description">
+			<p>The internal collection array</p>
+
+		</div>
+	</section>
+</div>
+
+<div id="methods">
+	<h2>Methods</h2>
+
+	<section class="method">
+		<h4 id="method:__construct">public function <span class="name">__construct</span>( [ <small>array</small> <span class="param" title="The data to set">$data</span> <small>= array (
+)</small> ] )</h4>
+
+		<div class="description">
+			<p>Creates a new DataMapper_Collection object</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>array</code> <strong>$data</strong>  <small>array (
+)</small> - The data to set</li>
+		</ul>
+
+
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function __construct(array $data = array())
+{
+	$this-&gt;collection = $data;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:current">public function <span class="name">current</span>()</h4>
+
+		<div class="description">
+			<p>Return the current element</p>
+
+		</div>
+
+
+		<h5>Tags</h5>
+		<ul>
+			<li>link - <a href="Array">http://php.net/manual/en/iterator.current.php</a></li>
+		</ul>
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>mixed</code> - Can return any type.</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function current()
+{
+	return current($this-&gt;collection);
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:data">public function <span class="name">data</span>( [ <small>array</small> <span class="param" title="Array of data to set">$data</span> <small>= NULL</small> ] )</h4>
+
+		<div class="description">
+			<p>Getter/setter for the data in the collection.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>array</code> <strong>$data</strong>  <small>NULL</small> - Array of data to set</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>mixed</code> - Array on get/$this on set</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function data($data = null)
+{
+	if ($data === null)
+	{
+		return $this-&gt;collection;
+	}
+
+	$this-&gt;collection = array_merge($this-&gt;collection, $data);
+	return $this;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:key">public function <span class="name">key</span>()</h4>
+
+		<div class="description">
+			<p>Return the key of the current element</p>
+
+		</div>
+
+
+		<h5>Tags</h5>
+		<ul>
+			<li>link - <a href="Array">http://php.net/manual/en/iterator.key.php</a></li>
+		</ul>
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>scalar</code> - scalar on success, integer 0 on failure.</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function key()
+{
+	return key($this-&gt;collection);
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:next">public function <span class="name">next</span>()</h4>
+
+		<div class="description">
+			<p>Move forward to next element</p>
+
+		</div>
+
+
+		<h5>Tags</h5>
+		<ul>
+			<li>link - <a href="Array">http://php.net/manual/en/iterator.next.php</a></li>
+		</ul>
+
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function next()
+{
+	next($this-&gt;collection);
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:rewind">public function <span class="name">rewind</span>()</h4>
+
+		<div class="description">
+			<p>Rewind the Iterator to the first element</p>
+
+		</div>
+
+
+		<h5>Tags</h5>
+		<ul>
+			<li>link - <a href="Array">http://php.net/manual/en/iterator.rewind.php</a></li>
+		</ul>
+
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function rewind()
+{
+	reset($this-&gt;collection);
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:valid">public function <span class="name">valid</span>()</h4>
+
+		<div class="description">
+			<p>Checks if current position is valid</p>
+
+		</div>
+
+
+		<h5>Tags</h5>
+		<ul>
+			<li>link - <a href="Array">http://php.net/manual/en/iterator.valid.php</a></li>
+		</ul>
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>boolean</code> - Returns true on success or false on failure.</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function valid()
+{
+	$key = key($this-&gt;collection);
+       return ($key !== NULL AND $key !== FALSE); 
+}</pre>
+	</section>
+</div>
+
+	</section>
+
+	<footer>
+		<p>
+			Documentation generated on January 24th, 2012.
+			Powered by <a href="https://github.com/BGSU-LITS/LiveAPI">LiveAPI</a>.
+		</p>
+	</footer>
+</body>
+</html>
