@@ -7,7 +7,7 @@ Cactus is a ORM based on the DataMapper library for PHP 5.3+
 We will walk through a quick example on how to use Cactus. First we will start
 with a table called `user` that we will builder our example around.
 
-```sql
+``` sql
 CREATE TABLE IF NOT EXISTS `user` (
 	`user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 	`email` varchar(128) NOT NULL,
@@ -31,7 +31,7 @@ For this example we will be using the built in PDO driver. For the PDO driver yo
 need to set up your database credentials, which can be done with the following call
 anywhere in your code before you run a database query.
 
-```
+``` php
 <?php
 
 \Cactus\PDO\Driver::pdo(new PDO(string $dsn [, string $username [, string $password [, array $driver_options ]]]));
@@ -42,7 +42,7 @@ information on creating a PDO connection._
 
 Here is a driver class for our `user` table.
 
-```
+``` php
 <?php
 
 class ModelUser extends \Cactus\PDO\Driver
@@ -99,7 +99,7 @@ There are 3 types of queries built in, finding, saving and deleting.
 
 ### Find
 
-```
+``` php
 <?php
 $model = new ModelUser;
 
@@ -116,7 +116,7 @@ $found = $model->find(array(
 ```
 
 ### Save
-```
+``` php
 <?php
 // New user assuming $post is posted form data
 $user = new User($post);
@@ -129,7 +129,7 @@ $model->save($user);
 ```
 
 ### Delete
-```
+``` php
 <?php
 $user = $model->get(1);
 $model->delete($user);
@@ -153,7 +153,7 @@ Since this is an ORM, you will need to test a database. To connect to the databa
 you will need to to modify the tests/bootstrap.php file with your settings.
 Before you commmit changes make sure you run...
 
-~~~
+~~~ shell
 git update-index --assume-unchanged tests/bootstrap.php
 ~~~
 
