@@ -189,6 +189,26 @@ class Driver extends \Cactus\Driver
 	}
 
 	/**
+	 * Gets all of the records associated in the table.
+	 *
+	 * @param  array  $values  The values to join in
+	 * @param  string $table   The table to join
+	 * @param  string $column  The column to join on
+	 * @return array
+	 */
+	public function join_in(array $values, $table, $column)
+	{
+		$result = \DB::select("{$this->table}.*")
+			->from($this->table)
+			->join($table, "LEFT")->on("{$table}.{$column}", "=", "{$this->table}.{$column}")
+			->where("{$table}.{$column}", "IN", $values)
+			->as_object($this->object_class)
+			->execute();
+
+		return $this->process_result($result);
+	}
+
+	/**
 	 * Processes a result set before returning it.
 	 *
 	 * @param   Database_Result   $result   An iteratable object
