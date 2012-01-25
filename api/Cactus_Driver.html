@@ -67,24 +67,27 @@
 			<li><a href="#property:primary_key">$primary_key</a></li>
 			<li><a href="#property:relationships">$relationships</a></li>
 			<li><a href="#property:table">$table</a></li>
+			<li><a href="#property:eager">$eager</a></li>
 		</ul>
 	</div>
 
 	<div class="section">
 		<h3>Methods</h3>
 		<ul>
-			<li><a href="#method:add_relationship">add_relationship()</a></li>
-			<li><a href="#method:all">all()</a></li>
 			<li><a href="#method:create">create()</a></li>
+			<li><a href="#method:all">all()</a></li>
 			<li><a href="#method:delete">delete()</a></li>
 			<li><a href="#method:find">find()</a></li>
 			<li><a href="#method:get">get()</a></li>
+			<li><a href="#method:join_in">join_in()</a></li>
 			<li><a href="#method:update">update()</a></li>
+			<li><a href="#method:add_relationship">add_relationship()</a></li>
 			<li><a href="#method:check_object">check_object()</a></li>
-			<li><a href="#method:clean_result">clean_result()</a></li>
 			<li><a href="#method:filter">filter()</a></li>
+			<li><a href="#method:process_result">process_result()</a></li>
 			<li><a href="#method:relationships">relationships()</a></li>
 			<li><a href="#method:save">save()</a></li>
+			<li><a href="#method:get_eager_data">get_eager_data()</a></li>
 		</ul>
 	</div>
 </div>
@@ -129,58 +132,45 @@
 
 		</div>
 	</section>
+	<section class="property">
+		<h4 id="property:eager">private <small>array</small> <span class="name">$eager</span></h4>
+		<div class="description">
+			<p>The eager loaded data.</p>
+
+		</div>
+	</section>
 </div>
 
 <div id="methods">
 	<h2>Methods</h2>
 
 	<section class="method">
-		<h4 id="method:add_relationship">public function <span class="name">add_relationship</span>( <small>\Cactus\Entity</small> <span class="param" title="The Cactus object to add relationships to">$result</span> )</h4>
+		<h4 id="method:create">abstract public function <span class="name">create</span>( <small>\Cactus\Object</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The object to create">$object</span> [, $validate <small>= true</small> ] )</h4>
 
 		<div class="description">
-			<p>Adds a relationship to a result.</p>
+			<p>Creates a new record in the database.</p>
 
 		</div>
 
 		<h5>Parameters</h5>
 		<ul>
-			<li><code>\Cactus\Entity</code> <strong>$result</strong>  <small>Required</small> <small></small> - The Cactus object to add relationships to</li>
+			<li><code>\Cactus\Object</code> <strong>$object</strong>  <small>Required</small> <small></small> - The object to create</li>
+			<li><code></code> <strong>$validate</strong>  <small>true</small> - &lt;p&gt;Creates a new record in the database.&lt;/p&gt;
+</li>
 		</ul>
 
+		<h5>Tags</h5>
+		<ul>
+			<li>throws - \Cactus\Exception         The passed in object is not the correct type</li>
+		</ul>
 
 		<h5>Return Values</h5>
 		<ul>
-			<li><code>\Cactus\Entity</code></li>
+			<li><code>mixed</code> - array [insert_id, affected rows] OR boolean false for failed validation</li>
 		</ul>
 
 		<h5>Source Code</h5>
-		<pre class="source sunlight-highlight-php">public function add_relationship(\Cactus\Entity $result)
-{
-	// If no relationships, then there is nothing to do
-	if (empty($this-&gt;relationships))
-	{
-		return $result;
-	}
-
-	// Just a single row
-	foreach ($this-&gt;relationships as $key =&gt; $row)
-	{
-		$class = &quot;\\Cactus\\Relationship\\{$row['type']}&quot;;
-		$relationship = new $class($result-&gt;{$row['column']}, $row['driver'], $row['column']);
-
-		// Check for eager loading
-		if (isset($row['loading']) AND $row['loading'] === \Cactus\Loading::EAGER)
-		{
-			$relationship = ($row['type'] === \Cactus\Relationship::HAS_ONE) ?
-				$relationship-&gt;result() :
-				$relationship-&gt;result()-&gt;data();
-		}
-
-		$result-&gt;{$key} = $relationship;
-	}
-
-	return $result;
-}</pre>
+		<pre class="source sunlight-highlight-php">public function create(\Cactus\Entity &amp; $object, $validate = true);</pre>
 	</section>
 	<section class="method">
 		<h4 id="method:all">public function <span class="name">all</span>( [ <small>string</small> <span class="param" title="The column to order on">$column</span> <small>= NULL</small> , <small>string</small> <span class="param" title="The directory to sort">$direction</span> <small>= 'DESC'</small> ] )</h4>
@@ -214,34 +204,6 @@
 		'ORDER BY' =&gt; $column.&quot; &quot;.$direction
 	));
 }</pre>
-	</section>
-	<section class="method">
-		<h4 id="method:create">abstract public function <span class="name">create</span>( <small>\Cactus\Object</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The object to create">$object</span> [, $validate <small>= true</small> ] )</h4>
-
-		<div class="description">
-			<p>Creates a new record in the database.</p>
-
-		</div>
-
-		<h5>Parameters</h5>
-		<ul>
-			<li><code>\Cactus\Object</code> <strong>$object</strong>  <small>Required</small> <small></small> - The object to create</li>
-			<li><code></code> <strong>$validate</strong>  <small>true</small> - &lt;p&gt;Creates a new record in the database.&lt;/p&gt;
-</li>
-		</ul>
-
-		<h5>Tags</h5>
-		<ul>
-			<li>throws - \Cactus\Exception         The passed in object is not the correct type</li>
-		</ul>
-
-		<h5>Return Values</h5>
-		<ul>
-			<li><code>mixed</code> - array [insert_id, affected rows] OR boolean false for failed validation</li>
-		</ul>
-
-		<h5>Source Code</h5>
-		<pre class="source sunlight-highlight-php">public function create(\Cactus\Entity &amp; $object, $validate = true);</pre>
 	</section>
 	<section class="method">
 		<h4 id="method:delete">abstract public function <span class="name">delete</span>( <small>\Cactus\Entity</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The database object to delete">$object</span> )</h4>
@@ -316,6 +278,30 @@
 		<pre class="source sunlight-highlight-php">public function get($id);</pre>
 	</section>
 	<section class="method">
+		<h4 id="method:join_in">abstract public function <span class="name">join_in</span>( <small>array</small> <span class="param" title="The values to join in">$values</span> , <small>string</small> <span class="param" title="The table to join">$table</span> , <small>string</small> <span class="param" title="The column to join on">$column</span> )</h4>
+
+		<div class="description">
+			<p>Gets all of the records associated in the table.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>array</code> <strong>$values</strong>  <small>Required</small> <small></small> - The values to join in</li>
+			<li><code>string</code> <strong>$table</strong>  <small>Required</small> <small></small> - The table to join</li>
+			<li><code>string</code> <strong>$column</strong>  <small>Required</small> <small></small> - The column to join on</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>array</code></li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function join_in(array $values, $table, $column);</pre>
+	</section>
+	<section class="method">
 		<h4 id="method:update">abstract public function <span class="name">update</span>( <small>\Cactus\Entity</small> <small><abbr title="passed by reference">&</abbr></small> <span class="param" title="The object to create">$object</span> [, <small>boolean</small> <span class="param" title="Validate the object before saving?">$validate</span> <small>= true</small> ] )</h4>
 
 		<div class="description">
@@ -343,6 +329,62 @@
 		<pre class="source sunlight-highlight-php">public function update(\Cactus\Entity &amp; $object, $validate = true);</pre>
 	</section>
 	<section class="method">
+		<h4 id="method:add_relationship">public function <span class="name">add_relationship</span>( <small>\Cactus\Entity</small> <span class="param" title="$entity  The Cactus object to add relationships to">$result</span> [, <small>array</small> <span class="param" title="If an eager load, the eager load data.">$data</span> <small>= array (
+)</small> ] )</h4>
+
+		<div class="description">
+			<p>Adds a relationship to a result.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code> <strong>$result</strong>  <small>Required</small> <small></small> - $entity  The Cactus object to add relationships to</li>
+			<li><code>array</code> <strong>$data</strong>  <small>array (
+)</small> - If an eager load, the eager load data.</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>\Cactus\Entity</code></li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function add_relationship(\Cactus\Entity $result, array $data = array())
+{
+	// If no relationships, then there is nothing to do
+	if (empty($this-&gt;relationships))
+	{
+		return $result;
+	}
+
+	// Just a single row
+	foreach ($this-&gt;relationships as $name =&gt; $config)
+	{
+		$value = $result-&gt;{$config['column']};
+		$relationship = \Cactus\Relationship::factory($config, $value);
+
+		// Check for eager loading
+		if (isset($data[$name]))
+		{
+			$value = isset($data[$name][$value]) ? $data[$name][$value] : array();
+
+			if ($config['type'] === \Cactus\Relationship::HAS_ONE)
+			{
+				$value = isset($value[0]) ? $value[0] : null;
+			}
+
+			$relationship-&gt;set_result($value);
+		}
+
+		$result-&gt;{$name} = $relationship;
+	}
+
+	return $result;
+}</pre>
+	</section>
+	<section class="method">
 		<h4 id="method:check_object">public function <span class="name">check_object</span>( <small>\Cactus\Entity</small> <span class="param" title="The \Cactus\Entity to check">$object</span> )</h4>
 
 		<div class="description">
@@ -368,39 +410,6 @@
 	{
 		throw new \Cactus\Exception(get_called_class().&quot; expects a {$this-&gt;object_class} object.&quot;);
 	}
-}</pre>
-	</section>
-	<section class="method">
-		<h4 id="method:clean_result">public function <span class="name">clean_result</span>( <small>mixed</small> <span class="param" title="An iteratable object">$result</span> )</h4>
-
-		<div class="description">
-			<p>Cleans a result set before returning it.</p>
-
-		</div>
-
-		<h5>Parameters</h5>
-		<ul>
-			<li><code>mixed</code> <strong>$result</strong>  <small>Required</small> <small></small> - An iteratable object</li>
-		</ul>
-
-
-		<h5>Return Values</h5>
-		<ul>
-			<li><code>\Cactus\Collection</code></li>
-		</ul>
-
-		<h5>Source Code</h5>
-		<pre class="source sunlight-highlight-php">public function clean_result($result)
-{
-	$self = $this;
-	$callback = function($row) use ($self) {
-		$row = $self-&gt;add_relationship($row);
-		return $row-&gt;clean();
-	};
-
-	$data = array_map($callback, $result);
-
-	return new \Cactus\Collection($data);
 }</pre>
 	</section>
 	<section class="method">
@@ -436,6 +445,39 @@
 	}
 
 	return $filtered;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:process_result">public function <span class="name">process_result</span>( <small>mixed</small> <span class="param" title="An iteratable object">$result</span> )</h4>
+
+		<div class="description">
+			<p>Processes a result set before returning it.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>mixed</code> <strong>$result</strong>  <small>Required</small> <small></small> - An iteratable object</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>\Cactus\Collection</code></li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function process_result($result)
+{
+	$eager = $this-&gt;get_eager_data($result);
+	$self = $this;
+
+	$process = function($row) use ($self, $eager){
+		$row = $self-&gt;add_relationship($row, $eager);
+		return $row-&gt;clean();
+	};
+
+	return new \Cactus\Collection(array_map($process, $result));
 }</pre>
 	</section>
 	<section class="method">
@@ -487,13 +529,70 @@
 		$this-&gt;update($object, $validate) ;
 }</pre>
 	</section>
+	<section class="method">
+		<h4 id="method:get_eager_data">private function <span class="name">get_eager_data</span>( <small>mixed</small> <span class="param" title="An iterable result set">$result</span> )</h4>
+
+		<div class="description">
+			<p>Gets query data from eagerly loaded relationships</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>mixed</code> <strong>$result</strong>  <small>Required</small> <small></small> - An iterable result set</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>array</code> - The eagerly loaded associative array</li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">private function get_eager_data($result)
+{
+	if ($this-&gt;eager !== null)
+	{
+		return $this-&gt;eager;
+	}
+
+	$eager = array();
+
+	if ( ! empty($this-&gt;relationships))
+	{
+		foreach ($this-&gt;relationships as $name =&gt; $config)
+		{
+			if (isset($config['loading']) AND $config['loading'] === \Cactus\Loading::EAGER)
+			{
+				$primary = $this-&gt;primary_key;
+				$data = array_map(function($row) use ($primary){
+					return $row-&gt;$primary;
+				}, $result);
+
+				$driver = new $config['driver'];
+
+				$tmp = array();
+				foreach ($driver-&gt;join_in($data, $this-&gt;table, $this-&gt;primary_key) as $row)
+				{
+					$tmp[$row-&gt;$primary][] = $row;
+				}
+
+				$eager[$name] = $tmp;
+			}
+		}
+	}
+
+	$this-&gt;eager = $eager;
+	return $this-&gt;eager;
+}</pre>
+	</section>
 </div>
 
 	</section>
 
 	<footer>
 		<p>
-			Documentation generated on January 24th, 2012.
+			Documentation generated on January 25th, 2012.
 			Powered by <a href="https://github.com/BGSU-LITS/LiveAPI">LiveAPI</a>.
 		</p>
 	</footer>

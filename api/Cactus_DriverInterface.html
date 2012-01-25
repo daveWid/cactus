@@ -73,6 +73,7 @@
 			<li><a href="#method:delete">delete()</a></li>
 			<li><a href="#method:find">find()</a></li>
 			<li><a href="#method:get">get()</a></li>
+			<li><a href="#method:join_in">join_in()</a></li>
 			<li><a href="#method:relationships">relationships()</a></li>
 			<li><a href="#method:save">save()</a></li>
 			<li><a href="#method:update">update()</a></li>
@@ -86,7 +87,8 @@
 	<h2>Methods</h2>
 
 	<section class="method">
-		<h4 id="method:add_relationship">abstract public function <span class="name">add_relationship</span>( <small>\Cactus\Entity</small> <span class="param" title="The DataMapper object to add relationships to">$result</span> )</h4>
+		<h4 id="method:add_relationship">abstract public function <span class="name">add_relationship</span>( <small>\Cactus\Entity</small> <span class="param" title="$entity  The Cactus object to add relationships to">$result</span> [, <small>array</small> <span class="param" title="If an eager load, the eager load data.">$data</span> <small>= array (
+)</small> ] )</h4>
 
 		<div class="description">
 			<p>Adds a relationship to a result.</p>
@@ -95,7 +97,9 @@
 
 		<h5>Parameters</h5>
 		<ul>
-			<li><code>\Cactus\Entity</code> <strong>$result</strong>  <small>Required</small> <small></small> - The DataMapper object to add relationships to</li>
+			<li><code>\Cactus\Entity</code> <strong>$result</strong>  <small>Required</small> <small></small> - $entity  The Cactus object to add relationships to</li>
+			<li><code>array</code> <strong>$data</strong>  <small>array (
+)</small> - If an eager load, the eager load data.</li>
 		</ul>
 
 
@@ -105,7 +109,7 @@
 		</ul>
 
 		<h5>Source Code</h5>
-		<pre class="source sunlight-highlight-php">public function add_relationship(\Cactus\Entity $result);</pre>
+		<pre class="source sunlight-highlight-php">public function add_relationship(\Cactus\Entity $result, array $data = array());</pre>
 	</section>
 	<section class="method">
 		<h4 id="method:all">abstract public function <span class="name">all</span>( [ <small>string</small> <span class="param" title="The column to order on">$column</span> <small>= NULL</small> , <small>string</small> <span class="param" title="The directory to sort">$direction</span> <small>= 'DESC'</small> ] )</h4>
@@ -253,6 +257,30 @@
 		<pre class="source sunlight-highlight-php">public function get($id);</pre>
 	</section>
 	<section class="method">
+		<h4 id="method:join_in">abstract public function <span class="name">join_in</span>( <small>array</small> <span class="param" title="The values to join in">$values</span> , <small>string</small> <span class="param" title="The table to join">$table</span> , <small>string</small> <span class="param" title="The column to join on">$column</span> )</h4>
+
+		<div class="description">
+			<p>Gets all of the records associated in the table.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>array</code> <strong>$values</strong>  <small>Required</small> <small></small> - The values to join in</li>
+			<li><code>string</code> <strong>$table</strong>  <small>Required</small> <small></small> - The table to join</li>
+			<li><code>string</code> <strong>$column</strong>  <small>Required</small> <small></small> - The column to join on</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>array</code></li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function join_in(array $values, $table, $column);</pre>
+	</section>
+	<section class="method">
 		<h4 id="method:relationships">abstract public function <span class="name">relationships</span>()</h4>
 
 		<div class="description">
@@ -326,7 +354,7 @@
 
 	<footer>
 		<p>
-			Documentation generated on January 24th, 2012.
+			Documentation generated on January 25th, 2012.
 			Powered by <a href="https://github.com/BGSU-LITS/LiveAPI">LiveAPI</a>.
 		</p>
 	</footer>

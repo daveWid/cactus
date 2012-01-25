@@ -79,7 +79,9 @@
 		<ul>
 			<li><a href="#method:__construct">__construct()</a></li>
 			<li><a href="#method:driver">driver()</a></li>
+			<li><a href="#method:factory">factory()</a></li>
 			<li><a href="#method:result">result()</a></li>
+			<li><a href="#method:set_result">set_result()</a></li>
 		</ul>
 	</div>
 </div>
@@ -141,7 +143,7 @@
 	<h2>Methods</h2>
 
 	<section class="method">
-		<h4 id="method:__construct">public function <span class="name">__construct</span>( <small>int</small> <span class="param" title="The primary key value">$value</span> , <small>string</small> <span class="param" title="The name of the Driver to use">$driver</span> , <small>string</small> <span class="param" title="The column that holds the relationship">$column</span> )</h4>
+		<h4 id="method:__construct">public function <span class="name">__construct</span>( <small>string</small> <span class="param" title="The column that holds the relationship">$column</span> , <small>int</small> <span class="param" title="The primary key value">$value</span> , <small>string</small> <span class="param" title="The name of the Driver to use">$driver</span> )</h4>
 
 		<div class="description">
 			<p>Creates a new \Cactus\Relationship object</p>
@@ -150,19 +152,19 @@
 
 		<h5>Parameters</h5>
 		<ul>
+			<li><code>string</code> <strong>$column</strong>  <small>Required</small> <small></small> - The column that holds the relationship</li>
 			<li><code>int</code> <strong>$value</strong>  <small>Required</small> <small></small> - The primary key value</li>
 			<li><code>string</code> <strong>$driver</strong>  <small>Required</small> <small></small> - The name of the Driver to use</li>
-			<li><code>string</code> <strong>$column</strong>  <small>Required</small> <small></small> - The column that holds the relationship</li>
 		</ul>
 
 
 
 		<h5>Source Code</h5>
-		<pre class="source sunlight-highlight-php">public function __construct($value, $driver, $column)
+		<pre class="source sunlight-highlight-php">public function __construct($column, $value, $driver)
 {
+	$this-&gt;column = $column;
 	$this-&gt;value = $value;
 	$this-&gt;driver($driver);
-	$this-&gt;column = $column;
 }</pre>
 	</section>
 	<section class="method">
@@ -192,23 +194,76 @@
 		return $this-&gt;driver;
 	}
 
-	$this-&gt;driver = new $name;
+	$this-&gt;driver = is_string($name) ? new $name : $name;
 	return $this;
+}</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:factory">public static function <span class="name">factory</span>( <small>array</small> <span class="param" title="The relationship config">$config</span> , <small>string</small> <span class="param" title="The value to join the relation tables">$value</span> )</h4>
+
+		<div class="description">
+			<p>Creates a Relationship based on a configuration array.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>array</code> <strong>$config</strong>  <small>Required</small> <small></small> - The relationship config</li>
+			<li><code>string</code> <strong>$value</strong>  <small>Required</small> <small></small> - The value to join the relation tables</li>
+		</ul>
+
+
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>\Cactus\Relationship</code></li>
+		</ul>
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public static function factory(array $config, $value)
+{
+	$class = &quot;\\Cactus\\Relationship\\{$config['type']}&quot;;
+	return new $class($config['column'], $value, $config['driver']);
 }</pre>
 	</section>
 	<section class="method">
 		<h4 id="method:result">abstract public function <span class="name">result</span>()</h4>
 
 		<div class="description">
-			<p>Gets the result set for the relationship</p>
+			<p>Gets the result set for the relationship.</p>
 
 		</div>
 
 
 
+		<h5>Return Values</h5>
+		<ul>
+			<li><code>mixed</code> - The result data</li>
+		</ul>
 
 		<h5>Source Code</h5>
 		<pre class="source sunlight-highlight-php">abstract public function result();</pre>
+	</section>
+	<section class="method">
+		<h4 id="method:set_result">public function <span class="name">set_result</span>( <small>mixed</small> <span class="param" title="The data to set the result to">$data</span> )</h4>
+
+		<div class="description">
+			<p>Sets the data for the result set. Useful for eager loading.</p>
+
+		</div>
+
+		<h5>Parameters</h5>
+		<ul>
+			<li><code>mixed</code> <strong>$data</strong>  <small>Required</small> <small></small> - The data to set the result to</li>
+		</ul>
+
+
+
+		<h5>Source Code</h5>
+		<pre class="source sunlight-highlight-php">public function set_result($data)
+{
+	$this-&gt;result = $data;
+	$this-&gt;has_result = true;
+}</pre>
 	</section>
 </div>
 
@@ -216,7 +271,7 @@
 
 	<footer>
 		<p>
-			Documentation generated on January 24th, 2012.
+			Documentation generated on January 25th, 2012.
 			Powered by <a href="https://github.com/BGSU-LITS/LiveAPI">LiveAPI</a>.
 		</p>
 	</footer>
