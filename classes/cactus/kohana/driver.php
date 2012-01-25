@@ -66,7 +66,7 @@ class Driver extends \Cactus\Driver
 		// Loop through the params, all keys that aren't in the column list are converted to DB::select method calls.
 		foreach ($params as $key => $value)
 		{
-			if (in_array($key, $this->columns))
+			if (in_array($key, array_keys($this->columns)))
 			{
 				if ( ! is_array($value))
 				{

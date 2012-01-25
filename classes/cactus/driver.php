@@ -211,7 +211,7 @@ abstract class Driver implements \Cactus\DriverInterface
 
 		foreach ($data as $key => $value)
 		{
-			if (in_array($key, $this->columns))
+			if (in_array($key, array_keys($this->columns)))
 			{
 				$filtered[$key] = $value;
 			}
