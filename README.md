@@ -61,7 +61,15 @@ class ModelUser extends \Cactus\PDO\Driver
 	/**
 	 * @var   array    The list of columns in the table
 	 */
-	protected $columns = array('user_id','email','password','last_name','first_name','status','create_date');
+	protected $columns = array(
+		'user_id' => \Cactus\Field\MySQL::VARCHAR,
+		'email' => \Cactus\Field\MySQL::VARCHAR,
+		'password' => \Cactus\Field\MySQL::VARCHAR,
+		'last_name' => \Cactus\Field\MySQL::VARCHAR,
+		'first_name' => \Cactus\Field\MySQL::VARCHAR,
+		'status' => \Cactus\Field\MySQL::INT,
+		'create_date' => \Cactus\Field\MySQL::DATETIME,
+	);
 
 	/**
 	 * @var   string   The name of the object to return in operations
@@ -135,6 +143,32 @@ $model->save($user);
 $user = $model->get(1);
 $model->delete($user);
 ```
+
+## Defining Columns
+
+The goal of the defining the columns is not to be able to generate the sql to
+create your tables, but to convert the string values from the database over to
+native php types.
+
+Lets take a look at the example from `ModelUser` above
+
+``` php
+<?php
+protected $columns = array(
+	'user_id' => \Cactus\Field\MySQL::VARCHAR,
+	'email' => \Cactus\Field\MySQL::VARCHAR,
+	'password' => \Cactus\Field\MySQL::VARCHAR,
+	'last_name' => \Cactus\Field\MySQL::VARCHAR,
+	'first_name' => \Cactus\Field\MySQL::VARCHAR,
+	'status' => \Cactus\Field\MySQL::INT,
+	'create_date' => \Cactus\Field\MySQL::DATETIME,
+);
+```
+
+As you can see the columns array is setup in a $name => $type setup. For a full
+list of field types you can choose from check the documentation for
+`\Cactus\Field\MySQL`. MySQL is the only supported database as this point, but if
+you need support for other database feel free to contribute!
 
 ## Relationships
 
