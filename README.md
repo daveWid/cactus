@@ -34,7 +34,8 @@ anywhere in your code before you run a database query.
 ``` php
 <?php
 
-\Cactus\PDO\Driver::pdo(new PDO(string $dsn [, string $username [, string $password [, array $driver_options ]]]));
+$pdo = new PDO(string $dsn [, string $username [, string $password [, array $driver_options ]]]);
+\Cactus\PDO\Driver::pdo($pdo);
 ```
 
 _See the [PDO](http://www.php.net/manual/en/class.pdo.php) docs for more
@@ -172,6 +173,24 @@ and `\Cactus\Relationship::HAS_ONE`.
 For loading you can use either `\Cactus\Loading::LAZY` or `\Cactus\Loading::EAGER`.
 Cactus loads relationship using the lazy method by default. Eagerly loaded relationships
 are loaded in a way to avoid the N+1 select problem.
+
+## Framework Drivers
+
+Instead of needed to rely on the PDO class, Cactus also comes bundled with drivers
+for the different php frameworks.
+
+### Kohana
+
+Cactus has a driver and entity for the [Kohana](http://www.kohanaframework.org) framework.
+
+To use the driver, you will need to activate the database module and set your database
+configuration as you normally would. Your driver classes will then need to extend
+`\Cactus\Kohana\Driver` instead of `\Cactus\PDO\Driver`. The Kohana driver uses the
+query builder classes to create queries.
+
+To use the Kohana based entity class your entities will need to extend `\Cactus\Kohana\Entity`.
+The Kohana entity class adds in validation and error messages that are based on the
+built-in Validation library.
 
 ## API
 
