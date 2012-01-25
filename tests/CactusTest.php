@@ -143,6 +143,19 @@ class CactusTest extends \Cactus\Tests\DatabaseTest
 	}
 
 	/**
+	 * Test to make sure the conversion of an entities properties are being set
+	 * correctly.
+	 */
+	public function testEntityConversion()
+	{
+		$model = new \Cactus\Tests\ModelUser;
+		$users = $model->get(1);
+
+		$this->assertInstanceOf("DateTime", $users->create_date, "Testing conversion to DateTime");
+		$this->assertInternalType("int", $users->status, "Testing conversion to int");
+	}
+
+	/**
 	 * Testing a working relationship
 	 */
 	public function testIterateRelationship()
