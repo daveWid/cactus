@@ -17,7 +17,15 @@ class ModelUserHasOne extends \Cactus\PDO\Driver
 	/**
 	 * @var   array    The list of columns in the table
 	 */
-	protected $columns = array('user_id','email','password','last_name','first_name','status','create_date');
+	protected $columns = array(
+		'user_id' => \Cactus\FIeldType::VARCHAR,
+		'email' => \Cactus\FIeldType::VARCHAR,
+		'password' => \Cactus\FIeldType::VARCHAR,
+		'last_name' => \Cactus\FIeldType::VARCHAR,
+		'first_name' => \Cactus\FIeldType::VARCHAR,
+		'status' => \Cactus\FIeldType::INT,
+		'create_date' => \Cactus\FIeldType::DATETIME,
+	);
 
 	/**
 	 * @var   string   The name of the object to return in operations

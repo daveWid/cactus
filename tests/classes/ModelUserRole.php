@@ -17,7 +17,10 @@ class ModelUserRole extends \Cactus\PDO\Driver
 	/**
 	 * @var   array    The list of columns in the table
 	 */
-	protected $columns = array('user_id','role_id');
+	protected $columns = array(
+		'user_id' => \Cactus\FieldType::INT,
+		'role_id' => \Cactus\FieldType::INT
+	);
 
 	/**
 	 * @var   string   The name of the doa object to return in operations

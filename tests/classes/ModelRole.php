@@ -17,7 +17,10 @@ class ModelRole extends \Cactus\PDO\Driver
 	/**
 	 * @var   array    The list of columns in the table
 	 */
-	protected $columns = array('role_id','name');
+	protected $columns = array(
+		'role_id' => \Cactus\FieldType::INT,
+		'name' => \Cactus\FieldType::VARCHAR,
+	);
 
 	/**
 	 * @var   string   The name of the object to return in operations
