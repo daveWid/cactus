@@ -1,6 +1,6 @@
 <?php
 
-namespace Cactus;
+namespace Cactus\Field;
 
 /**
  * MySQL Field Types
@@ -8,7 +8,7 @@ namespace Cactus;
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class FieldType
+class MySQL
 {
 	/**
 	 * Boolean
