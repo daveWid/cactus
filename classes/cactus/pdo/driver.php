@@ -265,7 +265,8 @@ class Driver extends \Cactus\Driver
 			"LEFT JOIN {$join} ON {$join}.{$column} = {$table}.{$column} ".
 			"WHERE {$table}.{$column} IN ({$q})";
 
-		return $this->run($query, $values, true);
+		$result = $this->run($query, $values, true);
+		return $this->process_result($result);
 	}
 
 	/**
