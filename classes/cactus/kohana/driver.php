@@ -30,8 +30,8 @@ class Driver extends \Cactus\Driver
 			return null;
 		}
 
-		$result = $this->add_relationship($result->current());
-		return $result->clean();
+		$result = $this->process_result($result);
+		return $result->current();
 	}
 
 	/**
