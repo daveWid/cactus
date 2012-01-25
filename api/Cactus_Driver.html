@@ -30,6 +30,7 @@
 			<li><a href="Cactus_DriverInterface.html">Cactus\DriverInterface</a></li>
 			<li><a href="Cactus_Entity.html">Cactus\Entity</a></li>
 			<li><a href="Cactus_Exception.html">Cactus\Exception</a></li>
+			<li><a href="Cactus_Field_MySQL.html">Cactus\Field\MySQL</a></li>
 			<li><a href="Cactus_Kohana_Driver.html">Cactus\Kohana\Driver</a></li>
 			<li><a href="Cactus_Kohana_Entity.html">Cactus\Kohana\Entity</a></li>
 			<li><a href="Cactus_Loading.html">Cactus\Loading</a></li>
@@ -63,11 +64,13 @@
 		<h3>Properties</h3>
 		<ul>
 			<li><a href="#property:columns">$columns</a></li>
+			<li><a href="#property:database_type">$database_type</a></li>
 			<li><a href="#property:object_class">$object_class</a></li>
 			<li><a href="#property:primary_key">$primary_key</a></li>
 			<li><a href="#property:relationships">$relationships</a></li>
 			<li><a href="#property:table">$table</a></li>
 			<li><a href="#property:eager">$eager</a></li>
+			<li><a href="#property:fieldtype">$fieldtype</a></li>
 		</ul>
 	</div>
 
@@ -105,6 +108,13 @@
 		</div>
 	</section>
 	<section class="property">
+		<h4 id="property:database_type">protected <small>string</small> <span class="name">$database_type</span></h4>
+		<div class="description">
+			<p>The database type (used for converting to native php values)</p>
+
+		</div>
+	</section>
+	<section class="property">
 		<h4 id="property:object_class">protected <small>string</small> <span class="name">$object_class</span></h4>
 		<div class="description">
 			<p>The name of the object to return in operations</p>
@@ -136,6 +146,13 @@
 		<h4 id="property:eager">private <small>array</small> <span class="name">$eager</span></h4>
 		<div class="description">
 			<p>The eager loaded data.</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:fieldtype">private <small>\Cactus\Field\*</small> <span class="name">$fieldtype</span></h4>
+		<div class="description">
+			<p>The fieldtype to use for conversions.</p>
 
 		</div>
 	</section>
@@ -438,7 +455,7 @@
 
 	foreach ($data as $key =&gt; $value)
 	{
-		if (in_array($key, $this-&gt;columns))
+		if (in_array($key, array_keys($this-&gt;columns)))
 		{
 			$filtered[$key] = $value;
 		}
@@ -472,12 +489,27 @@
 	$eager = $this-&gt;get_eager_data($result);
 	$self = $this;
 
-	$process = function($row) use ($self, $eager){
-		$row = $self-&gt;add_relationship($row, $eager);
-		return $row-&gt;clean();
-	};
+	if ($this-&gt;fieldtype === null)
+	{
+		$class = &quot;\\Cactus\\Field\\&quot;.$this-&gt;database_type;
+		$this-&gt;fieldtype = new $class;
+	}
 
-	return new \Cactus\Collection(array_map($process, $result));
+	$processed = array();
+	foreach ($result as $row)
+	{
+		// Convert all of the data over to the native php type
+		foreach ($row-&gt;data() as $key =&gt; $value)
+		{
+			$row-&gt;{$key} = $this-&gt;fieldtype-&gt;convert($this-&gt;columns[$key], $value);
+		}
+
+		$row = $self-&gt;add_relationship($row, $eager);
+
+		$processed[] = $row-&gt;clean();
+	}
+
+	return new \Cactus\Collection($processed);
 }</pre>
 	</section>
 	<section class="method">

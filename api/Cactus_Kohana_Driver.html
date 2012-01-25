@@ -30,6 +30,7 @@
 			<li><a href="Cactus_DriverInterface.html">Cactus\DriverInterface</a></li>
 			<li><a href="Cactus_Entity.html">Cactus\Entity</a></li>
 			<li><a href="Cactus_Exception.html">Cactus\Exception</a></li>
+			<li><a href="Cactus_Field_MySQL.html">Cactus\Field\MySQL</a></li>
 			<li><a href="Cactus_Kohana_Driver.html">Cactus\Kohana\Driver</a></li>
 			<li><a href="Cactus_Kohana_Entity.html">Cactus\Kohana\Entity</a></li>
 			<li><a href="Cactus_Loading.html">Cactus\Loading</a></li>
@@ -65,6 +66,7 @@
 		<h3>Properties</h3>
 		<ul>
 			<li><a href="#property:columns">$columns</a></li>
+			<li><a href="#property:database_type">$database_type</a></li>
 			<li><a href="#property:object_class">$object_class</a></li>
 			<li><a href="#property:primary_key">$primary_key</a></li>
 			<li><a href="#property:relationships">$relationships</a></li>
@@ -105,6 +107,13 @@
 )</h4>
 		<div class="description">
 			<p>The list of columns in the table</p>
+
+		</div>
+	</section>
+	<section class="property">
+		<h4 id="property:database_type">protected <small>string</small> <span class="name">$database_type</span></h4>
+		<div class="description">
+			<p>The database type (used for converting to native php values)</p>
 
 		</div>
 	</section>
@@ -326,7 +335,7 @@
 	// Loop through the params, all keys that aren't in the column list are converted to DB::select method calls.
 	foreach ($params as $key =&gt; $value)
 	{
-		if (in_array($key, $this-&gt;columns))
+		if (in_array($key, array_keys($this-&gt;columns)))
 		{
 			if ( ! is_array($value))
 			{
@@ -382,8 +391,8 @@
 		return null;
 	}
 
-	$result = $this-&gt;add_relationship($result-&gt;current());
-	return $result-&gt;clean();
+	$result = $this-&gt;process_result($result);
+	return $result-&gt;current();
 }</pre>
 	</section>
 	<section class="method">
@@ -612,7 +621,7 @@
 
 	foreach ($data as $key =&gt; $value)
 	{
-		if (in_array($key, $this-&gt;columns))
+		if (in_array($key, array_keys($this-&gt;columns)))
 		{
 			$filtered[$key] = $value;
 		}
