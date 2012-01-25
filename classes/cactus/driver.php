@@ -36,6 +36,16 @@ abstract class Driver implements \Cactus\DriverInterface
 	protected $relationships = array();
 
 	/**
+	 * @var  string   The database type (used for converting to native php values)
+	 */
+	protected $database_type = "MySQL";
+
+	/**
+	 * @var  \Cactus\Field\*  The fieldtype to use for conversions.
+	 */
+	private $fieldtype = null;
+
+	/**
 	 * @var   array  The eager loaded data.
 	 */
 	private $eager = null;
@@ -94,12 +104,27 @@ abstract class Driver implements \Cactus\DriverInterface
 		$eager = $this->get_eager_data($result);
 		$self = $this;
 
-		$process = function($row) use ($self, $eager){
-			$row = $self->add_relationship($row, $eager);
-			return $row->clean();
-		};
+		if ($this->fieldtype === null)
+		{
+			$class = "\\Cactus\\Field\\".$this->database_type;
+			$this->fieldtype = new $class;
+		}
 
-		return new \Cactus\Collection(array_map($process, $result));
+		$processed = array();
+		foreach ($result as $row)
+		{
+			// Convert all of the data over to the native php type
+			foreach ($row->data() as $key => $value)
+			{
+				$row->{$key} = $this->fieldtype->convert($this->columns[$key], $value);
+			}
+
+			$row = $self->add_relationship($row, $eager);
+
+			$processed[] = $row->clean();
+		}
+
+		return new \Cactus\Collection($processed);
 	}
 
 	/**
