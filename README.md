@@ -135,6 +135,44 @@ $user = $model->get(1);
 $model->delete($user);
 ```
 
+## Relationships
+
+Building relationships with Cactus is easy. Within your Driver class you will
+need to add information to the `protected $relationships` array. In the ModelUser
+example above we specified a relationship using the following.
+
+``` php
+<?php
+
+protected $relationships = array(
+	// Roles
+	'role' => array(
+		'type' => \Cactus\Relationship::HAS_MANY,
+		'driver' => "ModelUserRole",
+		'column' => 'user_id',
+	//	'loading' => \Cactus\Loading::LAZY,
+	)
+);
+```
+
+The relationships array keys (in our case `role`) are the property names that will
+be set on the entity. The configuration array for each key can have the following
+options.
+
+ Key | Type | Description | Required
+-----|------|-------------|----------
+type | `string` | The type of relationship we are forming | Yes
+driver | `string` | The name \Cactus\Driver class that is used to get the relationship | Yes
+column | `string` | The name of the column to join the tables on | Yes
+loading | `int` | The type of loading to use | No (defaults to Lazy loading)
+
+There are only 2 types of relationships in Cactus, `\Cactus\Relationship::HAS_MANY`
+and `\Cactus\Relationship::HAS_ONE`.
+
+For loading you can use either `\Cactus\Loading::LAZY` or `\Cactus\Loading::EAGER`.
+Cactus loads relationship using the lazy method by default. Eagerly loaded relationships
+are loaded in a way to avoid the N+1 select problem.
+
 ## API
 
 Please open up `api/index.html` for full documentation on the Cactus library.
