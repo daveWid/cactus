@@ -46,7 +46,7 @@ class HasMany extends \Cactus\Relationship implements \Countable, \IteratorAggre
 	 */
 	public function getIterator()
 	{
-		return $this->result();
+		return new \ArrayIterator($this->result());
 	}
 
 	/**
