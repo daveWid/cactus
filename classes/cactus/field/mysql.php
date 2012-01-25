@@ -56,28 +56,28 @@ class MySQL
 	 * @param string $type   The database type to convert to
 	 * @param mixed  $value  The value from the database (usually strings)
 	 */
-	public static function convert($type, $value)
+	public function convert($type, $value)
 	{
 		switch ($type) 
 		{
-			case static::BOOLEAN:
+			case self::BOOLEAN:
 				$value = ((int) $value === 1);
 			break;
-			case static::INT:
-			case static::YEAR:
+			case self::INT:
+			case self::YEAR:
 				$value = (int) $value;
 			break;
-			case static::FLOAT:
+			case self::FLOAT:
 				$value = (float) $value;
 			break;
-			case static::DATE:
-				$value = DateTime::createFromFormat("Y-m-d", $value);
+			case self::DATE:
+				$value = \DateTime::createFromFormat("Y-m-d", $value);
 			break;
-			case static::TIME:
-				$value = DateTime::createFromFormat("H:i:s", $value);
+			case self::TIME:
+				$value = \DateTime::createFromFormat("H:i:s", $value);
 			break;
-			case static::DATETIME:
-				$value = DateTime::createFromFormat("Y-m-d H:i:s", $value);
+			case self::DATETIME:
+				$value = \DateTime::createFromFormat("Y-m-d H:i:s", $value);
 			break;
 			default:
 		}
