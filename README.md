@@ -192,6 +192,12 @@ To use the Kohana based entity class your entities will need to extend `\Cactus\
 The Kohana entity class adds in validation and error messages that are based on the
 built-in Validation library.
 
+### Creating Your Own Driver
+
+If you don't see drivers for your favorite framework, feel free to fork this repo
+and add them in. The only requirement for a driver is that it extends `\Cactus\Driver`
+and implements all of the methods in `\Cactus\DriverInterface`.
+
 ## API
 
 Please open up `api/index.html` for full documentation on the Cactus library.
