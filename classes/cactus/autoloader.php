@@ -31,7 +31,7 @@ class Autoloader
 			return false;
 		}
 
-		$file = static::$path . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
+		$file = strtolower(static::$path.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php');
 
 		if (is_file($file))
 		{
