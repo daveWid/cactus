@@ -1,5 +1,10 @@
 <?php
 
-// Setup the autoloader
-require_once "classes/cactus/autoloader.php";
-\Cactus\Autoloader::register();
+// Autoloading
+require_once "classes".DIRECTORY_SEPARATOR."SplClassLoader.php";
+
+$loader = new SplClassLoader;
+$path = dirname(__FILE__).DIRECTORY_SEPARATOR."classes".DIRECTORY_SEPARATOR;
+$loader->setIncludePath($path);
+$loader->register();
+unset($path);
