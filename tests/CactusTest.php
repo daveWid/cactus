@@ -15,7 +15,10 @@ class CactusTest extends \Cactus\Tests\DatabaseTest
 	 */
 	public function setUp()
 	{
-		\Cactus\PDO\Driver::pdo($this->getConnection()->getConnection());
+		$adapter = new \Cactus\Adapter\PDO;
+		$adapter->connection($this->getConnection()->getConnection());
+		\Cactus\Driver\Base::$adapter = $adapter;
+
 		parent::setUp();
 	}
 
@@ -135,8 +138,8 @@ class CactusTest extends \Cactus\Tests\DatabaseTest
 		$model = new \Cactus\Tests\ModelUser;
 		$users = $model->find(array(
 			'first_name' => "Abe",
-			'ORDER BY' => "`user_id` DESC",
-			'LIMIT' => 1
+			'order_by' => array("user_id", "DESC"),
+			'limit' => 1
 		));
 
 		$this->assertNotSame(0, count($users), "Finding records.");
@@ -181,7 +184,7 @@ class CactusTest extends \Cactus\Tests\DatabaseTest
 		$user = $model->get(1);
 
 		// There are 2 roles for the 1st user
-		$this->assertInstanceOf("\\Cactus\\PDO\\Driver", $user->role->driver());
+		$this->assertInstanceOf("\\Cactus\\Relationship\\HasMany", $user->role);
 	}
 
 	/**
