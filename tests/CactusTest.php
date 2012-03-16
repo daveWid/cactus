@@ -137,7 +137,7 @@ class CactusTest extends \Cactus\Tests\DatabaseTest
 	{
 		$model = new \Cactus\Tests\ModelUser;
 		$users = $model->find(array(
-			'first_name' => "Abe",
+			'first_name' => "Testy",
 			'order_by' => array("user_id", "DESC"),
 			'limit' => 1
 		));
