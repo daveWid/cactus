@@ -18,13 +18,13 @@ class ModelUser extends \Cactus\PDO\Driver
 	 * @var   array    The list of columns in the table
 	 */
 	protected $columns = array(
-		'user_id' => \Cactus\Field\MySQL::VARCHAR,
-		'email' => \Cactus\Field\MySQL::VARCHAR,
-		'password' => \Cactus\Field\MySQL::VARCHAR,
-		'last_name' => \Cactus\Field\MySQL::VARCHAR,
-		'first_name' => \Cactus\Field\MySQL::VARCHAR,
-		'status' => \Cactus\Field\MySQL::INT,
-		'create_date' => \Cactus\Field\MySQL::DATETIME,
+		'user_id' => \Cactus\Field::VARCHAR,
+		'email' => \Cactus\Field::VARCHAR,
+		'password' => \Cactus\Field::VARCHAR,
+		'last_name' => \Cactus\Field::VARCHAR,
+		'first_name' => \Cactus\Field::VARCHAR,
+		'status' => \Cactus\Field::INT,
+		'create_date' => \Cactus\Field::DATETIME,
 	);
 
 	/**
