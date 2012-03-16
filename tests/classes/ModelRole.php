@@ -2,7 +2,7 @@
 
 namespace Cactus\Tests;
 
-class ModelRole extends \Cactus\PDO\Driver
+class ModelRole extends \Cactus\Driver\Base
 {
 	/**
 	 * @var   string   The name of the table

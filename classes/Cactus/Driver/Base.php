@@ -11,6 +11,11 @@ namespace Cactus\Driver;
 abstract class Base implements \Cactus\Driver
 {
 	/**
+	 * @var \Cactus\Adapter  The database adapter to use when querying the database
+	 */
+	public static $adapter = null;
+
+	/**
 	 * @var   string   The name of the table
 	 */
 	protected $table;
@@ -46,33 +51,11 @@ abstract class Base implements \Cactus\Driver
 	private $eager = null;
 
 	/**
-	 * @var \Cactus\Adapter  The database adapter
-	 */
-	private $adapter = null;
-
-	/**
 	 * Creates a new Driver instance.
 	 */
 	public function __construct()
 	{
 		$this->field = new \Cactus\Field;
-	}
-
-	/**
-	 * Getter/Setter for the database adapter that is used to run the queries.
-	 *
-	 * @param  \Cactus\Adapter $adapter  The adapter used to execute sql querier
-	 * @return mixed                    Adapter [get] OR $this [set]
-	 */
-	public function adapter(\Cactus\Adapter $adapter = null)
-	{
-		if ($adapter === null)
-		{
-			return $this->adapter;
-		}
-
-		$this->adapter = $adapter;
-		return $this;
 	}
 
 	/**
@@ -83,10 +66,13 @@ abstract class Base implements \Cactus\Driver
 	 */
 	public function get($id)
 	{
-		$result = $this->default_query()
-			->where($this->primary_key, '=', $id)
+		$query = new \Peyote\Select($this->table);
+		$query->columns("*")
+			->where($this->primary_key, "=", $id)
 			->limit(1)
-			->execute();
+			->compile();
+
+		$result = static::$adapter->select($query, $this->object_class);
 
 		if (count($result) == 0)
 		{
@@ -112,8 +98,47 @@ abstract class Base implements \Cactus\Driver
 		}
 
 		return $this->find(array(
-			'ORDER BY' => $column." ".$direction
+			'order_by' => array($column, $direction)
 		));
+	}
+
+	/**
+	 * Finds records with the given parameters.
+	 *
+	 * @param   array   $params   The database parameters to search on
+	 * @return  array             An array of DataMapper\Object items
+	 */
+	public function find($params = array())
+	{
+		$query = new \Peyote\Select($this->table);
+
+		// Loop through the params, all keys that aren't in the column list
+		// are converted to \Peyote\Select method calls.
+		foreach ($params as $key => $value)
+		{
+			if (in_array($key, array_keys($this->columns)))
+			{
+				if ( ! is_array($value))
+				{
+					$value = array($value, "=");
+				}
+
+				list($value, $op) = $value;
+				$query->where($key, $op, $value);
+			}
+			else
+			{
+				if ( ! is_array($value))
+				{
+					$value = array($value);
+				}
+
+				call_user_func_array(array($query, $key), $value);
+			}
+		}
+
+		$result = static::$adapter->select($query->compile(), $this->object_class);
+		return $this->process_result($result);
 	}
 
 	/**
@@ -131,7 +156,127 @@ abstract class Base implements \Cactus\Driver
 	}
 
 	/**
-	 * Gets all of the relationships for the DataMapper
+	 * Creates a new record in the database.
+	 *
+	 * @throws  \Cactus\Exception           The passed in object is not the correct type
+	 * @param   \Cactus\ENtity   $object    The object to create
+	 * @return  mixed                       array [insert_id, affected rows] OR boolean false for failed validation
+	 */
+	public function create(\Cactus\Entity & $object, $validate = true)
+	{
+		// Make sure it is a new object
+		if ($object->is_new() !== true)
+		{
+			throw new \Cactus\Exception("Use \Cactus\Driver::update to save existing objects");
+		}
+
+		$this->check_object($object);
+
+		// Check for validation and run it
+		if ($validate AND ! $object->validate())
+		{
+			return false;
+		}
+
+		$data = $this->filter($object->data());
+
+		$insert = new \Peyote\Insert($this->table);
+		$insert->columns(array_keys($data))
+			->values(array_values($data));
+
+		$result = static::$adapter->insert($insert->compile());
+
+		$object = $this->get($result[0]);
+		return $result;
+	}
+
+	/**
+	 * Updates a record
+	 *
+	 * @throws  \Cactus\Exception           The passed in object is not the correct type
+	 * @param   \Cactus\Entity   $object    The object to create
+	 * @param   boolean          $validate  Validate the object before saving?
+	 * @return  mixed                       (int) affected rows OR boolean false for failed validation
+	 */
+	public function update(\Cactus\Entity & $object, $validate = true)
+	{
+		// Make sure it is not a new object
+		if ($object->is_new() === true)
+		{
+			throw new \Cactus\Exception("Use \Cactus\Driver::create to save a new object");
+		}
+
+		$this->check_object($object);
+
+		// Check for validation and run it
+		if ($validate AND ! $object->validate())
+		{
+			return false;
+		}
+
+		$data = $this->filter($object->modified());
+		$affected = 0;
+
+		if ( ! empty($data))
+		{
+			$update = new \Peyote\Update($this->table);
+			$update->set($data)
+				->where($this->primary_key, '=', $object->get($this->primary_key))
+				->limit(1);
+
+			$affected = static::$adapter->update($update->compile());
+		}
+
+		$object->clean();
+		return $affected;
+	}
+
+	/**
+	 * Deletes a record from the database
+	 *
+	 * @throws  \Cactus\Exception          The passed in object is not the correct type
+	 * @param   \Cactus\Entity   $object   The database object to delete
+	 * @return  int                        The number of affected rows 
+	 */
+	public function delete(\Cactus\Entity & $object)
+	{
+		$this->check_object($object);
+
+		$delete = new \Peyote\Delete($this->table);
+		$delete->where($this->primary_key, '=', $object->get($this->primary_key))
+			->limit(1);
+
+		$affected = static::$adapter->delete($delete->compile());
+
+		if ($affected == 1)
+		{
+			$object = null;
+		}
+
+		return $affected;
+	}
+
+	/**
+	 * Gets all of the records associated in the table joining a table with an IN statement.
+	 *
+	 * @param  array  $values  The values to join in
+	 * @param  string $table   The table to join
+	 * @param  string $column  The column to join on
+	 * @return array
+	 */
+	public function join_in(array $values, $table, $column)
+	{
+		$select = new \Peyote\Select($this->table);
+		$select->columns("{$this->table}.*")
+			->join($table, "LEFT")->on("{$table}.{$column}", "=", "{$this->table}.{$column}")
+			->where("{$table}.{$column}", "IN", $values);
+
+		$result = static::$adapter->select($select->compile(), $this->object_class);
+		return $this->process_result($result);
+	}
+
+	/**
+	 * Gets all of the relationships for this class
 	 *
 	 * @return  array  List of relationship
 	 */
@@ -166,49 +311,6 @@ abstract class Base implements \Cactus\Driver
 		}
 
 		return new \Cactus\Collection($processed);
-	}
-
-	/**
-	 * Gets query data from eagerly loaded relationships
-	 *
-	 * @param  mixed $result An iterable result set
-	 * @return array  The eagerly loaded associative array
-	 */
-	private function get_eager_data($result)
-	{
-		if ($this->eager !== null)
-		{
-			return $this->eager;
-		}
-
-		$eager = array();
-
-		if ( ! empty($this->relationships))
-		{
-			foreach ($this->relationships as $name => $config)
-			{
-				if (isset($config['loading']) AND $config['loading'] === \Cactus\Loading::EAGER)
-				{
-					$primary = $this->primary_key;
-					$data = array_map(function($row) use ($primary){
-						return $row->$primary;
-					}, $result);
-
-					$driver = new $config['driver'];
-
-					$tmp = array();
-					foreach ($driver->join_in($data, $this->table, $this->primary_key) as $row)
-					{
-						$tmp[$row->$primary][] = $row;
-					}
-
-					$eager[$name] = $tmp;
-				}
-			}
-		}
-
-		$this->eager = $eager;
-		return $this->eager;
 	}
 
 	/**
@@ -284,6 +386,82 @@ abstract class Base implements \Cactus\Driver
 		}
 
 		return $filtered;
+	}
+
+	/**
+	 * Deletes all of the rows in a table where the column equals the value
+	 *
+	 * @param   string   $column    The column
+	 * @param   string   $value     The column value
+	 * @param   string   $op        The operator to use
+	 * @return  int                 The number of affected rows
+	 */
+	public function delete_on_column($column, $value, $op = "=")
+	{
+		$delete = new \Peyote\Delete($this->table);
+		$delete->where($column, $op, $value);
+
+		return static::$adapter->delete($delete->compile());
+	}
+
+	/**
+	 * Runs a cascade delete.
+	 */
+	protected function cascade($object)
+	{
+		if(empty($this->relationships) === true)
+		{
+			return; // Nothing to do....
+		}
+
+		foreach ($this->relationships as $row)
+		{
+			$mapper = new $row['driver'];
+			$mapper->delete_on_column($row['column'], $object->get($row['column']));
+		}
+	}
+
+	/**
+	 * Gets query data from eagerly loaded relationships
+	 *
+	 * @param  mixed $result An iterable result set
+	 * @return array  The eagerly loaded associative array
+	 */
+	private function get_eager_data($result)
+	{
+		if ($this->eager !== null)
+		{
+			return $this->eager;
+		}
+
+		$eager = array();
+
+		if ( ! empty($this->relationships))
+		{
+			foreach ($this->relationships as $name => $config)
+			{
+				if (isset($config['loading']) AND $config['loading'] === \Cactus\Loading::EAGER)
+				{
+					$primary = $this->primary_key;
+					$data = array_map(function($row) use ($primary){
+						return $row->$primary;
+					}, $result);
+
+					$driver = new $config['driver'];
+
+					$tmp = array();
+					foreach ($driver->join_in($data, $this->table, $this->primary_key) as $row)
+					{
+						$tmp[$row->$primary][] = $row;
+					}
+
+					$eager[$name] = $tmp;
+				}
+			}
+		}
+
+		$this->eager = $eager;
+		return $this->eager;
 	}
 
 }

@@ -11,14 +11,6 @@ namespace Cactus;
 interface Driver
 {
 	/**
-	 * Getter/Setter for the database adapter that is used to run the queries.
-	 *
-	 * @param  \Cactus\Adapter $adapter  The adapter used to execute sql querier
-	 * @return mixed                    Adapter [get] OR $this [set]
-	 */
-	public function adapter(\Cactus\Adapter $adapter = null);
-
-	/**
 	 * Returns a row from the table with the given id for the primary key column
 	 *
 	 * @param   int   $id   The primary id value
@@ -113,5 +105,24 @@ interface Driver
 	 * @param   \Cactus\Entity   $object    The datamapper object to check
 	 */
 	public function check_object(\Cactus\Entity $object);
+
+	/**
+	 * Filters any data against the column list to make sure the
+	 * insert/update functions work properly.
+	 *
+	 * @param   array   $data   The data to filter
+	 * @return  array           Filtered data
+	 */
+	public function filter(array $data);
+
+	/**
+	 * Deletes all of the rows in a table where the column equals the value
+	 *
+	 * @param   string   $column    The column
+	 * @param   string   $value     The column value
+	 * @param   string   $op        The operator to use
+	 * @return  int                 The number of affected rows
+	 */
+	public function delete_on_column($column, $value, $op = "=");
 
 }

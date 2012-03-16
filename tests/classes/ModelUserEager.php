@@ -2,7 +2,7 @@
 
 namespace Cactus\Tests;
 
-class ModelUserEager extends \Cactus\PDO\Driver
+class ModelUserEager extends \Cactus\Driver\Base
 {
 	/**
 	 * @var   string   The name of the table
