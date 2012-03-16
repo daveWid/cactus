@@ -13,12 +13,12 @@ abstract class Relationship
 	/**
 	 * A has one relationship
 	 */
-	const HAS_ONE = "hasone";
+	const HAS_ONE = "HasOne";
 
 	/**
 	 * A has may relationship
 	 */
-	const HAS_MANY = "hasmany";
+	const HAS_MANY = "HasMany";
 
 	/**
 	 * Creates a Relationship based on a configuration array.
@@ -29,7 +29,7 @@ abstract class Relationship
 	 */
 	public static function factory(array $config, $value)
 	{
-		$class = "\\Cactus\\Relationship\\{$config['type']}";
+		$class = "Cactus\\Relationship\\{$config['type']}";
 		return new $class($config['column'], $value, $config['driver']);
 	}
 
