@@ -1,14 +1,14 @@
 <?php
 
-namespace Cactus\Field;
+namespace Cactus;
 
 /**
- * MySQL Field Types
+ * Database field types with a built-in converter.
  *
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class MySQL
+class Field
 {
 	/**
 	 * Boolean
