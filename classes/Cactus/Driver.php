@@ -3,71 +3,45 @@
 namespace Cactus;
 
 /**
- * An abstract implentation for the Driver interface.
+ * The interface for Cactus drivers.
  *
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class Driver implements \Cactus\DriverInterface
+interface Driver
 {
 	/**
-	 * @var   string   The name of the table
+	 * Getter/Setter for the database adapter that is used to run the queries.
+	 *
+	 * @param  \Cactus\Adapter $adapter  The adapter used to execute sql querier
+	 * @return mixed                    Adapter [get] OR $this [set]
 	 */
-	protected $table;
+	public function adapter(\Cactus\Adapter $adapter = null);
 
 	/**
-	 * @var   string   The name of the primary key column
+	 * Returns a row from the table with the given id for the primary key column
+	 *
+	 * @param   int   $id   The primary id value
+	 * @return  \Cactus\Entity
 	 */
-	protected $primary_key;
+	public function get($id);
 
 	/**
-	 * @var   array    The list of columns in the table
-	 */
-	protected $columns = array();
-
-	/**
-	 * @var   string   The name of the object to return in operations
-	 */
-	protected $object_class;
-
-	/**
-	 * @var   array   A list of all table relationships 
-	 */
-	protected $relationships = array();
-
-	/**
-	 * @var  string   The database type (used for converting to native php values)
-	 */
-	protected $database_type = "MySQL";
-
-	/**
-	 * @var  \Cactus\Field\*  The fieldtype to use for conversions.
-	 */
-	private $fieldtype = null;
-
-	/**
-	 * @var   array  The eager loaded data.
-	 */
-	private $eager = null;
-
-	/**
-	 * Gets all of the rows in the database. 
+	 * Gets all of the rows in the database.
 	 *
 	 * @param   string   $column      The column to order on
 	 * @param   string   $direction   The directory to sort
 	 * @return  array                 An array of DataMapper\Object items
 	 */
-	public function all($column = null, $direction = 'DESC')
-	{
-		if ($column === null)
-		{
-			$column = $this->primary_key;
-		}
+	public function all($column = null, $direction = 'DESC');
 
-		return $this->find(array(
-			'ORDER BY' => $column." ".$direction
-		));
-	}
+	/**
+	 * Finds records with the given parameters.
+	 *
+	 * @param   array   $params   The database parameters to search on
+	 * @return  array             An array of \Cactus\Entity items
+	 */
+	public function find($params = array());
 
 	/**
 	 * Saves an object.
@@ -76,99 +50,52 @@ abstract class Driver implements \Cactus\DriverInterface
 	 * @param   boolean          $validate   Should the data be validated first??
 	 * @return  mixed                        \Cactus\Entity OR boolean false for failed validation
 	 */
-	public function save(\Cactus\Entity & $object, $validate = true)
-	{
-		return ($object->is_new()) ?
-			$this->create($object, $validate) :
-			$this->update($object, $validate) ;
-	}
+	public function save(\Cactus\Entity & $object, $validate = true);
+
+	/**
+	 * Creates a new record in the database.
+	 *
+	 * @throws  \Cactus\Exception         The passed in object is not the correct type
+	 * @param   \Cactus\Object   $object  The object to create
+	 * @return  mixed                     array [insert_id, affected rows] OR boolean false for failed validation
+	 */
+	public function create(\Cactus\Entity & $object, $validate = true);
+
+	/**
+	 * Updates a record
+	 *
+	 * @throws  \Cactus\Exception           The passed in object is not the correct type
+	 * @param   \Cactus\Entity   $object    The object to create
+	 * @param   boolean          $validate  Validate the object before saving?
+	 * @return  mixed                       (int) affected rows OR boolean false for failed validation
+	 */
+	public function update(\Cactus\Entity & $object, $validate = true);
+
+	/**
+	 * Deletes a record from the database
+	 *
+	 * @throws  \Cactus\Exception          The passed in object is not the correct type
+	 * @param   \Cactus\Entity   $object   The database object to delete
+	 * @return  int                        The number of affected rows
+	 */
+	public function delete(\Cactus\Entity & $object);
+
+	/**
+	 * Gets all of the records associated in the table.
+	 *
+	 * @param  array  $values  The values to join in
+	 * @param  string $table   The table to join
+	 * @param  string $column  The column to join on
+	 * @return array
+	 */
+	public function join_in(array $values, $table, $column);
 
 	/**
 	 * Gets all of the relationships for the DataMapper
 	 *
 	 * @return  array  List of relationship
 	 */
-	public function relationships()
-	{
-		return $this->relationships;
-	}
-
-	/**
-	 * Processes a result set before returning it.
-	 *
-	 * @param   mixed   $result   An iteratable object
-	 * @return  \Cactus\Collection
-	 */
-	public function process_result($result)
-	{
-		$eager = $this->get_eager_data($result);
-		$self = $this;
-
-		if ($this->fieldtype === null)
-		{
-			$class = "\\Cactus\\Field\\".$this->database_type;
-			$this->fieldtype = new $class;
-		}
-
-		$processed = array();
-		foreach ($result as $row)
-		{
-			// Convert all of the data over to the native php type
-			foreach ($row->data() as $key => $value)
-			{
-				$row->{$key} = $this->fieldtype->convert($this->columns[$key], $value);
-			}
-
-			$row = $self->add_relationship($row, $eager);
-
-			$processed[] = $row->clean();
-		}
-
-		return new \Cactus\Collection($processed);
-	}
-
-	/**
-	 * Gets query data from eagerly loaded relationships
-	 *
-	 * @param  mixed $result An iterable result set
-	 * @return array  The eagerly loaded associative array
-	 */
-	private function get_eager_data($result)
-	{
-		if ($this->eager !== null)
-		{
-			return $this->eager;
-		}
-
-		$eager = array();
-
-		if ( ! empty($this->relationships))
-		{
-			foreach ($this->relationships as $name => $config)
-			{
-				if (isset($config['loading']) AND $config['loading'] === \Cactus\Loading::EAGER)
-				{
-					$primary = $this->primary_key;
-					$data = array_map(function($row) use ($primary){
-						return $row->$primary;
-					}, $result);
-
-					$driver = new $config['driver'];
-
-					$tmp = array();
-					foreach ($driver->join_in($data, $this->table, $this->primary_key) as $row)
-					{
-						$tmp[$row->$primary][] = $row;
-					}
-
-					$eager[$name] = $tmp;
-				}
-			}
-		}
-
-		$this->eager = $eager;
-		return $this->eager;
-	}
+	public function relationships();
 
 	/**
 	 * Adds a relationship to a result.
@@ -177,72 +104,14 @@ abstract class Driver implements \Cactus\DriverInterface
 	 * @param  array          $data    If an eager load, the eager load data.
 	 * @return \Cactus\Entity
 	 */
-	public function add_relationship(\Cactus\Entity $result, array $data = array())
-	{
-		// If no relationships, then there is nothing to do
-		if (empty($this->relationships))
-		{
-			return $result;
-		}
-
-		// Just a single row
-		foreach ($this->relationships as $name => $config)
-		{
-			$value = $result->{$config['column']};
-			$relationship = \Cactus\Relationship::factory($config, $value);
-
-			// Check for eager loading
-			if (isset($data[$name]))
-			{
-				$value = isset($data[$name][$value]) ? $data[$name][$value] : array();
-
-				if ($config['type'] === \Cactus\Relationship::HAS_ONE)
-				{
-					$value = isset($value[0]) ? $value[0] : null;
-				}
-
-				$relationship->set_result($value);
-			}
-
-			$result->{$name} = $relationship;
-		}
-
-		return $result;
-	}
+	public function add_relationship(\Cactus\Entity $result, array $data = array());
 
 	/**
 	 * Checks to make sure the object passed in is of the correct type.
 	 *
 	 * @throws  \Cactus\Exception           The passed in object is not the correct type
-	 * @param   \Cactus\Entity   $object    The \Cactus\Entity to check
+	 * @param   \Cactus\Entity   $object    The datamapper object to check
 	 */
-	public function check_object(\Cactus\Entity $object)
-	{
-		if ( ! $object instanceof $this->object_class)
-		{
-			throw new \Cactus\Exception(get_called_class()." expects a {$this->object_class} object.");
-		}
-	}
-
-	/**
-	 * Filters any data against the column list to make sure the insert/update functions work properly.
-	 *
-	 * @param   array   $data   The data to filter
-	 * @return  array           Filtered data
-	 */
-	public function filter(array $data)
-	{
-		$filtered = array();
-
-		foreach ($data as $key => $value)
-		{
-			if (in_array($key, array_keys($this->columns)))
-			{
-				$filtered[$key] = $value;
-			}
-		}
-
-		return $filtered;
-	}
+	public function check_object(\Cactus\Entity $object);
 
 }
