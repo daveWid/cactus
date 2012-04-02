@@ -42,7 +42,7 @@ abstract class Model
 	private $relationships = array();
 
 	/**
-	 * @var  \Cactus\Converter  The type converter.
+	 * @var  \Cactus\Field  The type converter.
 	 */
 	private $converter = null;
 
@@ -68,7 +68,7 @@ abstract class Model
 	 */
 	public function __construct(array $props)
 	{
-		$this->converter = new \Cactus\Converter;
+		$this->converter = new \Cactus\Field;
 
 		$list = array("table","primary_key","columns","object_class","relationships");
 		foreach ($props as $name => $value)
