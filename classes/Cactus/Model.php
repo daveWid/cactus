@@ -1,6 +1,6 @@
 <?php
 
-namespace Cactus\Driver;
+namespace Cactus;
 
 /**
  * The model class defines the API that developers will use to access their data
