@@ -44,11 +44,18 @@ interface Adapter
 	public function delete($query);
 
 	/**
-	 * Gets the connection object.
+	 * The database connection object.
 	 *
-	 * @param  mixed $db  The database connection object used internally
-	 * @return mixed      [get] The connection object OR [set] $this
+	 * @return mixed      The connection object
 	 */
-	public function connection($db = null);
+	public function get_connection();
+
+	/**
+	 * Sets the connection object used to connect to the database.
+	 *
+	 * @param  mixed $db  The database connection object.
+	 * @return \Cactus\Adapter
+	 */
+	public function set_connection($db);
 
 }
