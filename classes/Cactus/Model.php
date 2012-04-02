@@ -98,7 +98,7 @@ abstract class Model
 	 */
 	public function set_adapter($adapter)
 	{
-		self:$adapter = $adapter;
+		self::$adapter = $adapter;
 		return $this;
 	}
 
