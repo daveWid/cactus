@@ -3,47 +3,48 @@
 namespace Cactus\Driver;
 
 /**
- * A base driver that you will extend in your projects.
+ * The model class defines the API that developers will use to access their data
+ * from a data source.
  *
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class Base implements \Cactus\Driver
+abstract class Model
 {
 	/**
-	 * @var \Cactus\Adapter  The database adapter to use when querying the database
+	 * @var \Cactus\Adapter  The adapter that is used to query for data.
 	 */
-	public static $adapter = null;
+	private static $adapter;
 
 	/**
 	 * @var   string   The name of the table
 	 */
-	protected $table;
+	private $table;
 
 	/**
 	 * @var   string   The name of the primary key column
 	 */
-	protected $primary_key;
+	private $primary_key;
 
 	/**
 	 * @var   array    The list of columns in the table
 	 */
-	protected $columns = array();
+	private $columns = array();
 
 	/**
 	 * @var   string   The name of the object to return in operations
 	 */
-	protected $object_class;
+	private $object_class = null;
 
 	/**
 	 * @var   array   A list of all table relationships 
 	 */
-	protected $relationships = array();
+	private $relationships = array();
 
 	/**
-	 * @var  \Cactus\Field  The field type converter.
+	 * @var  \Cactus\Converter  The type converter.
 	 */
-	private $field = null;
+	private $converter = null;
 
 	/**
 	 * @var   array  The eager loaded data.
@@ -52,10 +53,53 @@ abstract class Base implements \Cactus\Driver
 
 	/**
 	 * Creates a new Driver instance.
+	 *
+	 * The properties that can be set are as follows.
+	 * 
+	 * Name | Type | Description
+	 * -----|------|-------------
+	 * table | string |The database table name
+	 * primary_key | string |The column name that is the primary key of the table
+	 * columns | array | An array of columns and types that are in the table
+	 * object_class | string | The name of the class to return in all select statements
+	 * relationships | array | An array that holds all of the Relationship objects
+	 *
+	 * @param array $props  Internal properties to set.
 	 */
-	public function __construct()
+	public function __construct(array $props)
 	{
-		$this->field = new \Cactus\Field;
+		$this->converter = new \Cactus\Converter;
+
+		$list = array("table","primary_key","columns","object_class","relationships");
+		foreach ($props as $name => $value)
+		{
+			if (in_array($name, $list))
+			{
+				$this->{$name} = $value;
+			}
+		}
+	}
+
+	/**
+	 * Gets the database object.
+	 *
+	 * @return \Cactus\Adapter 
+	 */
+	public function get_adapter()
+	{
+		return self::$adapter;
+	}
+
+	/**
+	 * Sets the adapter object used to run queries.
+	 *
+	 * @param  \Cactus\Adapter $adapter  The adapter used to query for data.
+	 * @return \Cactus\Driver 
+	 */
+	public function set_adapter($adapter)
+	{
+		self:$adapter = $adapter;
+		return $this;
 	}
 
 	/**
@@ -69,10 +113,9 @@ abstract class Base implements \Cactus\Driver
 		$query = new \Peyote\Select($this->table);
 		$query->columns("*")
 			->where($this->primary_key, "=", $id)
-			->limit(1)
-			->compile();
+			->limit(1);
 
-		$result = static::$adapter->select($query, $this->object_class);
+		$result = $this->get_adapter()->select($query->compile(), $this->object_class);
 
 		if (count($result) == 0)
 		{
@@ -88,7 +131,7 @@ abstract class Base implements \Cactus\Driver
 	 *
 	 * @param   string   $column      The column to order on
 	 * @param   string   $direction   The directory to sort
-	 * @return  array                 An array of DataMapper\Object items
+	 * @return  \Cactus\Collection
 	 */
 	public function all($column = null, $direction = 'DESC')
 	{
@@ -106,7 +149,7 @@ abstract class Base implements \Cactus\Driver
 	 * Finds records with the given parameters.
 	 *
 	 * @param   array   $params   The database parameters to search on
-	 * @return  array             An array of DataMapper\Object items
+	 * @return  \Cactus\Collection
 	 */
 	public function find($params = array())
 	{
@@ -137,7 +180,7 @@ abstract class Base implements \Cactus\Driver
 			}
 		}
 
-		$result = static::$adapter->select($query->compile(), $this->object_class);
+		$result = $this->get_adapter()->select($query->compile(), $this->object_class);
 		return $this->process_result($result);
 	}
 
@@ -184,7 +227,7 @@ abstract class Base implements \Cactus\Driver
 		$insert->columns(array_keys($data))
 			->values(array_values($data));
 
-		$result = static::$adapter->insert($insert->compile());
+		$result = $this->get_adapter()->insert($insert->compile());
 
 		$object = $this->get($result[0]);
 		return $result;
@@ -224,7 +267,7 @@ abstract class Base implements \Cactus\Driver
 				->where($this->primary_key, '=', $object->get($this->primary_key))
 				->limit(1);
 
-			$affected = static::$adapter->update($update->compile());
+			$affected = $this->get_adapter()->update($update->compile());
 		}
 
 		$object->clean();
@@ -246,7 +289,7 @@ abstract class Base implements \Cactus\Driver
 		$delete->where($this->primary_key, '=', $object->get($this->primary_key))
 			->limit(1);
 
-		$affected = static::$adapter->delete($delete->compile());
+		$affected = $this->get_adapter()->delete($delete->compile());
 
 		if ($affected == 1)
 		{
@@ -271,7 +314,7 @@ abstract class Base implements \Cactus\Driver
 			->join($table, "LEFT")->on("{$table}.{$column}", "=", "{$this->table}.{$column}")
 			->where("{$table}.{$column}", "IN", $values);
 
-		$result = static::$adapter->select($select->compile(), $this->object_class);
+		$result = $this->get_adapter()->select($select->compile(), $this->object_class);
 		return $this->process_result($result);
 	}
 
@@ -302,7 +345,7 @@ abstract class Base implements \Cactus\Driver
 			// Convert all of the data over to the native php type
 			foreach ($row->data() as $key => $value)
 			{
-				$row->{$key} = $this->field->convert($this->columns[$key], $value);
+				$row->{$key} = $this->converter->convert($this->columns[$key], $value);
 			}
 
 			$row = $self->add_relationship($row, $eager);
@@ -401,7 +444,7 @@ abstract class Base implements \Cactus\Driver
 		$delete = new \Peyote\Delete($this->table);
 		$delete->where($column, $op, $value);
 
-		return static::$adapter->delete($delete->compile());
+		return $this->get_adapter()->delete($delete->compile());
 	}
 
 	/**
@@ -424,8 +467,8 @@ abstract class Base implements \Cactus\Driver
 	/**
 	 * Gets query data from eagerly loaded relationships
 	 *
-	 * @param  mixed $result An iterable result set
-	 * @return array  The eagerly loaded associative array
+	 * @param  mixed $result  An iterable result set
+	 * @return array          The eagerly loaded associative array
 	 */
 	private function get_eager_data($result)
 	{
