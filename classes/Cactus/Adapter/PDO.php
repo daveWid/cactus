@@ -16,7 +16,7 @@ class PDO implements \Cactus\Adapter
 	 * @var \PDO  The PDO connection object
 	 */
 	private $pdo;
-	
+
 	/**
 	 * Run a SELECT query.
 	 *
@@ -92,18 +92,23 @@ class PDO implements \Cactus\Adapter
 	}
 
 	/**
-	 * Gets the connection object.
+	 * The database connection object.
 	 *
-	 * @param  mixed $db  The database connection object used internally
-	 * @return mixed      [get] The connection object OR [set] $this
+	 * @return \PDO  The pdo connection object
 	 */
-	public function connection($db = null)
+	public function get_connection()
 	{
-		if ($db === null)
-		{
-			return $this->pdo;
-		}
+		return $this->pdo;
+	}
 
+	/**
+	 * Sets the connection object used to connect to the database.
+	 *
+	 * @param  \PDO $db  The database connection object.
+	 * @return \Cactus\Adapter
+	 */
+	public function set_connection($db)
+	{
 		$this->pdo = $db;
 		return $this;
 	}
