@@ -84,22 +84,6 @@ class ModelTest extends \Cactus\Tests\DatabaseTest
 	}
 
 	/**
-	 * A test to make sure the modified data is correctly being set
-	 */
-	public function testModified()
-	{
-		$new = array(
-			'first_name' => "George",
-			'last_name' => "Washington"
-		);
-
-		$user = $this->model->get(1);
-		$user->set($new);
-
-		$this->assertSame($new, $user->modified());
-	}
-
-	/**
 	 * Runs through the read, update, save procedure
 	 */
 	public function testUpdate()
