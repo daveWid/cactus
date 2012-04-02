@@ -3,12 +3,12 @@
 namespace Cactus;
 
 /**
- * Database field types with a built-in converter.
+ * Converts Database fields into native PHP types.
  *
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class Field
+class Converter
 {
 	/**
 	 * Boolean
