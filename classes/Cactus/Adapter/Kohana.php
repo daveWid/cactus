@@ -39,7 +39,7 @@ class Kohana implements \Cactus\Adapter
 			$as_object = false;
 		}
 
-		return \Database::instance()->query(\Database::SELECT, $query, $as_object);
+		return $this->db->query(\Database::SELECT, $query, $as_object);
 	}
 
 	/**
@@ -50,7 +50,7 @@ class Kohana implements \Cactus\Adapter
 	 */
 	public function insert($query)
 	{
-		return \Database::instance()->query(\Database::INSERT, $query);
+		return $this->db->query(\Database::INSERT, $query);
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Kohana implements \Cactus\Adapter
 	 */
 	public function update($query)
 	{
-		return \Database::instance()->query(\Database::UPDATE, $query);
+		return $this->db->query(\Database::UPDATE, $query);
 	}
 
 	/**
@@ -72,7 +72,7 @@ class Kohana implements \Cactus\Adapter
 	 */
 	public function delete($query)
 	{
-		return \Database::instance()->query(\Database::DELETE, $query);
+		return $this->db->query(\Database::DELETE, $query);
 	}
 
 	/**
@@ -81,13 +81,19 @@ class Kohana implements \Cactus\Adapter
 	 * @param  mixed $db  The database object.
 	 * @return mixed      The database object [get] OR $this [set]
 	 */
-	public function connection($db = null)
+	public function get_connection($db = null)
 	{
-		if ($db === null)
-		{
-			return $this->db;
-		}
+		return $this->db;
+	}
 
+	/**
+	 * Set the database connection for the adapter.
+	 *
+	 * @param  \Database $db   The database class to use when running queries.
+	 * @return \Cactus\Adapter\Kohana
+	 */
+	public function set_connection($db)
+	{
 		$this->db = $db;
 		return $this;
 	}
