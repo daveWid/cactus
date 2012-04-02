@@ -8,7 +8,7 @@ namespace Cactus;
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class Converter
+class Field
 {
 	/**
 	 * Boolean
