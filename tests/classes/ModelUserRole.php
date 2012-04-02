@@ -2,29 +2,21 @@
 
 namespace Cactus\Tests;
 
-class ModelUserRole extends \Cactus\Driver\Base
+class ModelUserRole extends \Cactus\Model
 {
 	/**
-	 * @var   string   The name of the table
+	 * Model setup 
 	 */
-	protected $table = "user_role";
-
-	/**
-	 * @var   string   The name of the primary key column
-	 */
-	protected $primary_key = "user_id";
-
-	/**
-	 * @var   array    The list of columns in the table
-	 */
-	protected $columns = array(
-		'user_id' => \Cactus\Field::INT,
-		'role_id' => \Cactus\Field::INT
-	);
-
-	/**
-	 * @var   string   The name of the doa object to return in operations
-	 */
-	protected $object_class = "\\Cactus\\Tests\\UserRole";
-
+	public function __construct()
+	{
+		parent::__construct(array(
+			'table' => "user_role",
+			'primary_key' => "user_id",
+			'columns' => array(
+				'user_id' => \Cactus\Field::INT,
+				'role_id' => \Cactus\Field::INT
+			),
+			'object_class' => "\\Cactus\\Tests\\UserRole",
+		));
+	}
 }

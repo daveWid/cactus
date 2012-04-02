@@ -2,29 +2,22 @@
 
 namespace Cactus\Tests;
 
-class ModelRole extends \Cactus\Driver\Base
+class ModelRole extends \Cactus\Model
 {
 	/**
-	 * @var   string   The name of the table
+	 * Model setup.
 	 */
-	protected $table = "role";
-
-	/**
-	 * @var   string   The name of the primary key column
-	 */
-	protected $primary_key = "role_id";
-
-	/**
-	 * @var   array    The list of columns in the table
-	 */
-	protected $columns = array(
-		'role_id' => \Cactus\Field::INT,
-		'name' => \Cactus\Field::VARCHAR,
-	);
-
-	/**
-	 * @var   string   The name of the object to return in operations
-	 */
-	protected $object_class = "\\Cactus\\Tests\\Role";
+	public function __construct()
+	{
+		parent::__construct(array(
+			'table' => "role",
+			'primary_key' => "role_id",
+			'object_class' => "\\Cactus\\Tests\\Role",
+			'columns' => array(
+				'role_id' => \Cactus\Field::INT,
+				'name' => \Cactus\Field::VARCHAR,
+			),
+		));
+	}
 
 }
