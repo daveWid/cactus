@@ -110,19 +110,16 @@ abstract class Model
 	 */
 	public function get($id)
 	{
-		$query = new \Peyote\Select($this->table);
-		$query->columns("*")
-			->where($this->primary_key, "=", $id)
-			->limit(1);
-
-		$result = $this->get_adapter()->select($query->compile(), $this->object_class);
+		$result = $this->find(array(
+			$this->primary_key => $id,
+			'limit' => 1,
+		));
 
 		if (count($result) == 0)
 		{
 			return null;
 		}
 
-		$result = $this->process_result($result);
 		return $result->current();
 	}
 
@@ -148,12 +145,16 @@ abstract class Model
 	/**
 	 * Finds records with the given parameters.
 	 *
-	 * @param   array   $params   The database parameters to search on
-	 * @return  \Cactus\Collection
+	 * @param  array          $params  The database parameters to search on
+	 * @param  \Peyote\Select $query   A Select query.
+	 * @return \Cactus\Collection
 	 */
-	public function find($params = array())
+	public function find($params = array(), $query = null)
 	{
-		$query = new \Peyote\Select($this->table);
+		if ($query === null)
+		{
+			$query = new \Peyote\Select($this->table);
+		}
 
 		// Loop through the params, all keys that aren't in the column list
 		// are converted to \Peyote\Select method calls.
