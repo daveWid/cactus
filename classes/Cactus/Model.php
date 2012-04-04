@@ -19,27 +19,27 @@ abstract class Model
 	/**
 	 * @var   string   The name of the table
 	 */
-	private $table;
+	protected $table;
 
 	/**
 	 * @var   string   The name of the primary key column
 	 */
-	private $primary_key;
+	protected $primary_key;
 
 	/**
 	 * @var   array    The list of columns in the table
 	 */
-	private $columns = array();
+	protected $columns = array();
 
 	/**
 	 * @var   string   The name of the object to return in operations
 	 */
-	private $object_class = null;
+	protected $object_class = null;
 
 	/**
 	 * @var   array   A list of all table relationships 
 	 */
-	private $relationships = array();
+	protected $relationships = array();
 
 	/**
 	 * @var  \Cactus\Field  The type converter.
