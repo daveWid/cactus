@@ -110,6 +110,7 @@ class PDO implements \Cactus\Adapter
 	public function set_connection($db)
 	{
 		$this->pdo = $db;
+		$this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 		return $this;
 	}
 
