@@ -1,11 +1,11 @@
 # Cactus
 
-Cactus is a ORM based on the DataMapper library for PHP 5.3+
+Cactus is a ORM based on the DataMapper pattern for PHP 5.3+
 
 ## Example
 
 We will walk through a quick example on how to use Cactus. First we will start
-with a table called `user` that we will builder our example around.
+with a table called `user` that we will build our example around.
 
 ``` sql
 CREATE TABLE IF NOT EXISTS `user` (
@@ -20,76 +20,73 @@ CREATE TABLE IF NOT EXISTS `user` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 ```
 
-Working with this structure we can now dive into drivers and entities.
+Working with this structure we can now dive into the model and entity classes.
 
-### Driver
+### Model
 
-The driver is the class that holds all of the information about the database,
+The model is the class that holds all of the information about the database,
 column names, interactions, relationships, etc...
 
-For this example we will be using the built in PDO driver. For the PDO driver you
-need to set up your database credentials, which can be done with the following call
-anywhere in your code before you run a database query.
+To get the model to actually connect to the database, you must setup a \Cactus\Adapter
+to do so. Built into Cactus is an Adapter based of the PDO class. You will only
+need to set the adapter 1 time per request as it is a shared resource between
+all \Cactus\Model classes.
 
 ``` php
 <?php
 
-$pdo = new PDO(string $dsn [, string $username [, string $password [, array $driver_options ]]]);
-\Cactus\PDO\Driver::pdo($pdo);
+$pdo = new PDO($dsn, $username, $password);
+$adapter = new \Cactus\Adapter\PDO($pdo);
+
+$model = new ModelUser;
+$model->set_adapter($adapter);
 ```
 
 _See the [PDO](http://www.php.net/manual/en/class.pdo.php) docs for more
 information on creating a PDO connection._
 
-Here is a driver class for our `user` table.
+Here is the model class for our `user` table.
 
 ``` php
 <?php
 
-class ModelUser extends \Cactus\PDO\Driver
+class ModelUser extends \Cactus\Model
 {
 	/**
-	 * @var   string   The name of the table
+	 * Model setup. 
 	 */
-	protected $table = "user";
-
-	/**
-	 * @var   string   The name of the primary key column
-	 */
-	protected $primary_key = "user_id";
-
-	/**
-	 * @var   array    The list of columns in the table
-	 */
-	protected $columns = array(
-		'user_id' => \Cactus\Field\MySQL::VARCHAR,
-		'email' => \Cactus\Field\MySQL::VARCHAR,
-		'password' => \Cactus\Field\MySQL::VARCHAR,
-		'last_name' => \Cactus\Field\MySQL::VARCHAR,
-		'first_name' => \Cactus\Field\MySQL::VARCHAR,
-		'status' => \Cactus\Field\MySQL::INT,
-		'create_date' => \Cactus\Field\MySQL::DATETIME,
-	);
-
-	/**
-	 * @var   string   The name of the object to return in operations
-	 */
-	protected $object_class = "User";
-
-	protected $relationships = array(
-		// Roles
-		'role' => array(
-			'type' => \Cactus\Relationship::HAS_MANY,
-			'driver' => "ModelUserRole",
-			'column' => 'user_id'
-		)
-	);
+	public function __construct()
+	{
+		parent::__construct(array(
+			'table' => "user",
+			'primary_key' => "user_id",
+			'columns' => array(
+				'user_id' => \Cactus\Field::VARCHAR,
+				'email' => \Cactus\Field::VARCHAR,
+				'password' => \Cactus\Field::VARCHAR,
+				'last_name' => \Cactus\Field::VARCHAR,
+				'first_name' => \Cactus\Field::VARCHAR,
+				'status' => \Cactus\Field::INT,
+				'create_date' => \Cactus\Field::DATETIME,
+			),
+			'object_class' => "\\Cactus\\Tests\\User",
+			'relationships' => array(
+				// Roles
+				'role' => array(
+					'type' => \Cactus\Relationship::HAS_MANY,
+					//'loading' => \Cactus\Loading::EAGER,
+					'driver' => "\\Cactus\\Tests\\ModelUserRole",
+					'column' => 'user_id'
+				)
+			),
+		));
+	}
 }
 ```
 
 ### Entity
 
-An entity is a representation of a database row as a native object. All validation
+An entity is a representation of a database row as ane object. All validation
 should be contained within the entity.
 
 Below is a sample entity class for our user.
@@ -104,12 +101,14 @@ Pretty simple huh?
 
 ## Querying
 
-There are 3 types of queries built in, finding, saving and deleting.
+There are 3 types of queries built in; finding, saving and deleting.
 
 ### Find
 
 ``` php
 <?php
+
+// Assuming that the adapter has been setup correctly already...
 $model = new ModelUser;
 
 // Find the user with a user_id of 1
@@ -146,7 +145,7 @@ $model->delete($user);
 
 ## Defining Columns
 
-The goal of the defining the columns is not to be able to generate the sql to
+The goal of defining the columns is not to be able to generate the sql to
 create your tables, but to convert the string values from the database over to
 native php types.
 
@@ -154,40 +153,39 @@ Lets take a look at the example from `ModelUser` above
 
 ``` php
 <?php
-protected $columns = array(
-	'user_id' => \Cactus\Field\MySQL::VARCHAR,
-	'email' => \Cactus\Field\MySQL::VARCHAR,
-	'password' => \Cactus\Field\MySQL::VARCHAR,
-	'last_name' => \Cactus\Field\MySQL::VARCHAR,
-	'first_name' => \Cactus\Field\MySQL::VARCHAR,
-	'status' => \Cactus\Field\MySQL::INT,
-	'create_date' => \Cactus\Field\MySQL::DATETIME,
-);
+'columns' => array(
+	'user_id' => \Cactus\Field::VARCHAR,
+	'email' => \Cactus\Field::VARCHAR,
+	'password' => \Cactus\Field::VARCHAR,
+	'last_name' => \Cactus\Field::VARCHAR,
+	'first_name' => \Cactus\Field::VARCHAR,
+	'status' => \Cactus\Field::INT,
+	'create_date' => \Cactus\Field::DATETIME,
+),
 ```
 
 As you can see the columns array is setup in a $name => $type setup. For a full
 list of field types you can choose from check the documentation for
-`\Cactus\Field\MySQL`. MySQL is the only supported database as this point, but if
+`\Cactus\Field`. MySQL is the only supported database as this point, but if
 you need support for other database feel free to contribute!
 
 ## Relationships
 
-Building relationships with Cactus is easy. Within your Driver class you will
-need to add information to the `protected $relationships` array. In the ModelUser
+Building relationships with Cactus is easy. Within your Model class you will
+need to add information to the `relationships` config array. In the ModelUser
 example above we specified a relationship using the following.
 
 ``` php
 <?php
-
-protected $relationships = array(
+'relationships' => array(
 	// Roles
 	'role' => array(
 		'type' => \Cactus\Relationship::HAS_MANY,
-		'driver' => "ModelUserRole",
-		'column' => 'user_id',
-	//	'loading' => \Cactus\Loading::LAZY,
+		//'loading' => \Cactus\Loading::EAGER,
+		'driver' => "\\Cactus\\Tests\\ModelUserRole",
+		'column' => 'user_id'
 	)
-);
+),
 ```
 
 The relationships array keys (in our case `role`) are the property names that will
@@ -208,29 +206,33 @@ For loading you can use either `\Cactus\Loading::LAZY` or `\Cactus\Loading::EAGE
 Cactus loads relationship using the lazy method by default. Eagerly loaded relationships
 are loaded in a way to avoid the N+1 select problem.
 
-## Framework Drivers
+## Building Queries
 
-Instead of needed to rely on the PDO class, Cactus also comes bundled with drivers
+You can build queries for custom methods in your model anyway you want. Cactus does
+come bundled with [Peyote](https://github.com/daveWid/Peyote) if you would like to
+build your queries in an object oriented way.
+
+## Framework Adapters
+
+Instead of needed to rely on the PDO class, Cactus also comes bundled with adapters
 for the different php frameworks.
 
 ### Kohana
 
-Cactus has a driver and entity for the [Kohana](http://www.kohanaframework.org) framework.
+Cactus has a adapter and entity for the [Kohana](http://www.kohanaframework.org) framework.
 
-To use the driver, you will need to activate the database module and set your database
-configuration as you normally would. Your driver classes will then need to extend
-`\Cactus\Kohana\Driver` instead of `\Cactus\PDO\Driver`. The Kohana driver uses the
-query builder classes to create queries.
+To use the adapter, you will need to activate the database module and set your database
+configuration as you normally would. The adapter you will set will then need to be
+`\Cactus\Adapter\Kohana` instead of `\Cactus\Adapter\PDO`.
 
-To use the Kohana based entity class your entities will need to extend `\Cactus\Kohana\Entity`.
+To use the Kohana based entity class your entities will need to extend `\Cactus\Entity\Kohana`.
 The Kohana entity class adds in validation and error messages that are based on the
 built-in Validation library.
 
-### Creating Your Own Driver
+### Creating Your Own Adapter
 
-If you don't see drivers for your favorite framework, feel free to fork this repo
-and add them in. The only requirement for a driver is that it extends `\Cactus\Driver`
-and implements all of the methods in `\Cactus\DriverInterface`.
+If you don't see an adapter for your favorite framework, feel free to fork this repo
+and add it in. The only requirement for a adapter is that it implements `\Cactus\Adapter`.
 
 ## API
 
