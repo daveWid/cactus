@@ -28,9 +28,10 @@ The model is the class that holds all of the information about the database,
 column names, interactions, relationships, etc...
 
 To get the model to actually connect to the database, you must setup a \Cactus\Adapter
-to do so. Built into Cactus is an Adapter based of the PDO class. You will only
-need to set the adapter 1 time per request as it is a shared resource between
-all \Cactus\Model classes.
+to do so. Built into Cactus is an Adapter using the PDO class to make the database
+calls. You will only need to set the adapter 1 time per request as it is a
+shared resource between all \Cactus\Model classes. _Some sort of Dependency Injection
+Container will probably come in handy to manage the adapters..._
 
 ``` php
 <?php
@@ -69,13 +70,13 @@ class ModelUser extends \Cactus\Model
 				'status' => \Cactus\Field::INT,
 				'create_date' => \Cactus\Field::DATETIME,
 			),
-			'object_class' => "\\Cactus\\Tests\\User",
+			'object_class' => "User",
 			'relationships' => array(
 				// Roles
 				'role' => array(
 					'type' => \Cactus\Relationship::HAS_MANY,
 					//'loading' => \Cactus\Loading::EAGER,
-					'driver' => "\\Cactus\\Tests\\ModelUserRole",
+					'driver' => "ModelUserRole",
 					'column' => 'user_id'
 				)
 			),
@@ -134,6 +135,8 @@ $model->save($user);
 $user = $model->get(1);
 $user->first_name = "Billy";
 $model->save($user);
+
+echo $user->first_name; // Output: Billy
 ```
 
 ### Delete
@@ -173,7 +176,8 @@ you need support for other database feel free to contribute!
 
 Building relationships with Cactus is easy. Within your Model class you will
 need to add information to the `relationships` config array. In the ModelUser
-example above we specified a relationship using the following.
+example above we specified a relationship using the following. _Uncomment the
+loading property if you want Eager loading._
 
 ``` php
 <?php
@@ -182,7 +186,7 @@ example above we specified a relationship using the following.
 	'role' => array(
 		'type' => \Cactus\Relationship::HAS_MANY,
 		//'loading' => \Cactus\Loading::EAGER,
-		'driver' => "\\Cactus\\Tests\\ModelUserRole",
+		'driver' => "ModelUserRole",
 		'column' => 'user_id'
 	)
 ),
@@ -195,7 +199,7 @@ options.
  Key | Type | Description | Required
 -----|------|-------------|----------
 type | `string` | The type of relationship we are forming | Yes
-driver | `string` | The name \Cactus\Driver class that is used to get the relationship | Yes
+driver | `string` | The name \Cactus\Model class that is used to get the relationship | Yes
 column | `string` | The name of the column to join the tables on | Yes
 loading | `int` | The type of loading to use | No (defaults to Lazy loading)
 
@@ -214,7 +218,7 @@ build your queries in an object oriented way.
 
 ## Framework Adapters
 
-Instead of needed to rely on the PDO class, Cactus also comes bundled with adapters
+Instead of needing to rely on the PDO class, Cactus also comes bundled with adapters
 for the different php frameworks.
 
 ### Kohana
