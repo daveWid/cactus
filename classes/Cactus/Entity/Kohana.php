@@ -1,6 +1,6 @@
 <?php
 
-namespace Cactus\Kohana;
+namespace Cactus\Entity;
 
 /**
  * A Kohana based Entity.
@@ -8,7 +8,7 @@ namespace Cactus\Kohana;
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class Entity extends \Cactus\Entity
+abstract class Kohana extends \Cactus\Entity
 {
 	/**
 	 * Checks to see if the data is valid
