@@ -18,6 +18,19 @@ class PDO implements \Cactus\Adapter
 	private $pdo;
 
 	/**
+	 * Allows the user to set the connection upon creation.
+	 *
+	 * @param \PDO $connection  The PDO connection object.
+	 */
+	public function __construct(\PDO $connection = null)
+	{
+		if ($connection !== null)
+		{
+			$this->set_connection($connection);
+		}
+	}
+
+	/**
 	 * Run a SELECT query.
 	 *
 	 * @param  string $query      The query to run
