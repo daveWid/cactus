@@ -8,13 +8,8 @@ namespace Peyote;
  * @package    Peyote
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class Where extends \Peyote\WhereCondition
+class Where extends \Peyote\Condition
 {
-	/**
-	 * Empty constructor to avoid php4 compatibility problems.
-	 */
-	public function __construct(){}
-
 	/**
 	 * Gets the type of condition
 	 *
@@ -23,19 +18,6 @@ class Where extends \Peyote\WhereCondition
 	public function type()
 	{
 		return "WHERE";
-	}
-
-	/**
-	 * Alias for and_where
-	 *
-	 * @param  string $column  The column
-	 * @param  string $op      The comparison operator
-	 * @param  string $value   The value
-	 * @return $this
-	 */
-	public function where($column, $op, $value)
-	{
-		return $this->and_where($column, $op, $value);
 	}
 
 	/**

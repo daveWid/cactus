@@ -120,6 +120,60 @@ class Select extends \Peyote\Base
 	}
 
 	/**
+	 * Starts the join statement
+	 *
+	 * @param  string $table  The table to join
+	 * @param  string $type   The type of join
+	 * @return $this
+	 */
+	public function join($table, $type = null)
+	{
+		$this->join->add_join($table, $type);
+		return $this;
+	}
+
+	/**
+	 * Sets for the limit number.
+	 *
+	 * @param  int $num     The limit number
+	 * @param  int $offset  The offset
+	 * @return \Peyote\Select
+	 */
+	public function limit($num = null, $offset = null)
+	{
+		$this->limit->set_limit($num, $offset);
+		return $this;
+	}
+
+	/**
+	 * Add a having condition.
+	 *
+	 * @param  string $column  The column
+	 * @param  string $op      The comparison operator
+	 * @param  string $value   The value
+	 * @return \Peyote\Select
+	 */
+	public function having($column, $op, $value)
+	{
+		$this->having->and_having($column, $op, $value);
+		return $this;
+	}
+
+	/**
+	 * Add a where condition.
+	 *
+	 * @param  string $column  The column
+	 * @param  string $op      The comparison operator
+	 * @param  string $value   The value
+	 * @return \Peyote\Select
+	 */
+	public function where($column, $op, $value)
+	{
+		$this->where->and_where($column, $op, $value);
+		return $this;
+	}
+
+	/**
 	 * Compiles the query into raw SQL
 	 *
 	 * @return  string
