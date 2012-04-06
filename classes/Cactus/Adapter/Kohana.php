@@ -18,11 +18,14 @@ class Kohana implements \Cactus\Adapter
 	private $db;
 
 	/**
-	 * Setup the default database instance. 
+	 * Setup the default database instance.
+	 *
+	 * @param   string   instance name
+	 * @param   array    configuration parameters
 	 */
-	public function __construct()
+	public function __construct($name = NULL, array $config = NULL)
 	{
-		$this->db = \Database::instance();
+		$this->db = \Database::instance($name, $config);
 	}
 
 	/**
