@@ -5,7 +5,7 @@ namespace Cactus;
 /**
  * The base Entity class for data rows.
  *
- * @package    DataMapper
+ * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
 abstract class Entity implements \ArrayAccess
