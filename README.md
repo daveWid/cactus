@@ -1,6 +1,6 @@
 # Cactus
 
-Cactus is a ORM based on the DataMapper pattern for PHP 5.3+
+Cactus is a ORM using the DataMapper pattern for PHP 5.3+
 
 ## Example
 
@@ -22,16 +22,13 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 Working with this structure we can now dive into the model and entity classes.
 
-### Model
+## Model
 
 The model is the class that holds all of the information about the database,
 column names, interactions, relationships, etc...
 
-To get the model to actually connect to the database, you must setup a \Cactus\Adapter
-to do so. Built into Cactus is an Adapter using the PDO class to make the database
-calls. You will only need to set the adapter 1 time per request as it is a
-shared resource between all \Cactus\Model classes. _Some sort of Dependency Injection
-Container will probably come in handy to manage the adapters..._
+The model class has no knowledge of how to connect to your data source so you will
+have to specify that yourself.
 
 ``` php
 <?php
@@ -39,12 +36,16 @@ Container will probably come in handy to manage the adapters..._
 $pdo = new PDO($dsn, $username, $password);
 $adapter = new \Cactus\Adapter\PDO($pdo);
 
-$model = new ModelUser;
-$model->set_adapter($adapter);
+\Cactus\Model::set_adapter($adapter);
 ```
 
 _See the [PDO](http://www.php.net/manual/en/class.pdo.php) docs for more
 information on creating a PDO connection._
+
+Using a framework or don't have PDO available? You are in luck because you can
+easily create adapters to suit your needs. All you need to do is implement the
+`\Cactus\Adapter` interface and inject that adapter into Cactus. See the list of
+supported frameworks below.
 
 Here is the model class for our `user` table.
 
@@ -85,10 +86,10 @@ class ModelUser extends \Cactus\Model
 }
 ```
 
-### Entity
+## Entity
 
-An entity is a representation of a database row as ane object. All validation
-should be contained within the entity.
+An entity is a representation of each data row as an object. All validation
+and data normalization should be contained within the entity.
 
 Below is a sample entity class for our user.
 
@@ -175,9 +176,8 @@ you need support for other database feel free to contribute!
 ## Relationships
 
 Building relationships with Cactus is easy. Within your Model class you will
-need to add information to the `relationships` config array. In the ModelUser
-example above we specified a relationship using the following. _Uncomment the
-loading property if you want Eager loading._
+need to add information to the `relationships` configuration array. In the ModelUser
+example above we specified a relationship using the following.
 
 ``` php
 <?php
@@ -207,40 +207,22 @@ There are only 2 types of relationships in Cactus, `\Cactus\Relationship::HAS_MA
 and `\Cactus\Relationship::HAS_ONE`.
 
 For loading you can use either `\Cactus\Loading::LAZY` or `\Cactus\Loading::EAGER`.
-Cactus loads relationship using the lazy method by default. Eagerly loaded relationships
-are loaded in a way to avoid the N+1 select problem.
+Cactus loads relationship using the lazy method by default. Eagerly loaded
+relationships are loaded in a way to avoid the N+1 select problem.
 
 ## Building Queries
 
-You can build queries for custom methods in your model anyway you want. Cactus does
-come bundled with [Peyote](https://github.com/daveWid/Peyote) if you would like to
+You can build queries for custom methods in your model anyway you want. Cactus
+comes bundled with [Peyote](https://github.com/daveWid/Peyote) if you would like to
 build your queries in an object oriented way.
 
-## Framework Adapters
+## Supported Adapters
 
-Instead of needing to rely on the PDO class, Cactus also comes bundled with adapters
-for the different php frameworks.
+Below is a list of currently supported adapters. If you don't see your framework
+in the list, hack the code and send a pull request.
 
-### Kohana
-
-Cactus has a adapter and entity for the [Kohana](http://www.kohanaframework.org) framework.
-
-To use the adapter, you will need to activate the database module and set your database
-configuration as you normally would. The adapter you will set will then need to be
-`\Cactus\Adapter\Kohana` instead of `\Cactus\Adapter\PDO`.
-
-To use the Kohana based entity class your entities will need to extend `\Cactus\Entity\Kohana`.
-The Kohana entity class adds in validation and error messages that are based on the
-built-in Validation library.
-
-### Creating Your Own Adapter
-
-If you don't see an adapter for your favorite framework, feel free to fork this repo
-and add it in. The only requirement for a adapter is that it implements `\Cactus\Adapter`.
-
-## API
-
-Please open up `api/index.html` for full documentation on the Cactus library.
+* PDO
+* Kohana
 
 ## Hacking
 
