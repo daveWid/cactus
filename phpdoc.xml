@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+	<title>Cactus</title>
+	<parser>
+		<target>developer/api</target>
+	</parser>
+	<transformer>
+		<target>developer/api</target>
+	</transformer>
+	<files>
+		<directory>classes/</directory>
+	</files>
+</phpdoc>
