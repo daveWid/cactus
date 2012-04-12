@@ -20,12 +20,11 @@ class Kohana implements \Cactus\Adapter
 	/**
 	 * Setup the default database instance.
 	 *
-	 * @param   string   instance name
-	 * @param   array    configuration parameters
+	 * @param \Database $db  The database instance
 	 */
-	public function __construct($name = NULL, array $config = NULL)
+	public function __construct(\Database $db)
 	{
-		$this->db = \Database::instance($name, $config);
+		$this->db = $db;
 	}
 
 	/**
@@ -76,29 +75,6 @@ class Kohana implements \Cactus\Adapter
 	public function delete($query)
 	{
 		return $this->db->query(\Database::DELETE, $query);
-	}
-
-	/**
-	 * Get/Set the database connection object.
-	 *
-	 * @param  mixed $db  The database object.
-	 * @return mixed      The database object [get] OR $this [set]
-	 */
-	public function get_connection($db = null)
-	{
-		return $this->db;
-	}
-
-	/**
-	 * Set the database connection for the adapter.
-	 *
-	 * @param  \Database $db   The database class to use when running queries.
-	 * @return \Cactus\Adapter\Kohana
-	 */
-	public function set_connection($db)
-	{
-		$this->db = $db;
-		return $this;
 	}
 
 }

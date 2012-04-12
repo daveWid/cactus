@@ -20,14 +20,12 @@ class PDO implements \Cactus\Adapter
 	/**
 	 * Allows the user to set the connection upon creation.
 	 *
-	 * @param \PDO $connection  The PDO connection object.
+	 * @param \PDO $db  The PDO object.
 	 */
-	public function __construct(\PDO $connection = null)
+	public function __construct(\PDO $db)
 	{
-		if ($connection !== null)
-		{
-			$this->set_connection($connection);
-		}
+		$db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+		$this->pdo = $db;
 	}
 
 	/**
@@ -102,29 +100,6 @@ class PDO implements \Cactus\Adapter
 		}
 
 		return $statement;
-	}
-
-	/**
-	 * The database connection object.
-	 *
-	 * @return \PDO  The pdo connection object
-	 */
-	public function get_connection()
-	{
-		return $this->pdo;
-	}
-
-	/**
-	 * Sets the connection object used to connect to the database.
-	 *
-	 * @param  \PDO $db  The database connection object.
-	 * @return \Cactus\Adapter
-	 */
-	public function set_connection($db)
-	{
-		$this->pdo = $db;
-		$this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-		return $this;
 	}
 
 }
