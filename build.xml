@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Cactus" default="package" basedir=".">
-	<property name="version" value="0.3.2" />
+	<property name="version" value="0.3.3" />
 
 	<!-- Packages up the code to be uploaded -->
 	<target name="package">	
-		<mkdir dir="packages" />
+		<property name="file" value="developer/packages/Cactus-${version}.zip" />
 
-		<!-- Build the zip -->
-		<zip destfile="${project.basedir}/packages/Cactus-${version}.zip">
+		<mkdir dir="developer/packages" />
+		<delete file="${file}" />
+
+		<zip destfile="${file}">
 			<fileset dir="${project.basedir}/">
 				<include name="classes/**" />
 				<include name="README.md" />
-				<include name="bootstrap.php" />
+				<include name="LICENSE.md" />
+
+				<exclude name=".DS_Store" />
 			</fileset>
 		</zip>
 	</target>
