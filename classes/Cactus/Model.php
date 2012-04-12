@@ -17,6 +17,26 @@ abstract class Model
 	private static $adapter;
 
 	/**
+	 * Gets the database object.
+	 *
+	 * @return \Cactus\Adapter
+	 */
+	public static function get_adapter()
+	{
+		return self::$adapter;
+	}
+
+	/**
+	 * Sets the adapter object used to run queries.
+	 *
+	 * @param  \Cactus\Adapter $adapter  The adapter used to query for data.
+	 */
+	public static function set_adapter($adapter)
+	{
+		self::$adapter = $adapter;
+	}
+
+	/**
 	 * @var   string   The name of the table
 	 */
 	protected $table;
@@ -78,28 +98,6 @@ abstract class Model
 				$this->{$name} = $value;
 			}
 		}
-	}
-
-	/**
-	 * Gets the database object.
-	 *
-	 * @return \Cactus\Adapter 
-	 */
-	public function get_adapter()
-	{
-		return self::$adapter;
-	}
-
-	/**
-	 * Sets the adapter object used to run queries.
-	 *
-	 * @param  \Cactus\Adapter $adapter  The adapter used to query for data.
-	 * @return \Cactus\Driver 
-	 */
-	public function set_adapter($adapter)
-	{
-		self::$adapter = $adapter;
-		return $this;
 	}
 
 	/**
