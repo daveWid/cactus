@@ -51,6 +51,11 @@ class Field
 	const VARCHAR = 64;
 
 	/**
+	 * A text column.
+	 */
+	const TEXT = 128;
+
+	/**
 	 * Converts a value of the given type.
 	 *
 	 * @param string $type   The database type to convert to
