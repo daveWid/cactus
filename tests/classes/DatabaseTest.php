@@ -13,6 +13,17 @@ require 'PHPUnit/Extensions/Database/TestCase.php';
 class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
 {
 	/**
+	 * Setup the PDO adapter
+	 */
+	public function setUp()
+	{
+		$adapter = new \Cactus\Adapter\PDO($this->getConnection()->getConnection());
+		\Cactus\Model::set_adapter($adapter);
+
+		parent::setUp();
+	}
+
+	/**
 	 * Gets the database connection.
 	 *
 	 * @return PHPUnit_Extensions_Database_DB_IDatabaseConnection

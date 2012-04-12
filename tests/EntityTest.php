@@ -25,15 +25,10 @@ class EntityTest extends \Cactus\Tests\DatabaseTest
 	 */
 	public function setUp()
 	{
-		$adapter = new \Cactus\Adapter\PDO;
-		$adapter->set_connection($this->getConnection()->getConnection());
+		parent::setUp();
 
 		$this->model = new \Cactus\Tests\ModelUser;
-		$this->model->set_adapter($adapter);
-
 		$this->user = $this->model->get(1);
-
-		parent::setUp();
 	}
 
 	/**

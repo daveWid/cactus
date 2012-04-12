@@ -20,15 +20,10 @@ class FieldTest extends \Cactus\Tests\DatabaseTest
 	 */
 	public function setUp()
 	{
-		$adapter = new \Cactus\Adapter\PDO;
-		$adapter->set_connection($this->getConnection()->getConnection());
+		parent::setUp();
 
 		$model = new \Cactus\Tests\ModelUser;
-		$model->set_adapter($adapter);
-
 		$this->row = $model->get(1);
-
-		parent::setUp();
 	}
 
 	/**
