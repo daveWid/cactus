@@ -134,7 +134,7 @@ class Entity
 			}
 			else
 			{
-				trigger_error(get_called_class()."::{$name} is an undefined property]");
+				trigger_error(get_called_class()."::{$name} is an undefined property");
 			}
 		}
 	}
