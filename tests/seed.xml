@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<libraries>
+	<library>
+		<name>Cactus</name>
+		<author>Dave Widmer</author>
+		<createDate>2012-07-02 13:58:23</createDate>
+		<version>0.3.0</version>
+	</library>
+	<library>
+		<name>Owl</name>
+		<author>Dave Widmer</author>
+		<createDate>2012-07-02 13:58:23</createDate>
+		<version>0.3.0</version>
+	</library>
+</libraries>
