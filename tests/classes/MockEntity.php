@@ -31,5 +31,6 @@ class MockEntity extends \Cactus\Entity
 		}
 
 		$this->data['createDate'] = $date;
+		$this->modified_data['createDate'] = $date;
 	}
 }

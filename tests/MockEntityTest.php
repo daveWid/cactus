@@ -43,6 +43,15 @@ class MockEntityTest extends PHPUnit_Framework_TestCase
 		$this->assertInstanceOf("DateTime", $this->entity->createDate);
 	}
 
+	public function testOverriddenSetChangesModifiedData()
+	{
+		$date = "2012-07-02 13:02:14";
+		$this->entity->createDate = $date;
+
+		$modified = $this->entity->getModifiedData();
+		$this->assertSame($modified['createDate'], $this->entity->createDate);
+	}
+
 	/**
 	 * @expectedException PHPUnit_Framework_Error_Notice
 	 */
