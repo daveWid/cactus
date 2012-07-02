@@ -235,11 +235,11 @@ Before you send a pull request on any changes, make sure that the phpunit tests 
 adding tests where necessary.
 
 Since this is an ORM, you will need to test a database. To connect to the database
-you will need to to modify the tests/bootstrap.php file with your settings.
+you will need to to modify the `php` section of the phpunit.xml file with your settings.
 Before you commmit changes make sure you run...
 
 ~~~ shell
-git update-index --assume-unchanged tests/bootstrap.php
+git update-index --assume-unchanged phpunit.xml
 ~~~
 
 This way your username/passwords don't get pushed into the repo.

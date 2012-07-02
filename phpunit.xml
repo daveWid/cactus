@@ -1,4 +1,10 @@
 <phpunit bootstrap="tests/bootstrap.php" colors="true" verbose="true">
+	<php>
+		<env name="DB_NAME" value="cactus_test" />
+		<env name="DB_USER" value="root" />
+		<env name="DB_PASS" value="" />
+	</php>
+
 	<testsuites>
 		<testsuite name="Cactus ORM Test Suite">
 			<directory>tests/</directory>
@@ -7,8 +13,6 @@
 
 	<filter>
 		<blacklist>
-			<file>classes/SplClassLoader.php</file>
-			<directory>classes/Peyote</directory>
 			<directory suffix=".php">tests/classes/</directory>
 		</blacklist>
 	</filter>
