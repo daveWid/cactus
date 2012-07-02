@@ -1,0 +1,21 @@
+{
+	"name": "davewid/cactus",
+	"description": "A lightweight ORM using the DataMapper pattern, PHP 5.3+",
+	"keywords": ["ORM","DataMapper"],
+	"homepage": "https://github.com/daveWid/cactus",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Dave Widmer",
+			"email": "dave@davewidmer.net",
+			"homepage": "http://www.davewidmer.net"
+		}
+	],
+	"require":{
+		"php": ">=5.3"
+	},
+	"autoload": {
+		"psr-0": { "Cactus": "classes/" }
+	}
+}
