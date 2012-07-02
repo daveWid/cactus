@@ -1,6 +1,6 @@
 <phpunit bootstrap="tests/bootstrap.php" colors="true" verbose="true">
 	<php>
-		<env name="DB_NAME" value="cactus_test" />
+		<env name="DB_DSN" value="mysql:host=localhost;dbname=cactus_test;" />
 		<env name="DB_USER" value="root" />
 		<env name="DB_PASS" value="" />
 	</php>
