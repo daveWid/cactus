@@ -30,8 +30,8 @@ class DatabaseTest extends \PHPUnit_Extensions_Database_TestCase
 	 */
 	protected function getConnection()
 	{
-		$pdo = new \PDO(MYSQL_DSN, MYSQL_USER, MYSQL_PASSWORD);
-		return $this->createDefaultDBConnection($pdo, DB_NAME);
+		$pdo = new \PDO($_ENV['DB_DSN'], $_ENV['DB_USER'], $_ENV['DB_PASS']);
+		return $this->createDefaultDBConnection($pdo, $_ENV['DB_NAME']);
 	}
 
 	/**
