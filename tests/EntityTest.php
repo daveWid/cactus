@@ -1,76 +1,70 @@
 <?php
 
-namespace Cactus\Tests;
-
 /**
  * Some testing on the entity classes.
  *
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class EntityTest extends \Cactus\Tests\DatabaseTest
+class EntityTest extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @var \Cactus\Tests\ModelUser  The model to interact with the data
+	 * @var \Cactus\Entity  An entity used for testing.
 	 */
-	public $model;
+	public $entity;
 
 	/**
-	 * @var \Cactus\Tests\User  The test user row
-	 */
-	public $user;
-
-	/**
-	 * Setup the PDO adapter
+	 * Create a default entity
 	 */
 	public function setUp()
 	{
 		parent::setUp();
 
-		$this->model = new \Cactus\Tests\ModelUser;
-		$this->user = $this->model->get(1);
+		$this->entity = new \Cactus\Entity;
+
+		// Faking entity creation for testing purposes...
+		$this->entity->setArray(array(
+			'name' => 'Dave Widmer',
+			'library' => 'Cactus',
+			'php' => '>=5.3.0'
+		));
+		$this->entity->clean();
 	}
 
-	/**
-	 * Testing the creation of a "new" entity. 
-	 */
-	public function testIsNew()
+	public function testNewEntity()
 	{
-		// Existing row
-		$this->assertFalse($this->user->is_new());
-
-		// Now create a "new" User
-		$user = new \Cactus\Tests\User(array(
-			'first_name' => "Testy",
-			'last_name' => "TestMaker"
+		$entity = new \Cactus\Entity(array(
+			'name' => 'Dave Widmer',
+			'library' => 'Cactus',
+			'php' => '>=5.3.0'
 		));
 
-		$this->assertTrue($user->is_new());
+		$this->assertTrue($entity->isNew());
 	}
 
-	/**
-	 * Test the different ways to get access to the data. 
-	 */
-	public function testDataAccess()
+	public function testModifiedData()
 	{
-		$this->assertSame($this->user->first_name, $this->user['first_name']);
-	}
-
-	/**
-	 * A test to make sure the modified data is being tracked correctly and then
-	 * cleaned when asked
-	 */
-	public function testModifiedAndClean()
-	{
-		$new = array(
-			'first_name' => "George",
-			'last_name' => "Washington"
+		$changed = array(
+			'language' => "PHP 5.3+",
+			'name' => "Changy McChangerson"
 		);
 
-		$this->user->set($new);
-		$this->assertSame($new, $this->user->modified());
+		$this->entity->setArray($changed);
 
-		$this->user->clean();
-		$this->assertEmpty($this->user->modified());
+		$this->assertSame($changed, $this->entity->getModifiedData());
 	}
+
+	public function testGet()
+	{
+		$this->assertSame("Dave Widmer", $this->entity->name);
+	}
+
+	public function testSet()
+	{
+		$name = 'Changy McChangerson';
+		$this->entity->name = $name;
+
+		$this->assertSame($name, $this->entity->name);
+	}
+
 }

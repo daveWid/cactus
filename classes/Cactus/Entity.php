@@ -3,12 +3,12 @@
 namespace Cactus;
 
 /**
- * The base Entity class for data rows.
+ * An entity class.
  *
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class Entity implements \ArrayAccess
+class Entity
 {
 	/**
 	 * @var   array   The data for this object
@@ -26,11 +26,6 @@ abstract class Entity implements \ArrayAccess
 	protected $modified_data = array();
 
 	/**
-	 * @var   mixed   The validation object
-	 */
-	protected $validation = null;
-
-	/**
 	 * Creates a new \Cactus\Entity.
 	 *
 	 * @param  array  Data for a new object.
@@ -39,7 +34,7 @@ abstract class Entity implements \ArrayAccess
 	{
 		if ($data !== null)
 		{
-			$this->set($data);
+			$this->setArray($data);
 			$this->is_new = true;
 		}
 	}
@@ -49,7 +44,7 @@ abstract class Entity implements \ArrayAccess
 	 *
 	 * @return   boolean
 	 */
-	public function is_new()
+	public function isNew()
 	{
 		return $this->is_new;
 	}
@@ -57,190 +52,119 @@ abstract class Entity implements \ArrayAccess
 	/**
 	 * Cleans all of the "modified" fields
 	 *
-	 * @return   $this
+	 * @return   \Cactus\Entity
 	 */
 	public function clean()
 	{
-		$this->validation = null;
 		$this->modified_data = array();
 		return $this;
 	}
 
 	/**
-	 * Returns all of the data in the object
+	 * Returns an array of data.
 	 *
 	 * @return   array
 	 */
-	public function data()
+	public function asArray()
 	{
 		return $this->data;
 	}
 
 	/**
-	 * Gets only the data that is modified
+	 * Returns a json representation of this object.
+	 *
+	 * @param  string $options  Any json_encode options.
+	 * @return string
+	 */
+	public function asJSON($options = 0)
+	{
+		return json_encode($this->data, $options);
+	}
+
+	/**
+	 * Gets only the data that has been modified
 	 *
 	 * @return   array
 	 */
-	public function modified()
+	public function getModifiedData()
 	{
 		return $this->modified_data;
 	}
 
 	/**
-	 * Checks to see if the data is valid
+	 * Sets key/value pairs in the entity given the array.
 	 *
-	 * @return   boolean   Does this object contain valid data?
-	 */
-	public function validate()
-	{
-		return true; // No validation by default
-	}
-
-	/**
-	 * Gets any validation errors
+	 * If you only want to set one value at a time use set()
 	 *
-	 * @param   type     $file        The path to the message file
-	 * @param   boolean  $translate   Translate the errors?
-	 * @return  array
+	 * @param  array $data  The data to set
+	 * @return \Cactus\Entity
 	 */
-	public function errors($file = null, $translate = true)
+	public function setArray(array $data)
 	{
-		return array(); // No validation by default, so no checking is done...
-	}
-
-	/**
-	 * Sets the validation rules for this object.
-	 *
-	 * @param   mixed   $valid   The current validation rules
-	 * @return  mixed
-	 */
-	protected function validation_rules($valid)
-	{
-		return $valid; // no default validation...
-	}
-
-	/**
-	 * Gets the value of an instance variable.
-	 *
-	 * @param   string   $name     The property name to fetch
-	 * @param   mixed    $default  The default value if the key isn't found
-	 * @return  mixed
-	 */
-	public function get($name, $default = null)
-	{
-		return $this->offsetExists($name) ? $this->data[$name] : $default;
-	}
-
-	/**
-	 * Sets a property value, or an array of values.
-	 *
-	 * @param   string|array   $name    The property name or array of property => values
-	 * @param   mixed          $value   The value to set
-	 * @return  $this
-	 */
-	public function set($name, $value = null)
-	{
-		if ( ! is_array($name))
+		foreach ($data as $key => $value)
 		{
-			$name = array($name => $value);
-		}
-
-		foreach ($name as $key => $value)
-		{
-			if ( ! $this->get($key, false) OR $this->data[$key] !== $value)
-			{
-				$this->modified_data[$key] = $value;
-			}
-
-			$this->data[$key] = $value;
+			$this->{$key} = $value;
 		}
 
 		return $this;
 	}
 
 	/**
-	 * Reading data from inaccessible properties
+	 * The magic 'get' method.
 	 *
-	 * @param   type   $name   The name of the property to get
-	 * @return  mixed          The value of the property, or null if not found 
+	 * This function will first check for a get{ucfirst($name)} function. If that
+	 * isn't set, then it will return a call to get.
+	 *
+	 * @param  string $name  The name of the property to fetch.
+	 * @return mixed         The found value or false if the propery wasn't found
 	 */
 	public function __get($name)
 	{
-		return $this->get($name, null);
+		$method = "get".ucfirst($name);
+
+		if (method_exists($this, $method))
+		{
+			return $this->{$method}();
+		}
+		else
+		{
+			if (isset($this->data[$name]))
+			{
+				return $this->data[$name];
+			}
+			else
+			{
+				trigger_error(get_called_class()."::{$name} is an undefined property]");
+			}
+		}
 	}
 
 	/**
-	 * Write data to inaccessible properties.
+	 * The magic 'set' method.
 	 *
-	 * @param   string   $name   The property name
-	 * @param   mixed    $value  The value to set
+	 * This function will look for a set{ucfirst($name)} function. If it isn't
+	 * found it will pipe it through to set.
+	 *
+	 * @param  string $name  The name of the property to set
+	 * @param  mixed  $value The value to set
 	 */
 	public function __set($name, $value)
 	{
-		$this->set($name, $value);
-	}
+		$method = "set".ucfirst($name);
 
-	/**
-	 * Checking to see if a property exists.
-	 *
-	 * @param  string $name The property name
-	 * @return boolean
-	 */
-	public function __isset($name)
-	{
-		return $this->offsetExists($name);
-	}
+		if (method_exists($this, $method))
+		{
+			$this->{$method}($value);
+		}
+		else
+		{
+			if ( ! isset($this->data[$name]) OR $this->data[$name] !== $value)
+			{
+				$this->modified_data[$name] = $value;
+			}
 
-	/**
-	 * Whether a offset exists
-	 *
-	 * @link    http://php.net/manual/en/arrayaccess.offsetexists.php
-	 *
-	 * @param   mixed   $offset   An offset to check for.
-	 * @return  boolean           Returns true on success or false on failure.
-	 */
-	public function offsetExists($offset)
-	{
-		return isset($this->data[$offset]);
-	}
-
-	/**
-	 * Offset to retrieve
-	 *
-	 * @link    http://php.net/manual/en/arrayaccess.offsetget.php
-	 *
-	 * @param   mixed   $offset   The offset to retrieve.
-	 * @return  mixed             Can return all value types.
-	 */
-	public function offsetGet($offset)
-	{
-		return $this->data[$offset];
-	}
-
-	/**
-	 * Offset to set
-	 *
-	 * @link    http://php.net/manual/en/arrayaccess.offsetset.php
-	 *
-	 * @param   mixed   $offset    The offset to assign the value to.
-	 * @param   mixed   $value     The value to set.
-	 * @return  void 
-	 */
-	public function offsetSet($offset, $value)
-	{
-		$this->set($offset, $value);
-	}
-
-	/**
-	 * Offset to unset
-	 * 
-	 * @link    http://php.net/manual/en/arrayaccess.offsetunset.php
-	 * @param   mixed   $offset   The offset to unset.
-	 * @return  void
-	 */
-	public function offsetUnset($offset)
-	{
-		unset($this->data[$offset]);
+			$this->data[$name] = $value;
+		}
 	}
 
 }
