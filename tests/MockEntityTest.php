@@ -42,4 +42,13 @@ class MockEntityTest extends PHPUnit_Framework_TestCase
 	{
 		$this->assertInstanceOf("DateTime", $this->entity->createDate);
 	}
+
+	/**
+	 * @expectedException PHPUnit_Framework_Error_Notice
+	 */
+	public function testNonExistingProperty()
+	{
+		var_export($this->entity->fail);
+	}
+
 }
