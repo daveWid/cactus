@@ -8,7 +8,7 @@ namespace Cactus\DataSource;
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class PDO
+class PDO implements \Cactus\DataSource
 {
 	/**
 	 * @var \PDO  The PDO connection object
@@ -22,6 +22,7 @@ class PDO
 	 */
 	public function __construct(\PDO $connection)
 	{
+		$connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 		$this->connection = $connection;
 	}
 
@@ -35,7 +36,11 @@ class PDO
 	 */
 	public function select($query, $data = array(), $as_object = null)
 	{
-		
+		$statement = $this->execute($query, $data);
+
+		return ($as_object === null) ?
+			$statement->fetchAll() :
+			$statement->fetchAll(\PDO::FETCH_CLASS, $as_object);
 	}
 
 	/**
@@ -47,7 +52,8 @@ class PDO
 	 */
 	public function insert($query, $data = array())
 	{
-		
+		$statement = $this->execute($query, $data);
+		return array($this->connection->lastInsertId(), $statement->rowCount());
 	}
 
 	/**
@@ -59,7 +65,8 @@ class PDO
 	 */
 	public function update($query, $data = array())
 	{
-		
+		$statement = $this->execute($query, $data);
+		return $statement->rowCount();
 	}
 
 	/**
@@ -71,7 +78,30 @@ class PDO
 	 */
 	public function delete($query, $data = array())
 	{
-		
+		$statement = $this->execute($query, $data);
+		return $statement->rowCount();
+	}
+
+	/**
+	 * Executes a pdo query and handles any errors.
+	 *
+	 * @throws \Cactus\Exception
+	 *
+	 * @param  string $query  The SQL query to run
+	 * @param  array $data    The key/value pairs
+	 * @return \PDOStatement
+	 */
+	private function execute($query, array $data)
+	{
+		$statement = $this->connection->prepare($query, $data);
+
+		try{
+			$statement->execute();
+		} catch(\PDOException $e) {
+			throw new \Cactus\Exception($e->getMessage());
+		}
+
+		return $statement;
 	}
 
 }
