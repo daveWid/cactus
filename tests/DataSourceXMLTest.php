@@ -23,7 +23,7 @@ class DataSourceXMLTest extends PHPUnit_Framework_TestCase
 
 	public function testSelect()
 	{
-		$result = $this->data->select("/users/user", "MockUser");
+		$result = $this->data->select("/mysqldump/database/table_data/row", "MockUser");
 
 		$this->assertFalse(empty($result));
 		$this->assertSame(2, $result->count());

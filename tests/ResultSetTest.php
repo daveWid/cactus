@@ -25,20 +25,21 @@ class ResultSetTest extends PHPUnit_Framework_TestCase
 		$file = __DIR__.DIRECTORY_SEPARATOR.'seed.xml';
 		$this->data = new \Cactus\DataSource\XML($file);
 
-		$this->result = $this->data->select("/users/user", "MockUser");
+		$this->result = $this->data->select("/mysqldump/database/table_data/row", "MockUser");
 
-		$this->new_row = array(
+		$this->new_row = new MockUser(array(
 			'name' => "Anastasia",
 			'password' => "motherland",
 			'createDate' => "2012-07-03 11:01:26"
-		);
+		));
 	}
 
 	public function testConstructorWithData()
 	{
-		$rs = new \Cactus\ResultSet($this->new_row);
+		$rs = new \Cactus\ResultSet(array($this->new_row));
+		$data = $rs->asArray();
 
-		$this->assertSame($this->new_row, $rs->asArray());
+		$this->assertSame($this->new_row, $data[0]);
 	}
 
 	public function testConstructorWithoutData()
