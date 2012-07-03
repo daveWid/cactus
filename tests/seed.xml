@@ -1,13 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<users>
-	<user>
-		<name>Dave</name>
-		<password>hidden</password>
-		<createDate>2012-07-03 11:01:26</createDate>
-	</user>
-	<user>
-		<name>Nicholas</name>
-		<password>choochoo</password>
-		<createDate>2012-07-03 11:01:26</createDate>
-	</user>
-</users>
+<?xml version="1.0"?>
+<mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<database name="cactus_test">
+	<table_structure name="user">
+		<field Field="userId" Type="int(10) unsigned" Null="NO" Key="PRI" Extra="auto_increment" Comment="" />
+		<field Field="name" Type="varchar(50)" Null="NO" Key="" Extra="" Comment="" />
+		<field Field="password" Type="varchar(100)" Null="NO" Key="" Extra="" Comment="" />
+		<field Field="createDate" Type="timestamp" Null="NO" Key="" Default="CURRENT_TIMESTAMP" Extra="" Comment="" />
+		<key Table="user" Non_unique="0" Key_name="PRIMARY" Seq_in_index="1" Column_name="userId" Collation="A" Cardinality="2" Null="" Index_type="BTREE" Comment="" Index_comment="" />
+		<options Name="user" Engine="MyISAM" Version="10" Row_format="Dynamic" Rows="2" Avg_row_length="28" Data_length="56" Max_data_length="281474976710655" Index_length="2048" Data_free="0" Auto_increment="3" Create_time="2012-07-03 15:36:11" Update_time="2012-07-03 15:38:46" Collation="utf8_general_ci" Create_options="" Comment="" />
+	</table_structure>
+	<table_data name="user">
+	<row>
+		<field name="userId">1</field>
+		<field name="name">Dave</field>
+		<field name="password">hidden</field>
+		<field name="createDate">2012-07-03 15:38:46</field>
+	</row>
+	<row>
+		<field name="userId">2</field>
+		<field name="name">NIcholas</field>
+		<field name="password">choo-choo</field>
+		<field name="createDate">2012-07-03 15:38:46</field>
+	</row>
+	</table_data>
+</database>
+</mysqldump>
