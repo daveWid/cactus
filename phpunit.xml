@@ -5,6 +5,12 @@
 		</testsuite>
 	</testsuites>
 
+	<php>
+		<env name="DB_NAME" value="cactus_test" />
+		<env name="DB_USER" value="root" />
+		<env name="DB_PASS" value="" />
+	</php>
+
 	<filter>
 		<blacklist>
 			<directory suffix=".php">tests/classes/</directory>
