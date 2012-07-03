@@ -6,7 +6,7 @@
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class MockEntity extends \Cactus\Entity
+class MockUser extends \Cactus\Entity
 {
 	/**
 	 * U no can haz password!

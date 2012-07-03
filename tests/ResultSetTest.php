@@ -25,13 +25,12 @@ class ResultSetTest extends PHPUnit_Framework_TestCase
 		$file = __DIR__.DIRECTORY_SEPARATOR.'seed.xml';
 		$this->data = new \Cactus\DataSource\XML($file);
 
-		$this->result = $this->data->select("/libraries/library", "MockEntity");
+		$this->result = $this->data->select("/users/user", "MockUser");
 
 		$this->new_row = array(
-			'name' => "Peyote",
-			'author' => 'Dave Widmer',
-			'createDate' => '2011-10-02 08:58:23',
-			'version' => '0.5.5'
+			'name' => "Anastasia",
+			'password' => "motherland",
+			'createDate' => "2012-07-03 11:01:26"
 		);
 	}
 

@@ -6,7 +6,7 @@
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class MockEntityTest extends PHPUnit_Framework_TestCase
+class MockUserTest extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * @var \Cactus\Entity  An entity used for testing.
@@ -20,15 +20,13 @@ class MockEntityTest extends PHPUnit_Framework_TestCase
 	{
 		parent::setUp();
 
-		$this->entity = new MockEntity;
+		$this->entity = new MockUser;
 
 		// Faking entity creation for testing purposes...
 		$this->entity->setArray(array(
-			'name' => 'Dave Widmer',
-			'library' => 'Cactus',
-			'php' => '>=5.3.0',
-			'password' => "hidden",
-			'createDate' => "2012-07-01 12:04:57"
+			'name' => 'Dave',
+			'passowrd' => 'hidden',
+			'createDate' => "2012-07-03 11:01:26"
 		));
 		$this->entity->clean();
 	}

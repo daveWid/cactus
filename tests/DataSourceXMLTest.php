@@ -23,7 +23,7 @@ class DataSourceXMLTest extends PHPUnit_Framework_TestCase
 
 	public function testSelect()
 	{
-		$result = $this->data->select("/libraries/library", "MockEntity");
+		$result = $this->data->select("/users/user", "MockUser");
 
 		$this->assertFalse(empty($result));
 		$this->assertSame(2, $result->count());
@@ -34,7 +34,7 @@ class DataSourceXMLTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testInsert()
 	{
-		$this->data->insert("/libraries/library");
+		$this->data->insert("/users/user");
 	}
 
 	/**
@@ -42,7 +42,7 @@ class DataSourceXMLTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testUpdate()
 	{
-		$this->data->update("/libraries/library");
+		$this->data->update("/users/user");
 	}
 
 	/**
@@ -50,7 +50,7 @@ class DataSourceXMLTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testDelete()
 	{
-		$this->data->delete("/libraries/library");
+		$this->data->delete("/users/user");
 	}
 
 }
