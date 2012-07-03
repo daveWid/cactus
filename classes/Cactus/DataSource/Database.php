@@ -13,11 +13,12 @@ abstract class Database
 	/**
 	 * Runs a query to find data in the dataset.
 	 *
-	 * @param  string   $query     The query to run.
+	 * @param  string  $query      The query to run.
+	 * @param  array   $data       An array of data to bind to the query
 	 * @param  boolean $as_object  Return the result back as objects?
 	 * @return mixed               The result set
 	 */
-	public function select($query, $as_object = null)
+	public function select($query, $data = array(), $as_object = null)
 	{
 		
 	}
@@ -26,9 +27,10 @@ abstract class Database
 	 * Runs a query that will add data to the dataset
 	 *
 	 * @param   string $query  The query to run.
+	 * @param   array  $data   An array of data to bind to the query
 	 * @return  array          array($insert_id, $affected_rows);
 	 */
-	public function insert($query)
+	public function insert($query, $data = array())
 	{
 		
 	}
@@ -37,9 +39,10 @@ abstract class Database
 	 * Runs a query that will update data
 	 *
 	 * @param  string $query  The query to run
+	 * @param  array  $data   An array of data to bind to the query
 	 * @return int            The number of affected rows
 	 */
-	public function update($query)
+	public function update($query, $data = array())
 	{
 		
 	}
@@ -48,9 +51,10 @@ abstract class Database
 	 * Runs a query that will remove data.
 	 *
 	 * @param  string $query  The query to run
+	 * @param  array  $data   An array of data to bind to the query
 	 * @return int            The number of deleted rows 
 	 */
-	public function delete($query)
+	public function delete($query, $data = array())
 	{
 		
 	}
