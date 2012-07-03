@@ -3,13 +3,28 @@
 namespace Cactus\DataSource;
 
 /**
- * The DataSource for Database connections
+ * The DataSource that uses a PDO connection.
  *
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-abstract class Database
+class PDO
 {
+	/**
+	 * @var \PDO  The PDO connection object
+	 */
+	private $connection = null;
+
+	/**
+	 * Creates a new PDO DataSource with the connection information passed in.
+	 *
+	 * @param \PDO $connection  The PDO connection information.
+	 */
+	public function __construct(\PDO $connection)
+	{
+		$this->connection = $connection;
+	}
+
 	/**
 	 * Runs a query to find data in the dataset.
 	 *
