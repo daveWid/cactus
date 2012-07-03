@@ -8,7 +8,7 @@ namespace Cactus\DataSource;
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class XML
+class XML implements \Cactus\DataSource
 {
 	/**
 	 * @var SimpleXML  The parsed xml file
@@ -41,11 +41,12 @@ class XML
 	/**
 	 * Runs a query to find data in the dataset.
 	 *
-	 * @param  string   $query     The query to run.
+	 * @param  string  $query      The query to run.
+	 * @param  array   $data       An array of data to bind to the query
 	 * @param  boolean $as_object  Return the result back as objects?
-	 * @return mixed               The result set
+	 * @return \Cactus\ResultSet   The result set from the query
 	 */
-	public function select($query, $as_object = null)
+	public function select($query, $data = array(), $as_object = null)
 	{
 		$result = $this->xml->xpath($query);
 		if ($result === false)
@@ -53,12 +54,12 @@ class XML
 			return false;
 		}
 
-		$data = array();
+		$rs = new \Cactus\ResultSet;
 		foreach ($result as $row)
 		{
 			if ($as_object === null)
 			{
-				$data[] = (array) $row;
+				$rs->add((array) $row);
 			}
 			else
 			{
@@ -68,11 +69,52 @@ class XML
 					$object->{$key} = (string) $value;
 				}
 
-				$data[] = $object;
+				if ($object instanceof \Cactus\Entity)
+				{
+					$object->clean();
+				}
+
+				$rs->add($object);
 			}
 		}
 
-		return $data;
+		return $rs;
+	}
+
+	/**
+	 * Runs a query that will add data to the dataset
+	 *
+	 * @param   string $query  The query to run.
+	 * @param   array  $data   An array of data to bind to the query
+	 * @return  array          array($insert_id, $affected_rows);
+	 */
+	public function insert($query, $data = array())
+	{
+		throw new \Cactus\Exception(get_called_class()."::insert has not be implemented yet");
+	}
+
+	/**
+	 * Runs a query that will update data
+	 *
+	 * @param  string $query  The query to run
+	 * @param  array  $data   An array of data to bind to the query
+	 * @return int            The number of affected rows
+	 */
+	public function update($query, $data = array())
+	{
+		throw new \Cactus\Exception(get_called_class()."::update has not be implemented yet");
+	}
+
+	/**
+	 * Runs a query that will remove data.
+	 *
+	 * @param  string $query  The query to run
+	 * @param  array  $data   An array of data to bind to the query
+	 * @return int            The number of deleted rows 
+	 */
+	public function delete($query, $data = array())
+	{
+		throw new \Cactus\Exception(get_called_class()."::delete has not be implemented yet");
 	}
 
 }

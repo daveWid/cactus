@@ -24,7 +24,33 @@ class DataSourceXMLTest extends PHPUnit_Framework_TestCase
 	public function testSelect()
 	{
 		$result = $this->data->select("/libraries/library", "MockEntity");
+
 		$this->assertFalse(empty($result));
+		$this->assertSame(2, $result->count());
+	}
+
+	/**
+	 * @expectedException \Cactus\Exception
+	 */
+	public function testInsert()
+	{
+		$this->data->insert("/libraries/library");
+	}
+
+	/**
+	 * @expectedException \Cactus\Exception
+	 */
+	public function testUpdate()
+	{
+		$this->data->update("/libraries/library");
+	}
+
+	/**
+	 * @expectedException \Cactus\Exception
+	 */
+	public function testDelete()
+	{
+		$this->data->delete("/libraries/library");
 	}
 
 }
