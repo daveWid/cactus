@@ -1,14 +1,17 @@
 <?php
 
-namespace Cactus\DataSource;
+namespace Cactus\Adapter;
 
 /**
- * The DataSource that uses a PDO connection.
+ * A PDO Adapter implementation.
+ *
+ * This adapter will run whatever query you throw at it, so all of the data
+ * validation/sanitation should be done before your run it through the adapter.
  *
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class PDO implements \Cactus\DataSource
+class PDO implements \Cactus\Adapter
 {
 	/**
 	 * @var \PDO  The PDO connection object
@@ -16,7 +19,7 @@ class PDO implements \Cactus\DataSource
 	private $connection = null;
 
 	/**
-	 * Creates a new PDO DataSource with the connection information passed in.
+	 * Creates a new PDO Adapter with the connection information passed in.
 	 *
 	 * @param \PDO $connection  The PDO connection information.
 	 */
@@ -30,42 +33,52 @@ class PDO implements \Cactus\DataSource
 	 * Runs a query to find data in the dataset.
 	 *
 	 * @param  string  $query      The query to run.
-	 * @param  array   $data       An array of data to bind to the query
 	 * @param  boolean $as_object  Return the result back as objects?
-	 * @return mixed               The result set
+	 * @return \Cactus\Collection  The result set
 	 */
-	public function select($query, $data = array(), $as_object = null)
+	public function select($query, $as_object = null)
 	{
-		$statement = $this->execute($query, $data);
+		$statement = $this->run($query);
 
-		return ($as_object === null) ?
-			$statement->fetchAll() :
+		$result = ($as_object === null) ?
+			$statement->fetchAll():
 			$statement->fetchAll(\PDO::FETCH_CLASS, $as_object);
+
+		$collection = new \Cactus\Collection;
+		foreach ($result as $row)
+		{
+			if ($row instanceOf \Cactus\Entity)
+			{
+				$row->reset();
+			}
+
+			$collection->add($row);
+		}
+
+		return $collection;
 	}
 
 	/**
 	 * Runs a query that will add data to the dataset
 	 *
 	 * @param   string $query  The query to run.
-	 * @param   array  $data   An array of data to bind to the query
 	 * @return  array          array($insert_id, $affected_rows);
 	 */
-	public function insert($query, $data = array())
+	public function insert($query)
 	{
-		$statement = $this->execute($query, $data);
-		return array($this->connection->lastInsertId(), $statement->rowCount());
+		$statement = $this->run($query);
+		return array((int) $this->connection->lastInsertId(), $statement->rowCount());
 	}
 
 	/**
 	 * Runs a query that will update data
 	 *
 	 * @param  string $query  The query to run
-	 * @param  array  $data   An array of data to bind to the query
 	 * @return int            The number of affected rows
 	 */
-	public function update($query, $data = array())
+	public function update($query)
 	{
-		$statement = $this->execute($query, $data);
+		$statement = $this->run($query);
 		return $statement->rowCount();
 	}
 
@@ -73,30 +86,26 @@ class PDO implements \Cactus\DataSource
 	 * Runs a query that will remove data.
 	 *
 	 * @param  string $query  The query to run
-	 * @param  array  $data   An array of data to bind to the query
 	 * @return int            The number of deleted rows 
 	 */
-	public function delete($query, $data = array())
+	public function delete($query)
 	{
-		$statement = $this->execute($query, $data);
+		$statement = $this->run($query);
 		return $statement->rowCount();
 	}
 
 	/**
-	 * Executes a pdo query and handles any errors.
+	 * Runs a SQL query and handles any errors.
 	 *
 	 * @throws \Cactus\Exception
 	 *
 	 * @param  string $query  The SQL query to run
-	 * @param  array $data    The key/value pairs
 	 * @return \PDOStatement
 	 */
-	private function execute($query, array $data)
+	private function run($query)
 	{
-		$statement = $this->connection->prepare($query, $data);
-
 		try{
-			$statement->execute();
+			$statement = $this->connection->query($query);
 		} catch(\PDOException $e) {
 			throw new \Cactus\Exception($e->getMessage());
 		}
