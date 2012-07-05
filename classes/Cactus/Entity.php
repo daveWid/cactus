@@ -36,7 +36,7 @@ class Entity
 		if ($data !== null)
 		{
 			$this->is_new = true;
-			$this->setArray($data);
+			$this->fill($data);
 		}
 	}
 
@@ -106,7 +106,7 @@ class Entity
 	 *
 	 * @param array $data  The data to set
 	 */
-	public function setArray(array $data)
+	public function fill(array $data)
 	{
 		foreach ($data as $key => $value)
 		{

@@ -50,14 +50,14 @@ class EntityTest extends PHPUnit_Framework_TestCase
 		$this->assertSame($college, $this->entity->college);
 	}
 
-	public function testSetArray()
+	public function testFill()
 	{
 		$data = array(
 			'college' => "BGSU",
 			'major'   => "VCT"
 		);
 
-		$this->entity->setArray($data);
+		$this->entity->fill($data);
 
 		$this->assertSame($data['college'], $this->entity->college);
 		$this->assertSame($data['major'], $this->entity->major);
@@ -69,7 +69,7 @@ class EntityTest extends PHPUnit_Framework_TestCase
 			'college' => "BGSU"
 		);
 
-		$this->entity->setArray($data);
+		$this->entity->fill($data);
 
 		$this->assertSame($data, $this->entity->asArray(array('college')));
 	}
