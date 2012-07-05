@@ -1,70 +1,94 @@
 <?php
 
 /**
- * Some testing on the entity classes.
+ * Testing the Entity class
  *
- * @package    Cactus
- * @author     Dave Widmer <dave@davewidmer.net>
+ * @package   Cactus
+ * @author    Dave Widmer <dave@davewidmer.net>
  */
 class EntityTest extends PHPUnit_Framework_TestCase
 {
-	/**
-	 * @var \Cactus\Entity  An entity used for testing.
-	 */
 	public $entity;
 
-	/**
-	 * Create a default entity
-	 */
+	public $data = array(
+		'name' => "Dave"
+	);
+
 	public function setUp()
 	{
-		parent::setUp();
-
-		$this->entity = new \Cactus\Entity;
-
-		// Faking entity creation for testing purposes...
-		$this->entity->setArray(array(
-			'name' => 'Dave Widmer',
-			'library' => 'Cactus',
-			'php' => '>=5.3.0'
-		));
-		$this->entity->clean();
+		$this->entity = new \Cactus\Entity($this->data);
 	}
 
 	public function testNewEntity()
 	{
-		$entity = new \Cactus\Entity(array(
-			'name' => 'Dave Widmer',
-			'library' => 'Cactus',
-			'php' => '>=5.3.0'
-		));
-
-		$this->assertTrue($entity->isNew());
+		$this->assertTrue($this->entity->isNew());
 	}
 
-	public function testModifiedData()
+	public function testGetData()
 	{
-		$changed = array(
-			'language' => "PHP 5.3+",
-			'name' => "Changy McChangerson"
+		$this->assertSame("Dave", $this->entity->name);
+	}
+
+	public function testGetAsArray()
+	{
+		$this->assertSame($this->data, $this->entity->asArray());
+	}
+
+	/**
+     * @expectedException PHPUnit_Framework_Error_Notice
+     */
+	public function testGetUndefinedPropertyTriggersNotice()
+	{
+		$this->entity->fail;
+	}
+
+	public function testSetData()
+	{
+		$college = "BGSU";
+
+		$this->entity->college = $college;
+		$this->assertSame($college, $this->entity->college);
+	}
+
+	public function testSetArray()
+	{
+		$data = array(
+			'college' => "BGSU",
+			'major'   => "VCT"
 		);
 
-		$this->entity->setArray($changed);
+		$this->entity->setArray($data);
 
-		$this->assertSame($changed, $this->entity->getModifiedData());
+		$this->assertSame($data['college'], $this->entity->college);
+		$this->assertSame($data['major'], $this->entity->major);
 	}
 
-	public function testGet()
+	public function testGetAsArrayWithKeys()
 	{
-		$this->assertSame("Dave Widmer", $this->entity->name);
+		$data = array(
+			'college' => "BGSU"
+		);
+
+		$this->entity->setArray($data);
+
+		$this->assertSame($data, $this->entity->asArray(array('college')));
 	}
 
-	public function testSet()
+	public function testGetModifiedData()
 	{
-		$name = 'Changy McChangerson';
-		$this->entity->name = $name;
-
-		$this->assertSame($name, $this->entity->name);
+		$this->assertSame($this->data, $this->entity->getModifiedData());
 	}
 
+	public function testResetModifiedData()
+	{
+		$this->entity->reset();
+		$this->assertSame(array(), $this->entity->getModifiedData());
+	}
+
+	public function testUsingSameDataDoesntModify()
+	{
+		$this->entity->reset();
+		$this->entity->name = "Dave";
+		$this->assertSame(array(), $this->entity->getModifiedData());
+	}
 }

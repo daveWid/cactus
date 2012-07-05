@@ -3,46 +3,47 @@
 namespace Cactus;
 
 /**
- * An entity class.
+ * The entity class is a representation of data from a data source as an object.
  *
- * @package    Cactus
- * @author     Dave Widmer <dave@davewidmer.net>
+ * @package   Cactus
+ * @author    Dave Widmer <dave@davewidmer.net>
  */
 class Entity
 {
 	/**
-	 * @var   array   The data for this object
+	 * @var boolean  Is this a new object?
 	 */
-	protected $data = array();
+	private $is_new = false;
 
 	/**
-	 * @var   boolean  Is this a new object?
+	 * @var array  The internal data storage array
 	 */
-	protected $is_new = false;
+	private $data = array();
 
 	/**
-	 * @var   array    An array of data that has been modified
+	 * @var array  A list of properties that have been modified.
 	 */
-	protected $modified_data = array();
+	private $modified = array();
 
 	/**
-	 * Creates a new \Cactus\Entity.
+	 * If data is passed into the entity it will be marked as new, otherwise it
+	 * is an existing "row" of data.
 	 *
-	 * @param  array  Data for a new object.
+	 * @param array $data  Initial data for a new entity.
 	 */
 	public function __construct(array $data = null)
 	{
 		if ($data !== null)
 		{
-			$this->setArray($data);
 			$this->is_new = true;
+			$this->setArray($data);
 		}
 	}
 
 	/**
-	 * Checks to see if this is a new object.
+	 * Is this a new Entity?
 	 *
-	 * @return   boolean
+	 * @return boolean
 	 */
 	public function isNew()
 	{
@@ -50,54 +51,60 @@ class Entity
 	}
 
 	/**
-	 * Cleans all of the "modified" fields
+	 * Magic "getter".
 	 *
-	 * @return   \Cactus\Entity
+	 * @param string $name  The property name to get.
 	 */
-	public function clean()
+	public function __get($name)
 	{
-		$this->modified_data = array();
-		return $this;
+		return $this->data[$name];
 	}
 
 	/**
-	 * Returns an array of data.
+	 * Gets the data as an array.
 	 *
-	 * @return   array
+	 * @param  array $keys  A list of keys to pull out in case all of the data isn't needed.
+	 * @return array 
 	 */
-	public function asArray()
+	public function asArray(array $keys = null)
 	{
-		return $this->data;
+		if ($keys === null)
+		{
+			return $this->data;
+		}
+
+		$data = array();
+		foreach ($keys as $key)
+		{
+			$data[$key] = $this->data[$key];
+		}
+
+		return $data;
 	}
 
 	/**
-	 * Returns a json representation of this object.
+	 * Magic "setter"
 	 *
-	 * @param  string $options  Any json_encode options.
-	 * @return string
+	 * @param string $name  The property name
+	 * @param mixed  $value The property value
 	 */
-	public function asJSON($options = 0)
+	public function __set($name, $value)
 	{
-		return json_encode($this->data, $options);
+		if ( ! isset($this->data[$name]) OR $this->data[$name] !== $value)
+		{
+			$this->data[$name] = $value;
+
+			if ( ! in_array($name, $this->modified))
+			{
+				$this->modified[] = $name;
+			}
+		}
 	}
 
 	/**
-	 * Gets only the data that has been modified
+	 * Sets an array of properties.
 	 *
-	 * @return   array
-	 */
-	public function getModifiedData()
-	{
-		return $this->modified_data;
-	}
-
-	/**
-	 * Sets key/value pairs in the entity given the array.
-	 *
-	 * If you only want to set one value at a time use set()
-	 *
-	 * @param  array $data  The data to set
-	 * @return \Cactus\Entity
+	 * @param array $data  The data to set
 	 */
 	public function setArray(array $data)
 	{
@@ -105,66 +112,34 @@ class Entity
 		{
 			$this->{$key} = $value;
 		}
+	}
 
+	/**
+	 * Gets an array of all of the internal data that have been modified.
+	 *
+	 * @return array
+	 */
+	public function getModifiedData()
+	{
+		$modified = array();
+
+		foreach ($this->modified as $key)
+		{
+			$modified[$key] = $this->data[$key];
+		}
+
+		return $modified;
+	}
+
+	/**
+	 * Resets all of the modified data.
+	 *
+	 * @return \Cactus\Entity
+	 */
+	public function reset()
+	{
+		$this->modified = array();
 		return $this;
-	}
-
-	/**
-	 * The magic 'get' method.
-	 *
-	 * This function will first check for a get{ucfirst($name)} function. If that
-	 * isn't set, then it will return a call to get.
-	 *
-	 * @param  string $name  The name of the property to fetch.
-	 * @return mixed         The found value or false if the propery wasn't found
-	 */
-	public function __get($name)
-	{
-		$method = "get".ucfirst($name);
-
-		if (method_exists($this, $method))
-		{
-			return $this->{$method}();
-		}
-		else
-		{
-			if (isset($this->data[$name]))
-			{
-				return $this->data[$name];
-			}
-			else
-			{
-				trigger_error(get_called_class()."::{$name} is an undefined property");
-			}
-		}
-	}
-
-	/**
-	 * The magic 'set' method.
-	 *
-	 * This function will look for a set{ucfirst($name)} function. If it isn't
-	 * found it will pipe it through to set.
-	 *
-	 * @param  string $name  The name of the property to set
-	 * @param  mixed  $value The value to set
-	 */
-	public function __set($name, $value)
-	{
-		$method = "set".ucfirst($name);
-
-		if (method_exists($this, $method))
-		{
-			$this->{$method}($value);
-		}
-		else
-		{
-			if ( ! isset($this->data[$name]) OR $this->data[$name] !== $value)
-			{
-				$this->modified_data[$name] = $value;
-			}
-
-			$this->data[$name] = $value;
-		}
 	}
 
 }
