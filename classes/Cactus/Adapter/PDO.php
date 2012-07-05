@@ -39,7 +39,7 @@ class PDO implements \Cactus\Adapter
 	public function select($query)
 	{
 		$statement = $this->run($query);
-		return $statement->fetchAll();
+		return $statement->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 	/**
