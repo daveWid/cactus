@@ -8,7 +8,7 @@ namespace Cactus;
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class ResultSet implements \Iterator, \Countable, \ArrayAccess
+class Collection implements \Iterator, \Countable, \ArrayAccess
 {
 	/**
 	 * @var array  The internal result array
@@ -16,7 +16,7 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
 	private $data = array();
 
 	/**
-	 * Adds data to a result set.
+	 * Adds data to the collection.
 	 *
 	 * @param array $data  The data to set
 	 */
@@ -36,21 +36,11 @@ class ResultSet implements \Iterator, \Countable, \ArrayAccess
 	}
 
 	/**
-	 * An array representation of this result set.
-	 *
-	 * @return array
-	 */
-	public function asArray()
-	{
-		return $this->data;
-	}
-
-	/**
 	 * Add an item to the result set.
 	 *
-	 * @param mixed $item  The item to add to the result set
+	 * @param \Cactus\Entity $item  The item to add to the result set
 	 */
-	public function add($item)
+	public function add(\Cactus\Entity $item)
 	{
 		$this->data[] = $item;
 	}
