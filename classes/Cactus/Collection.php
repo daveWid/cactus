@@ -38,9 +38,9 @@ class Collection implements \Iterator, \Countable, \ArrayAccess
 	/**
 	 * Add an item to the result set.
 	 *
-	 * @param \Cactus\Entity $item  The item to add to the result set
+	 * @param mixed $item  The item to add to the result set
 	 */
-	public function add(\Cactus\Entity $item)
+	public function add($item)
 	{
 		$this->data[] = $item;
 	}
