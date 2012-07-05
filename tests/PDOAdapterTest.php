@@ -20,9 +20,9 @@ class PDOAdapterTest extends DatabaseTest
 	public function testSelect()
 	{
 		$query = "SELECT * FROM user WHERE user_id = 1";
-		$collection = $this->pdo->select($query);
+		$result = $this->pdo->select($query);
 
-		$this->assertInstanceOf("\Cactus\Collection", $collection);
+		$this->assertInternalType('array', $result);
 	}
 
 	public function testInsert()
@@ -53,9 +53,9 @@ class PDOAdapterTest extends DatabaseTest
 	public function testEmptyResult()
 	{
 		$query = "SELECT * FROM user WHERE user_id = 100";
-		$collection = $this->pdo->select($query);
+		$result = $this->pdo->select($query);
 
-		$this->assertSame(0, $collection->count());
+		$this->assertSame(0, count($result));
 	}
 
 	/**

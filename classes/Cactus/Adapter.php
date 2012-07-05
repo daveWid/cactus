@@ -15,10 +15,9 @@ interface Adapter
 	 *
 	 * @param  string  $query      The query to run.
 	 * @param  array   $data       An array of data to bind to the query
-	 * @param  boolean $as_object  Return the result back as objects?
-	 * @return \Cactus\Collection  The result set from the query
+	 * @return array               The result set from the query
 	 */
-	public function select($query, $as_object = null);
+	public function select($query);
 
 	/**
 	 * Runs a query that will add data to the dataset

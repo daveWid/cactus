@@ -34,28 +34,12 @@ class PDO implements \Cactus\Adapter
 	 *
 	 * @param  string  $query      The query to run.
 	 * @param  boolean $as_object  Return the result back as objects?
-	 * @return \Cactus\Collection  The result set
+	 * @return array               The result set
 	 */
-	public function select($query, $as_object = null)
+	public function select($query)
 	{
 		$statement = $this->run($query);
-
-		$result = ($as_object === null) ?
-			$statement->fetchAll():
-			$statement->fetchAll(\PDO::FETCH_CLASS, $as_object);
-
-		$collection = new \Cactus\Collection;
-		foreach ($result as $row)
-		{
-			if ($row instanceOf \Cactus\Entity)
-			{
-				$row->reset();
-			}
-
-			$collection->add($row);
-		}
-
-		return $collection;
+		return $statement->fetchAll();
 	}
 
 	/**
