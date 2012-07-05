@@ -79,6 +79,17 @@ class PDO implements \Cactus\Adapter
 	}
 
 	/**
+	 * Quotes a value before it goes into the database.
+	 *
+	 * @param  string $value  The value to quote
+	 * @return string         The quoted value
+	 */
+	public function quote($value)
+	{
+		return $this->connection->quote($value);
+	}
+
+	/**
 	 * Runs a SQL query and handles any errors.
 	 *
 	 * @throws \Cactus\Exception

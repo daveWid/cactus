@@ -43,4 +43,12 @@ interface Adapter
 	 */
 	public function delete($query);
 
+	/**
+	 * Quotes a value before it goes into the database.
+	 *
+	 * @param  string $value  The value to quote
+	 * @return string         The quoted value
+	 */
+	public function quote($value);
+
 }
