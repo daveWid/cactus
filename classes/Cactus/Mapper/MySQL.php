@@ -3,10 +3,10 @@
 namespace Cactus\Mapper;
 
 /**
- * The MySQL Mapper runs MySQL queries on top of a PDO DataSource.
+ * A Mapper that uses MySQL. Cool enne?
  *
- * This class does no data sanitation before a query is run, so it is up to you
- * to make sure that you aren't exposing your database to SQL Injection.
+ * This class has no SQL Injection protection so please sanitize the data before
+ * you send data to the database.
  *
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
@@ -14,123 +14,122 @@ namespace Cactus\Mapper;
 class MySQL extends \Cactus\Mapper
 {
 	/**
-	 * @var string  The database table to query on
-	 */
-	public $table;
-
-	/**
-	 * @param string  The primary key used in the table
-	 */
-	public $primary_key;
-
-	/**
 	 * Attempt to get a row of data by using the passed in key.
 	 *
-	 * @param  mixed $key  The key that is used to search for a row
-	 * @return \Cactus\Entity
+	 * @param  mixed $key  The value of the primary key that is used to find the data
+	 * @return \Cactus\Entity or null
 	 */
-	public function fetchOne($key)
+	public function get($key)
 	{
-		$query = "SELECT * FROM {$this->table} WHERE {$this->primary_key} = :id";
-		$result = $this->dataSource->select($query, array('id', $key), $this->objectClass);
+		$query = "SELECT * FROM {$this->table} WHERE {$this->primary_key} = {$key}";
+		$result = $this->adapter->select($query);
 
-		return $result->current();
+		if (empty($result))
+		{
+			return null;
+		}
+
+		$collection = $this->formCollection($result);
+		return $collection->current();
 	}
 
 	/**
 	 * Get all of the records in the data set.
 	 *
-	 * @return \Cactus\ResultSet
+	 * @param  string $column     The column to sort on
+	 * @param  string $direction  The direction to sort on (ASC or DESC)
+	 * @return \Cactus\Collection
 	 */
-	public function fetchAll()
+	public function all($column = null, $direction = 'DESC')
 	{
-		$query = "SELECT * FROM {$this->table} ORDER BY {$this->primary_key} DESC";
-		return $this->dataSource->select($query, array(), $this->objectClass);
+		if ($column === null)
+		{
+			$column = $this->primary_key;
+		}
+
+		$query = "SELECT * FROM {$this->table} ORDER BY {$column} {$direction}";
+		$result = $this->adapter->select($query);
+
+		return $this->formCollection($result);
 	}
 
 	/**
 	 * Gets all of the records that satisfy the search parameters.
 	 *
 	 * @param  array $params   The search parameters
-	 * @return \Cactus\ResultSet
+	 * @return \Cactus\Collection
 	 */
 	public function find(array $params = array())
 	{
-		$placeholders = array();
-		foreach ($params as $column => $value)
+		$set = array();
+		foreach ($params as $key => $value)
 		{
-			$placeholders[] = "`$column` = :{$column}";
+			$set[] = "{$key} = '{$value}'";
 		}
 
-		$query = "SELECT * FROM {$this->table}".join(" AND ", $placeholders);
-		return $this->dataSource->select($query, $params, $this->objectClass);
+		$query = "SELECT * FROM {$this->table} WHERE ".join(',', $set);
+		$result = $this->adapter->select($query);
+
+		return $this->formCollection($result);
 	}
 
 	/**
 	 * Saves an entity.
 	 *
-	 * @param  \Cactus\Entity $entity  The entity to save
-	 * @return mixed  If the entity is new this will return array($insert_id, $affected_rows)
-	 *                otherwise it return the number of updated rows
+	 * @param \Cactus\Entity $entity  The entity to save
+	 * @return mixed                  create = array($id, $affected) | update = $affected
 	 */
 	public function save(\Cactus\Entity & $entity)
 	{
-		if ($entity->isNew())
-		{
-			return $this->create($entity);
-		}
-		else
-		{
-			return $this->update($entity);
-		}
+		return ($entity->isNew()) ?
+			$this->create($entity) :
+			$this->update($entity) ;
 	}
 
 	/**
-	 * Creates a new row based on the entity.
+	 * Creates a new row.
 	 *
-	 * @param  \Cactus\Entity $entity  The entity to save
-	 * @return array  array($insert_id, $affected_rows)
+	 * @param  \Cactus\Entity $entity  The entity to create
+	 * @return array                   array($id, $affected)
 	 */
-	private function create(\Cactus\Entity & $entity)
+	protected function create(\Cactus\Entity & $entity)
 	{
-		$data = $entity->getModifiedData();
-		$columns = array();
-		$values = array();
+		$data = $this->revert($entity->getModifiedData());
+		$data = $this->filter($data);
 
-		foreach ($data as $key => $value)
-		{
-			$columns[] = $key;
-			$values[] = ":{$key}";
-		}
+		$columns = join(',', array_keys($data));
+		$values = array_map(array($this->adapter, "quote"), array_values($data));
 
-		$columns = join(",", $values);
-		$values = join(",", $values);
+		$query = "INSERT INTO {$this->table} ({$columns}) VALUES (".join(",", $values).")";
+		$result = $this->adapter->insert($query);
 
-		$query = "INSERT INTO {$this->table} ({$columns}) VALUES ($values)";
-		$result = $this->dataSource->insert($query, $data);
+		$entity = $this->get($result[0]);
 
-		$entity = $this->fetchOne($result[0]);
 		return $result;
 	}
 
 	/**
-	 * Updates an existing row in the database.
+	 * Updates an existing entity.
 	 *
 	 * @param  \Cactus\Entity $entity  The entity to update
-	 * @return int  The number of affected rows
+	 * @return int                     Affected rows
 	 */
-	private function update(\Cactus\Entity & $entity)
+	protected function update(\Cactus\Entity & $entity)
 	{
+		$data = $this->revert($entity->getModifiedData());
+		$data = $this->filter($data);
+
 		$set = array();
-		foreach ($entity->getModifiedData() as $key => $value)
+		foreach ($data as $key => $value)
 		{
-			$set[] = "{$key} = :{$key}";
+			$set[] = "{$key} = ".$this->adapter->quote($value);
 		}
 
-		$query = "UPDATE {$this->table} SET {$set} WHERE {$this->primary_key} = {$entity->{$this->primary_key}}";
-		$result = $this->dataSource->update($query, $data);
+		$pk = $this->adapter->quote($entity->{$this->primary_key});
+		$query = "UPDATE {$this->table} SET ".join(',', $set)." WHERE {$this->primary_key} = {$pk}";
+		$result = $this->adapter->update($query);
 
-		$entity->clean();
+		$entity->reset();
 		return $result;
 	}
 
@@ -142,16 +141,18 @@ class MySQL extends \Cactus\Mapper
 	 */
 	public function delete(\Cactus\Entity & $entity)
 	{
-		$query = "DELETE FROM {$this->table} WHERE {$this->primary_key} = {$entity->{$this->primary_key}}";
-		$result = $this->dataSource->delete($query);
+		$value = $entity->{$this->primary_key};
+		$query = "DELETE FROM {$this->table} WHERE {$this->primary_key} = '{$value}'";
 
-		if ($result === 0)
+		$affected = $this->adapter->delete($query);
+		$success = $affected > 0;
+
+		if ($success)
 		{
-			return false;
+			$entity = null;
 		}
 
-		$result = null;
-		return true;
+		return $success;
 	}
 
 }
