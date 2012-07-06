@@ -194,7 +194,7 @@ abstract class Mapper
 	 * @param  array $params   The search parameters
 	 * @return \Cactus\Collection
 	 */
-	abstract public function find(array $params = array());
+	abstract public function find(array $params);
 
 	/**
 	 * Saves an entity.

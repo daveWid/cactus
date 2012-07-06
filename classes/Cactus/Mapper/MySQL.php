@@ -21,10 +21,10 @@ class MySQL extends \Cactus\Mapper
 	 */
 	public function get($key)
 	{
-		$select = new \Peyote\Select;
-		$select->table($this->table)->where($this->primary_key, "=", $key);
+		$data = array($this->primary_key => $key);
+		$query = $this->selectQuery()." WHERE ".$this->where($this->primary_key);
 
-		$result = $this->adapter->select($select->compile());
+		$result = $this->adapter->select($query, $data);
 
 		if (empty($result))
 		{
@@ -49,10 +49,13 @@ class MySQL extends \Cactus\Mapper
 			$column = $this->primary_key;
 		}
 
-		$select = new \Peyote\Select;
-		$select->table($this->table)->orderBy($column, $direction);
+		if ($direction !== 'DESC')
+		{
+			$direction = 'ASC';
+		}
 
-		$result = $this->adapter->select($select->compile());
+		$query = $this->selectQuery()." ORDER BY {$column} {$direction}";
+		$result = $this->adapter->select($query);
 
 		return $this->formCollection($result);
 	}
@@ -63,18 +66,18 @@ class MySQL extends \Cactus\Mapper
 	 * @param  array $params   The search parameters
 	 * @return \Cactus\Collection
 	 */
-	public function find(array $params = array())
+	public function find(array $params)
 	{
-		$select = new \Peyote\Select;
-		$select->table($this->table);
-
-		$set = array();
+		$data = array();
+		$where = array();
 		foreach ($params as $key => $value)
 		{
-			$select->where($key, "=", $value);
+			$data[$key] = $value;
+			$where[] = $this->where($key);
 		}
 
-		$result = $this->adapter->select($select->compile());
+		$query = $this->selectQuery()." WHERE ".join(' AND ', $where);
+		$result = $this->adapter->select($query, $data);
 
 		return $this->formCollection($result);
 	}
@@ -103,12 +106,8 @@ class MySQL extends \Cactus\Mapper
 		$data = $this->revert($entity->getModifiedData());
 		$data = $this->filter($data);
 
-		$query = new \Peyote\Insert;
-		$query->table($this->table)
-			->columns(array_keys($data))
-			->values(array_values($data));
-
-		$result = $this->adapter->insert($query->compile());
+		$query = "INSERT INTO {$this->table} ".$this->buildInsert($data);
+		$result = $this->adapter->insert($query, $data);
 
 		$entity = $this->get($result[0]);
 
@@ -126,12 +125,12 @@ class MySQL extends \Cactus\Mapper
 		$data = $this->revert($entity->getModifiedData());
 		$data = $this->filter($data);
 
-		$query = new \Peyote\Update;
-		$query->table($this->table)
-			->set($data)
-			->where($this->primary_key, '=', $entity->{$this->primary_key});
+		$query = "UPDATE {$this->table} SET ".$this->buildUpdate($data);
+		$query .= " WHERE ".$this->where($this->primary_key);
 
-		$result = $this->adapter->update($query->compile());
+		$data[$this->primary_key] = $entity->{$this->primary_key};
+
+		$result = $this->adapter->update($query, $data);
 
 		$entity->reset();
 		return $result;
@@ -145,10 +144,11 @@ class MySQL extends \Cactus\Mapper
 	 */
 	public function delete(\Cactus\Entity & $entity)
 	{
-		$query = new \Peyote\Delete;
-		$query->table($this->table)->where($this->primary_key, '=', $entity->{$this->primary_key});
+		$data = array($this->primary_key => $entity->{$this->primary_key});
 
-		$affected = $this->adapter->delete($query->compile());
+		$query = "DELETE FROM {$this->table} WHERE ".$this->where($this->primary_key);
+
+		$affected = $this->adapter->delete($query, $data);
 		$success = $affected > 0;
 
 		if ($success)
@@ -157,6 +157,71 @@ class MySQL extends \Cactus\Mapper
 		}
 
 		return $success;
+	}
+
+	/**
+	 * The start of a select query.
+	 *
+	 * @return string
+	 */
+	protected function selectQuery()
+	{
+		return "SELECT * FROM {$this->table}";
+	}
+
+	/**
+	 * Creates a simple where clause.
+	 *
+	 * @param  string $key    The param key
+	 * @param  string $op     The operator
+	 * @return string
+	 */
+	private function where($key, $op = "=")
+	{
+		return "{$key} {$op} :{$key}";
+	}
+
+	/**
+	 * Builds the end of an insert query.
+	 *
+	 * @param  array $data  The data to use for building
+	 * @return string
+	 */
+	private function buildInsert(array $data)
+	{
+		$keys = array_keys($data);
+
+		$sql[] = "(".join(',', $keys).")";
+		$sql[] = "VALUES";
+		$sql[] = "(";
+
+		$placeholders = array();
+		foreach ($keys as $name)
+		{
+			$placeholders[] = ":{$name}";
+		}
+
+		$sql[] = join(',', $placeholders);
+		$sql[] = ")";
+
+		return join(" ", $sql);
+	}
+
+	/**
+	 * Builds the end of an update statement.
+	 *
+	 * @param  array $data  The data to set
+	 * @return string
+	 */
+	private function buildUpdate(array $data)
+	{
+		$sql = array();
+		foreach (array_keys($data) as $key)
+		{
+			$sql[] = "{$key} = :{$key}";
+		}
+
+		return join(", ", $sql);
 	}
 
 }
