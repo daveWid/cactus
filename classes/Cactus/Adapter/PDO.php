@@ -37,25 +37,27 @@ class PDO implements \Cactus\Adapter
 	/**
 	 * Runs a query to find data in the dataset.
 	 *
-	 * @param  string  $query      The query to run.
-	 * @param  boolean $as_object  Return the result back as objects?
-	 * @return array               The result set
+	 * @param  string $query   The query to run.
+	 * @param  array  $data    An array of data to bind to the query
+	 * @param  array  $params  A list of parameters to bind to the query
+	 * @return array           The result set from the query
 	 */
-	public function select($query)
+	public function select($query, array $params = array())
 	{
-		$statement = $this->run($query);
+		$statement = $this->run($query, $params);
 		return $statement->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 	/**
 	 * Runs a query that will add data to the dataset
 	 *
-	 * @param   string $query  The query to run.
-	 * @return  array          array($insert_id, $affected_rows);
+	 * @param  string $query  The query to run.
+	 * @param  array  $params A list of parameters to bind to the query
+	 * @return array          array($insert_id, $affected_rows);
 	 */
-	public function insert($query)
+	public function insert($query, array $params = array())
 	{
-		$statement = $this->run($query);
+		$statement = $this->run($query, $params);
 		return array((int) $this->connection->lastInsertId(), $statement->rowCount());
 	}
 
@@ -63,11 +65,12 @@ class PDO implements \Cactus\Adapter
 	 * Runs a query that will update data
 	 *
 	 * @param  string $query  The query to run
+	 * @param  array  $params A list of parameters to bind to the query
 	 * @return int            The number of affected rows
 	 */
-	public function update($query)
+	public function update($query, array $params = array())
 	{
-		$statement = $this->run($query);
+		$statement = $this->run($query, $params);
 		return $statement->rowCount();
 	}
 
@@ -75,11 +78,12 @@ class PDO implements \Cactus\Adapter
 	 * Runs a query that will remove data.
 	 *
 	 * @param  string $query  The query to run
+	 * @param  array  $params A list of parameters to bind to the query
 	 * @return int            The number of deleted rows 
 	 */
-	public function delete($query)
+	public function delete($query, array $params = array())
 	{
-		$statement = $this->run($query);
+		$statement = $this->run($query, $params);
 		return $statement->rowCount();
 	}
 
@@ -101,11 +105,13 @@ class PDO implements \Cactus\Adapter
 	 * @param  string $query  The SQL query to run
 	 * @return \PDOStatement
 	 */
-	private function run($query)
+	private function run($query, array $params)
 	{
 		try{
 			$this->queries[] = $query;
-			$statement = $this->connection->query($query);
+
+			$statement = $this->connection->prepare($query);
+			$statement->execute($params);
 		} catch(\PDOException $e) {
 			throw new \Cactus\Exception($e->getMessage());
 		}

@@ -13,35 +13,39 @@ interface Adapter
 	/**
 	 * Runs a query to find data in the dataset.
 	 *
-	 * @param  string  $query      The query to run.
-	 * @param  array   $data       An array of data to bind to the query
-	 * @return array               The result set from the query
+	 * @param  string $query   The query to run.
+	 * @param  array  $data    An array of data to bind to the query
+	 * @param  array  $params  A list of parameters to bind to the query
+	 * @return array           The result set from the query
 	 */
-	public function select($query);
+	public function select($query, array $params = array());
 
 	/**
 	 * Runs a query that will add data to the dataset
 	 *
-	 * @param   string $query  The query to run.
-	 * @return  array          array($insert_id, $affected_rows);
+	 * @param  string $query  The query to run.
+	 * @param  array  $params A list of parameters to bind to the query
+	 * @return array          array($insert_id, $affected_rows);
 	 */
-	public function insert($query);
+	public function insert($query, array $params = array());
 
 	/**
 	 * Runs a query that will update data
 	 *
 	 * @param  string $query  The query to run
+	 * @param  array  $params A list of parameters to bind to the query
 	 * @return int            The number of affected rows
 	 */
-	public function update($query);
+	public function update($query, array $params = array());
 
 	/**
 	 * Runs a query that will remove data.
 	 *
 	 * @param  string $query  The query to run
+	 * @param  array  $params A list of parameters to bind to the query
 	 * @return int            The number of deleted rows 
 	 */
-	public function delete($query);
+	public function delete($query, array $params = array());
 
 	/**
 	 * Gets a list of all of the queries that have been run.
