@@ -21,8 +21,10 @@ class MySQL extends \Cactus\Mapper
 	 */
 	public function get($key)
 	{
-		$query = "SELECT * FROM {$this->table} WHERE {$this->primary_key} = {$key}";
-		$result = $this->adapter->select($query);
+		$select = new \Peyote\Select;
+		$select->table($this->table)->where($this->primary_key, "=", $key);
+
+		$result = $this->adapter->select($select->compile());
 
 		if (empty($result))
 		{
@@ -47,8 +49,10 @@ class MySQL extends \Cactus\Mapper
 			$column = $this->primary_key;
 		}
 
-		$query = "SELECT * FROM {$this->table} ORDER BY {$column} {$direction}";
-		$result = $this->adapter->select($query);
+		$select = new \Peyote\Select;
+		$select->table($this->table)->orderBy($column, $direction);
+
+		$result = $this->adapter->select($select->compile());
 
 		return $this->formCollection($result);
 	}
@@ -61,14 +65,16 @@ class MySQL extends \Cactus\Mapper
 	 */
 	public function find(array $params = array())
 	{
+		$select = new \Peyote\Select;
+		$select->table($this->table);
+
 		$set = array();
 		foreach ($params as $key => $value)
 		{
-			$set[] = "{$key} = '{$value}'";
+			$select->where($key, "=", $value);
 		}
 
-		$query = "SELECT * FROM {$this->table} WHERE ".join(',', $set);
-		$result = $this->adapter->select($query);
+		$result = $this->adapter->select($select->compile());
 
 		return $this->formCollection($result);
 	}
@@ -97,11 +103,12 @@ class MySQL extends \Cactus\Mapper
 		$data = $this->revert($entity->getModifiedData());
 		$data = $this->filter($data);
 
-		$columns = join(',', array_keys($data));
-		$values = array_map(array($this->adapter, "quote"), array_values($data));
+		$query = new \Peyote\Insert;
+		$query->table($this->table)
+			->columns(array_keys($data))
+			->values(array_values($data));
 
-		$query = "INSERT INTO {$this->table} ({$columns}) VALUES (".join(",", $values).")";
-		$result = $this->adapter->insert($query);
+		$result = $this->adapter->insert($query->compile());
 
 		$entity = $this->get($result[0]);
 
@@ -119,15 +126,12 @@ class MySQL extends \Cactus\Mapper
 		$data = $this->revert($entity->getModifiedData());
 		$data = $this->filter($data);
 
-		$set = array();
-		foreach ($data as $key => $value)
-		{
-			$set[] = "{$key} = ".$this->adapter->quote($value);
-		}
+		$query = new \Peyote\Update;
+		$query->table($this->table)
+			->set($data)
+			->where($this->primary_key, '=', $entity->{$this->primary_key});
 
-		$pk = $this->adapter->quote($entity->{$this->primary_key});
-		$query = "UPDATE {$this->table} SET ".join(',', $set)." WHERE {$this->primary_key} = {$pk}";
-		$result = $this->adapter->update($query);
+		$result = $this->adapter->update($query->compile());
 
 		$entity->reset();
 		return $result;
@@ -141,10 +145,10 @@ class MySQL extends \Cactus\Mapper
 	 */
 	public function delete(\Cactus\Entity & $entity)
 	{
-		$value = $entity->{$this->primary_key};
-		$query = "DELETE FROM {$this->table} WHERE {$this->primary_key} = '{$value}'";
+		$query = new \Peyote\Delete;
+		$query->table($this->table)->where($this->primary_key, '=', $entity->{$this->primary_key});
 
-		$affected = $this->adapter->delete($query);
+		$affected = $this->adapter->delete($query->compile());
 		$success = $affected > 0;
 
 		if ($success)
