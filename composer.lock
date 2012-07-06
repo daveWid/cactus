@@ -1,9 +1,10 @@
 {
-    "hash": "cb50a11c79a142b27c3313a5df034cc1",
+    "hash": "9c996ce9e99968c24f800ed328b717d3",
     "packages": [
         {
             "package": "davewid/peyote",
-            "version": "0.3.0"
+            "version": "dev-master",
+            "source-reference": "a51510508e89ceec1f3bc8a07cbd7a7e36bfd6ed"
         }
     ],
     "packages-dev": null,
@@ -11,7 +12,7 @@
 
     ],
     "minimum-stability": "dev",
-    "stability-flags": [
-
-    ]
+    "stability-flags": {
+        "davewid/peyote": 20
+    }
 }
