@@ -67,4 +67,19 @@ class PDOAdapterTest extends DatabaseTest
 		$this->pdo->select($bad_query);
 	}
 
+	public function testQueries()
+	{
+		$queries = array(
+			'SELECT COUNT(*) AS num FROM user',
+			'SELECT * FROM user WHERE user_id = 1'
+		);
+
+		foreach ($queries as $query)
+		{
+			$this->pdo->select($query);
+		}
+
+		$this->assertSame($queries, $this->pdo->getQueries());
+	}
+
 }

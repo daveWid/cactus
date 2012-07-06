@@ -104,7 +104,7 @@ class PDO implements \Cactus\Adapter
 	private function run($query)
 	{
 		try{
-			$queries[] = $query;
+			$this->queries[] = $query;
 			$statement = $this->connection->query($query);
 		} catch(\PDOException $e) {
 			throw new \Cactus\Exception($e->getMessage());
