@@ -19,6 +19,11 @@ class PDO implements \Cactus\Adapter
 	private $connection = null;
 
 	/**
+	 * @var array An internal list of queries run
+	 */
+	private $queries = array();
+
+	/**
 	 * Creates a new PDO Adapter with the connection information passed in.
 	 *
 	 * @param \PDO $connection  The PDO connection information.
@@ -79,14 +84,13 @@ class PDO implements \Cactus\Adapter
 	}
 
 	/**
-	 * Quotes a value before it goes into the database.
+	 * Gets a list of all of the queries that have been run.
 	 *
-	 * @param  string $value  The value to quote
-	 * @return string         The quoted value
+	 * @return array
 	 */
-	public function quote($value)
+	public function getQueries()
 	{
-		return $this->connection->quote($value);
+		return $this->queries;
 	}
 
 	/**
@@ -100,6 +104,7 @@ class PDO implements \Cactus\Adapter
 	private function run($query)
 	{
 		try{
+			$queries[] = $query;
 			$statement = $this->connection->query($query);
 		} catch(\PDOException $e) {
 			throw new \Cactus\Exception($e->getMessage());

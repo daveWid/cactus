@@ -44,11 +44,10 @@ interface Adapter
 	public function delete($query);
 
 	/**
-	 * Quotes a value before it goes into the database.
+	 * Gets a list of all of the queries that have been run.
 	 *
-	 * @param  string $value  The value to quote
-	 * @return string         The quoted value
+	 * @return array
 	 */
-	public function quote($value);
+	public function getQueries();
 
 }
