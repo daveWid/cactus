@@ -1,7 +1,10 @@
 {
-    "hash": "9c84f46548e217dff0e840370949b939",
+    "hash": "7d55ad4282ec791f3c50905c0b8d0e8f",
     "packages": [
-
+        {
+            "package": "davewid/peyote",
+            "version": "0.5.0"
+        }
     ],
     "packages-dev": null,
     "aliases": [
