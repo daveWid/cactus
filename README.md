@@ -22,69 +22,62 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 Working with this structure we can now dive into the model and entity classes.
 
-## Model
+## Mapper
 
-The model is the class that holds all of the information about the database,
-column names, interactions, relationships, etc...
-
-The model class has no knowledge of how to connect to your data source so you will
-have to specify that yourself.
-
-``` php
-<?php
-
-$pdo = new PDO($dsn, $username, $password);
-$adapter = new \Cactus\Adapter\PDO($pdo);
-
-\Cactus\Model::set_adapter($adapter);
-```
-
-_See the [PDO](http://www.php.net/manual/en/class.pdo.php) docs for more
-information on creating a PDO connection._
-
-Using a framework or don't have PDO available? You are in luck because you can
-easily create adapters to suit your needs. All you need to do is implement the
-`\Cactus\Adapter` interface and inject that adapter into Cactus. See the list of
-supported frameworks below.
+The mapper classes hold all of the information about the database table it is
+mapping, including the table name and primary key.
 
 Here is the model class for our `user` table.
 
 ``` php
 <?php
 
-class ModelUser extends \Cactus\Model
+class UserMapper extends \Cactus\Mapper
 {
 	/**
-	 * Model setup. 
+	 * Use the init() function so you don't have to mess with handling the
+	 * adapter injection in the constructor.
 	 */
-	public function __construct()
+	protected function init()
 	{
-		parent::__construct(array(
-			'table' => "user",
-			'primary_key' => "user_id",
-			'columns' => array(
-				'user_id' => \Cactus\Field::VARCHAR,
-				'email' => \Cactus\Field::VARCHAR,
-				'password' => \Cactus\Field::VARCHAR,
-				'last_name' => \Cactus\Field::VARCHAR,
-				'first_name' => \Cactus\Field::VARCHAR,
-				'status' => \Cactus\Field::INT,
-				'create_date' => \Cactus\Field::DATETIME,
-			),
-			'object_class' => "User",
-			'relationships' => array(
-				// Roles
-				'role' => array(
-					'type' => \Cactus\Relationship::HAS_MANY,
-					//'loading' => \Cactus\Loading::EAGER,
-					'driver' => "ModelUserRole",
-					'column' => 'user_id'
-				)
-			),
-		));
+		$this->table = "user";
+		$this->primary_key = "user_id";
+
+		$this->columns = array(
+			'user_id' => 'integer',
+			'email' => 'string',
+			'password' => 'string',
+			'first_name' => 'string',
+			'last_name' => 'string',
+			'status' => 'integer'
+			'create_date' => 'dateTime'
+		);
 	}
 }
 ```
+
+The mapper class has no knowledge of how to connect to your data source so you will
+have to specify that yourself.
+
+``` php
+<?php
+
+
+$pdo = new PDO($dsn, $username, $password);
+$adapter = new \Cactus\Adapter\PDO($pdo);
+
+$mapper = new UserMapper($adapter);
+```
+
+As you can see the adapter needs to be injected into the class, so it is probably
+wise to use a dependency injection container to accomplish this.
+
+_See the [PDO](http://www.php.net/manual/en/class.pdo.php) docs for more
+information on creating a PDO connection._
+
+Using a framework or don't have PDO available? You are in luck because you can
+easily create adapters to suit your needs. All you need to do is implement the
+`\Cactus\Adapter` interface and inject that adapter into Cactus.
 
 ## Entity
 
@@ -110,17 +103,14 @@ There are 3 types of queries built in; finding, saving and deleting.
 ``` php
 <?php
 
-// Assuming that the adapter has been setup correctly already...
-$model = new ModelUser;
-
 // Find the user with a user_id of 1
-$user = $model->get(1);
+$user = $mapper->get(1);
 
 // Get all users
-$users = $model->all();
+$users = $mapper->all();
 
 // Find user who's email is test@foo.com
-$found = $model->find(array(
+$found = $mapper->find(array(
 	'email' => "test@foo.com"
 ));
 ```
@@ -128,14 +118,15 @@ $found = $model->find(array(
 ### Save
 ``` php
 <?php
+
 // New user assuming $post is posted form data
 $user = new User($post);
-$model->save($user);
+$mapper->save($user);
 
 // Existing user, after modifications
-$user = $model->get(1);
+$user = $mapper->get(1);
 $user->first_name = "Billy";
-$model->save($user);
+$mapper->save($user);
 
 echo $user->first_name; // Output: Billy
 ```
@@ -143,8 +134,9 @@ echo $user->first_name; // Output: Billy
 ### Delete
 ``` php
 <?php
-$user = $model->get(1);
-$model->delete($user);
+
+$user = $mapper->get(1);
+$mapper->delete($user);
 ```
 
 ## Defining Columns
@@ -153,62 +145,26 @@ The goal of defining the columns is not to be able to generate the sql to
 create your tables, but to convert the string values from the database over to
 native php types.
 
-Lets take a look at the example from `ModelUser` above
+Lets take a look at the example from `UserMapper` above
 
 ``` php
 <?php
-'columns' => array(
-	'user_id' => \Cactus\Field::VARCHAR,
-	'email' => \Cactus\Field::VARCHAR,
-	'password' => \Cactus\Field::VARCHAR,
-	'last_name' => \Cactus\Field::VARCHAR,
-	'first_name' => \Cactus\Field::VARCHAR,
-	'status' => \Cactus\Field::INT,
-	'create_date' => \Cactus\Field::DATETIME,
-),
+
+$this->columns = array(
+	'user_id' => 'integer',
+	'email' => 'string',
+	'password' => 'string',
+	'first_name' => 'string',
+	'last_name' => 'string',
+	'status' => 'integer'
+	'create_date' => 'dateTime'
+);
 ```
 
 As you can see the columns array is setup in a $name => $type setup. For a full
 list of field types you can choose from check the documentation for
-`\Cactus\Field`. MySQL is the only supported database as this point, but if
-you need support for other database feel free to contribute!
+`\Cactus\Converter`. Setting a field to `false` keeps it as a string as well.
 
-## Relationships
-
-Building relationships with Cactus is easy. Within your Model class you will
-need to add information to the `relationships` configuration array. In the ModelUser
-example above we specified a relationship using the following.
-
-``` php
-<?php
-'relationships' => array(
-	// Roles
-	'role' => array(
-		'type' => \Cactus\Relationship::HAS_MANY,
-		//'loading' => \Cactus\Loading::EAGER,
-		'driver' => "ModelUserRole",
-		'column' => 'user_id'
-	)
-),
-```
-
-The relationships array keys (in our case `role`) are the property names that will
-be set on the entity. The configuration array for each key can have the following
-options.
-
- Key | Type | Description | Required
------|------|-------------|----------
-type | `string` | The type of relationship we are forming | Yes
-driver | `string` | The name \Cactus\Model class that is used to get the relationship | Yes
-column | `string` | The name of the column to join the tables on | Yes
-loading | `int` | The type of loading to use | No (defaults to Lazy loading)
-
-There are only 2 types of relationships in Cactus, `\Cactus\Relationship::HAS_MANY`
-and `\Cactus\Relationship::HAS_ONE`.
-
-For loading you can use either `\Cactus\Loading::LAZY` or `\Cactus\Loading::EAGER`.
-Cactus loads relationship using the lazy method by default. Eagerly loaded
-relationships are loaded in a way to avoid the N+1 select problem.
 
 ## Building Queries
 
@@ -222,7 +178,6 @@ Below is a list of currently supported adapters. If you don't see your framework
 in the list, hack the code and send a pull request.
 
 * PDO
-* Kohana
 
 ## Hacking
 
@@ -236,7 +191,7 @@ adding tests where necessary.
 
 Since this is an ORM, you will need to test a database. To connect to the database
 you will need to to modify the `php` section of the phpunit.xml file with your settings.
-Before you commmit changes make sure you run...
+Before you commit changes make sure you run...
 
 ~~~ shell
 git update-index --assume-unchanged phpunit.xml
