@@ -11,7 +11,7 @@ namespace Cactus;
 class Reverter
 {
 	/**
-	 * Converts a string value to boolean.
+	 * Converts a boolean value to string.
 	 *
 	 * @param  string $value  A 0 or 1 as a string
 	 * @return boolean
@@ -22,7 +22,18 @@ class Reverter
 	}
 
 	/**
-	 * Converts a string date to a DateTime object.
+	 * Converts a string to a "string"?
+	 *
+	 * @param  string $value  The string value
+	 * @return string
+	 */
+	public static function string($value)
+	{
+		return (string) $value;
+	}
+
+	/**
+	 * Converts a DateTime object string date to a string.
 	 *
 	 * @param  string $value  A Y-m-d date as a string
 	 * @return \DateTime
@@ -33,7 +44,7 @@ class Reverter
 	}
 
 	/**
-	 * Converts a string date to a DateTime object.
+	 * Converts a DateTime object to a string date.
 	 *
 	 * @param  string $value  A Y-m-d H:i:s date as a string
 	 * @return \DateTime
@@ -44,7 +55,7 @@ class Reverter
 	}
 
 	/**
-	 * Converts a string float value to a real float.
+	 * Converts a float to a string.
 	 *
 	 * @param  string $value The float value as a string
 	 * @return float 
@@ -55,7 +66,7 @@ class Reverter
 	}
 
 	/**
-	 * Converts a string integer value to a real integer.
+	 * Converts an integer to a string.
 	 *
 	 * @param  string $value The integer value as a string
 	 * @return float 
@@ -66,7 +77,7 @@ class Reverter
 	}
 
 	/**
-	 * Converts a string time to a DateTime object.
+	 * Converts a DateTime object to a string.
 	 *
 	 * @param  string $value  A H:i:s time as a string
 	 * @return \DateTime

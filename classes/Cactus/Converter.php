@@ -22,6 +22,17 @@ class Converter
 	}
 
 	/**
+	 * Converts a string to a "string"?
+	 *
+	 * @param  string $value  The string value
+	 * @return string
+	 */
+	public static function string($value)
+	{
+		return (string) $value;
+	}
+
+	/**
 	 * Converts a string date to a DateTime object.
 	 *
 	 * @param  string $value  A Y-m-d date as a string
