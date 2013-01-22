@@ -40,7 +40,8 @@ class Reverter
 	 */
 	public static function date($value)
 	{
-		return $value->format("Y-m-d");
+		$date = new \DateTime($value);
+		return $date->format("Y-m-d");
 	}
 
 	/**
@@ -51,7 +52,8 @@ class Reverter
 	 */
 	public static function dateTime($value)
 	{
-		return $value->format("Y-m-d H:i:s");
+		$date = new \DateTime($value);
+		return $date->format("Y-m-d H:i:s");
 	}
 
 	/**
