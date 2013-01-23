@@ -93,8 +93,7 @@ abstract class Mapper
 
 		foreach ($result as $row)
 		{
-			$entity = new $this->objectClass;
-			$entity->dataStructure = $this->getColumns();
+			$entity = new $this->objectClass(null, $this->getColumns());
 			$entity->fill($row);
 			$entity->reset();
 			$collection->add($entity);
