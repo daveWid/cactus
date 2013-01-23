@@ -113,7 +113,7 @@ abstract class Mapper
 
 		foreach ($result as $row)
 		{
-			$row = $this->convert($row);
+			$row = $this->convert(new $this->objectClass, $row);
 			$row->reset();
 			$collection->add($row);
 		}
@@ -124,14 +124,13 @@ abstract class Mapper
 	/**
 	 * Converts an array over to the object class.
 	 *
-	 * @param  array $object  The array to convert
+	 * @param  array $object  The object to do the conversion on
+	 * @param  array $data    The data used to convert
 	 * @return mixed          The object class specified in the mapper with native php data types
 	 */
-	public function convert($object)
+	public function convert($object, array $data)
 	{
-		$converted = new $this->objectClass;
-
-		foreach ($object as $key => $value)
+		foreach ($data as $key => $value)
 		{
 			if (array_key_exists($key, $this->columns) AND $this->columns[$key] !== false)
 			{
@@ -139,10 +138,10 @@ abstract class Mapper
 				$value = self::$converter->$method($value);
 			}
 
-			$converted->{$key} = $value;
+			$object->{$key} = $value;
 		}
 
-		return $converted;
+		return $object;
 	}
 
 	/**
@@ -189,6 +188,18 @@ abstract class Mapper
 		}
 
 		return $filtered;
+	}
+
+	/**
+	 * Updates an entity with new data. This method makes sure that all updated
+	 * data in the entity keeps its native data type.
+	 *
+	 * @param  \Cactus\Entity $entity The entity to update
+	 * @param  array         $data    The new data
+	 */
+	public function updateEntity(\Cactus\Entity & $entity, array $data)
+	{
+		$entity = $this->convert($entity, $data);
 	}
 
 	/**

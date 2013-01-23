@@ -74,7 +74,7 @@ class MySQLMapperTest extends DatabaseTest
 	{
 		$user = $this->mapper->get(1);
 		$now = date("Y-m-d H:i:s");
-		$user->create_date = $now;
+		$this->mapper->updateEntity($user, array('create_date' => $now));
 
 		$this->mapper->save($user);
 		$this->assertSame($now, $user->create_date->format("Y-m-d H:i:s"));
