@@ -12,16 +12,6 @@ namespace Cactus;
 abstract class Mapper
 {
 	/**
-	 * @var \Cactus\Converter  The class used to convert strings into native php types
-	 */
-	public static $converter = null;
-
-	/**
-	 * @var \Cactus\Reverter  The class used to revert data back into strings.
-	 */
-	public static $reverter = null;
-
-	/**
 	 * @var \Cactus\Adapter  The adapter used to fetch data
 	 */
 	public $adapter;
@@ -58,16 +48,6 @@ abstract class Mapper
 	 */
 	public function __construct(\Cactus\Adapter $adapter = null)
 	{
-		if (self::$converter === null)
-		{
-			self::$converter = new \Cactus\Converter;
-		}
-
-		if (self::$reverter === null)
-		{
-			self::$reverter = new \Cactus\Reverter;
-		}
-
 		if ($adapter !== null)
 		{
 			$this->adapter = $adapter;
@@ -113,75 +93,35 @@ abstract class Mapper
 
 		foreach ($result as $row)
 		{
-			$row = $this->convert(new $this->objectClass, $row);
-			$row->reset();
-			$collection->add($row);
+			$entity = new $this->objectClass;
+			$entity->dataStructure = $this->getColumns();
+			$entity->fill($row);
+			$entity->reset();
+			$collection->add($entity);
 		}
 
 		return $collection;
 	}
 
 	/**
-	 * Converts an array over to the object class.
-	 *
-	 * @param  array $object  The object to do the conversion on
-	 * @param  array $data    The data used to convert
-	 * @return mixed          The object class specified in the mapper with native php data types
-	 */
-	public function convert($object, array $data)
-	{
-		foreach ($data as $key => $value)
-		{
-			if (array_key_exists($key, $this->columns) AND $this->columns[$key] !== false)
-			{
-				$method = $this->columns[$key];
-				$value = self::$converter->$method($value);
-			}
-
-			$object->{$key} = $value;
-		}
-
-		return $object;
-	}
-
-	/**
-	 * Reverts all native php types back to their string values.
-	 *
-	 * @param  array $data The data to revert
-	 * @return array
-	 */
-	public function revert(array $data)
-	{
-		$reverted = array();
-
-		foreach ($data as $key => $value)
-		{
-			if (array_key_exists($key, $this->columns) AND $this->columns[$key] !== false)
-			{
-				$method = $this->columns[$key];
-				$value = self::$reverter->$method($value);
-			}
-
-			$reverted[$key] = $value;
-		}
-
-		return $reverted;
-	}
-
-	/**
 	 * Filters the data to make sure only fields that are specified in the mapper
 	 * get set in the query.
 	 *
-	 * @param  array $data  The data to filter.
-	 * @return array
+	 * @param  mixed $data    The data to filter.
+	 * @param  array $columns The columns to filter on.
+	 * @return array          The filtered data
 	 */
-	public function filter(array $data)
+	public function filter($data, array $columns = array())
 	{
 		$filtered = array();
+		if (empty($columns))
+		{
+			$columns = $this->columns;
+		}
 
 		foreach ($data as $key => $value)
 		{
-			if (array_key_exists($key, $this->columns))
+			if (array_key_exists($key, $columns))
 			{
 				$filtered[$key] = $value;
 			}
@@ -191,15 +131,15 @@ abstract class Mapper
 	}
 
 	/**
-	 * Updates an entity with new data. This method makes sure that all updated
-	 * data in the entity keeps its native data type.
+	 * Prepares the data to return to the data store (as strings).
 	 *
-	 * @param  \Cactus\Entity $entity The entity to update
-	 * @param  array         $data    The new data
+	 * @param  \Cactus\Entity $entity The entity to prepare
+	 * @return array                  The modified/filtered/reverted data...
 	 */
-	public function updateEntity(\Cactus\Entity & $entity, array $data)
+	protected function prepareData(\Cactus\Entity $entity)
 	{
-		$entity = $this->convert($entity, $data);
+		$data = $this->filter($entity->getModifiedData());
+		return $entity->revert($data);
 	}
 
 	/**

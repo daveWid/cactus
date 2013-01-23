@@ -61,6 +61,21 @@ class MySQLMapperTest extends DatabaseTest
 		$this->assertFalse($user->isNew());
 	}
 
+	public function testCreateWithConversion()
+	{
+		$user = new \Cactus\Entity(
+			array(
+				'name' => "Biggie",
+				'password' => "purrrr....",
+				'create_date' => date("Y-m-d H:i:s")
+			),
+			$this->mapper->getColumns()
+		);
+
+		$this->mapper->save($user);
+		$this->assertFalse($user->isNew());
+	}
+
 	public function testUpdate()
 	{
 		$user = $this->mapper->get(1);
@@ -70,15 +85,16 @@ class MySQLMapperTest extends DatabaseTest
 		$this->assertSame("David", $user->name);
 	}
 
-	public function testUpdateWithNativeDataType()
+
+	public function testUpdateWithConversion()
 	{
 		$user = $this->mapper->get(1);
-		$now = date("Y-m-d H:i:s");
-		$this->mapper->updateEntity($user, array('create_date' => $now));
+		$user->create_date = date("Y-m-d H:i:s");
 
 		$this->mapper->save($user);
-		$this->assertSame($now, $user->create_date->format("Y-m-d H:i:s"));
+		$this->assertSame("David", $user->name);
 	}
+
 
 	public function testDelete()
 	{

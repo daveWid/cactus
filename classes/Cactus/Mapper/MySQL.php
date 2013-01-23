@@ -97,8 +97,7 @@ class MySQL extends \Cactus\Mapper
 	 */
 	protected function create(\Cactus\Entity & $entity)
 	{
-		$data = $this->revert($entity->getModifiedData());
-		$data = $this->filter($data);
+		$data = $this->prepareData($entity);
 
 		$query = new \Peyote\Insert($this->table);
 		$query->columns(array_keys($data))->values(array_values($data));
@@ -118,8 +117,7 @@ class MySQL extends \Cactus\Mapper
 	 */
 	protected function update(\Cactus\Entity & $entity)
 	{
-		$data = $this->revert($entity->getModifiedData());
-		$data = $this->filter($data);
+		$data = $this->prepareData($entity);
 
 		$query = new \Peyote\Update($this->table);
 		$query->set($data)->where($this->primary_key, '=', $entity->{$this->primary_key});

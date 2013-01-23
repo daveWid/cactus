@@ -91,4 +91,17 @@ class EntityTest extends PHPUnit_Framework_TestCase
 		$this->entity->name = "Dave";
 		$this->assertSame(array(), $this->entity->getModifiedData());
 	}
+
+	public function testDataTypeModificationIsInternal()
+	{
+		// Please do this in a factory or in the mapper...
+		$this->entity->dataStructure = array(
+			'name' => false,
+			'create_date' => 'dateTime'
+		);
+
+		$this->entity->create_date = date("Y-m-d H:i:s");
+		$this->assertInstanceOf('DateTime', $this->entity->create_date);
+	}
+
 }
