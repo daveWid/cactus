@@ -70,6 +70,16 @@ class MySQLMapperTest extends DatabaseTest
 		$this->assertSame("David", $user->name);
 	}
 
+	public function testUpdateWithNativeDataType()
+	{
+		$user = $this->mapper->get(1);
+		$now = date("Y-m-d H:i:s");
+		$user->create_date = $now;
+
+		$this->mapper->save($user);
+		$this->assertSame($now, $user->create_date->format("Y-m-d H:i:s"));
+	}
+
 	public function testDelete()
 	{
 		$user = $this->mapper->get(1);
