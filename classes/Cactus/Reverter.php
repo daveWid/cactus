@@ -38,7 +38,7 @@ class Reverter
 	 * @param  string $value  A Y-m-d date as a string
 	 * @return \DateTime
 	 */
-	public function date($value)
+	public function date(\DateTime $value)
 	{
 		return $value->format("Y-m-d");
 	}
@@ -49,7 +49,7 @@ class Reverter
 	 * @param  string $value  A Y-m-d H:i:s date as a string
 	 * @return \DateTime
 	 */
-	public function dateTime($value)
+	public function dateTime(\DateTime $value)
 	{
 		return $value->format("Y-m-d H:i:s");
 	}
@@ -82,7 +82,7 @@ class Reverter
 	 * @param  string $value  A H:i:s time as a string
 	 * @return \DateTime
 	 */
-	public function time($value)
+	public function time(\DateTime $value)
 	{
 		return $value->format("H:i:s");
 	}
