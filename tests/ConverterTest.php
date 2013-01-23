@@ -8,42 +8,49 @@
  */
 class ConverterTest extends PHPUnit_Framework_TestCase
 {
+	public $converter;
+
+	public function setUp()
+	{
+		$this->converter = new \Cactus\Converter;
+	}
+
 	public function testBooleanFalse()
 	{
-		$this->assertFalse(\Cactus\Converter::boolean("0"));
+		$this->assertFalse($this->converter->boolean("0"));
 	}
 
 	public function testBooleanTrue()
 	{
-		$this->assertTrue(\Cactus\Converter::boolean("1"));
+		$this->assertTrue($this->converter->boolean("1"));
 	}
 
 	public function testDate()
 	{
 		$date = "2012-07-05";
-		$this->assertInstanceOf("DateTime", \Cactus\Converter::date($date));
+		$this->assertInstanceOf("DateTime", $this->converter->date($date));
 	}
 
 	public function testDateTime()
 	{
 		$date = "2012-07-05 15:20:00";
-		$this->assertInstanceOf("DateTime", \Cactus\Converter::dateTime($date));
+		$this->assertInstanceOf("DateTime", $this->converter->dateTime($date));
 	}
 
 	public function testFloat()
 	{
-		$this->assertSame(50.35, \Cactus\Converter::float("50.35"));
+		$this->assertSame(50.35, $this->converter->float("50.35"));
 	}
 
 	public function testInteger()
 	{
-		$this->assertSame(50, \Cactus\Converter::integer("50"));
+		$this->assertSame(50, $this->converter->integer("50"));
 	}
 
 	public function testTime()
 	{
 		$time = "15:20:00";
-		$this->assertInstanceOf("DateTime", \Cactus\Converter::time($time));
+		$this->assertInstanceOf("DateTime", $this->converter->time($time));
 	}
 
 }

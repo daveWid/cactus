@@ -8,14 +8,21 @@
  */
 class ReverterTest extends PHPUnit_Framework_TestCase
 {
+	public $reverter;
+
+	public function setUp()
+	{
+		$this->reverter = new \Cactus\Reverter;
+	}
+
 	public function testBooleanFalse()
 	{
-		$this->assertSame("0", \Cactus\Reverter::boolean(false));
+		$this->assertSame("0", $this->reverter->boolean(false));
 	}
 
 	public function testBooleanTrue()
 	{
-		$this->assertSame("1", \Cactus\Reverter::boolean(true));
+		$this->assertSame("1", $this->reverter->boolean(true));
 	}
 
 	public function testDate()
@@ -23,7 +30,7 @@ class ReverterTest extends PHPUnit_Framework_TestCase
 		$time ="2012-07-05";
 		$date = DateTime::createFromFormat("Y-m-d", $time);
 
-		$this->assertSame($time, \Cactus\Reverter::date($date));
+		$this->assertSame($time, $this->reverter->date($date));
 	}
 
 	public function testDateTime()
@@ -31,17 +38,17 @@ class ReverterTest extends PHPUnit_Framework_TestCase
 		$time = "2012-07-05 15:20:00";
 		$date = DateTime::createFromFormat("Y-m-d H:i:s", $time);
 
-		$this->assertSame($time, \Cactus\Reverter::dateTime($date));
+		$this->assertSame($time, $this->reverter->dateTime($date));
 	}
 
 	public function testFloat()
 	{
-		$this->assertSame('50.35', \Cactus\Reverter::float(50.35));
+		$this->assertSame('50.35', $this->reverter->float(50.35));
 	}
 
 	public function testInteger()
 	{
-		$this->assertSame('50', \Cactus\Reverter::integer(50));
+		$this->assertSame('50', $this->reverter->integer(50));
 	}
 
 	public function testTime()
@@ -49,7 +56,7 @@ class ReverterTest extends PHPUnit_Framework_TestCase
 		$time = "15:20:00";
 		$date = DateTime::createFromFormat("H:i:s", $time);
 
-		$this->assertSame($time, \Cactus\Reverter::time($date));
+		$this->assertSame($time, $this->reverter->time($date));
 	}
 
 }

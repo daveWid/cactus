@@ -16,7 +16,7 @@ class Reverter
 	 * @param  string $value  A 0 or 1 as a string
 	 * @return boolean
 	 */
-	public static function boolean($value)
+	public function boolean($value)
 	{
 		return $value === true ? '1' : '0';
 	}
@@ -27,7 +27,7 @@ class Reverter
 	 * @param  string $value  The string value
 	 * @return string
 	 */
-	public static function string($value)
+	public function string($value)
 	{
 		return (string) $value;
 	}
@@ -38,7 +38,7 @@ class Reverter
 	 * @param  string $value  A Y-m-d date as a string
 	 * @return \DateTime
 	 */
-	public static function date($value)
+	public function date($value)
 	{
 		return $value->format("Y-m-d");
 	}
@@ -49,7 +49,7 @@ class Reverter
 	 * @param  string $value  A Y-m-d H:i:s date as a string
 	 * @return \DateTime
 	 */
-	public static function dateTime($value)
+	public function dateTime($value)
 	{
 		return $value->format("Y-m-d H:i:s");
 	}
@@ -60,7 +60,7 @@ class Reverter
 	 * @param  string $value The float value as a string
 	 * @return float 
 	 */
-	public static function float($value)
+	public function float($value)
 	{
 		return (string) $value;
 	}
@@ -71,7 +71,7 @@ class Reverter
 	 * @param  string $value The integer value as a string
 	 * @return float 
 	 */
-	public static function integer($value)
+	public function integer($value)
 	{
 		return (string) $value;
 	}
@@ -82,7 +82,7 @@ class Reverter
 	 * @param  string $value  A H:i:s time as a string
 	 * @return \DateTime
 	 */
-	public static function time($value)
+	public function time($value)
 	{
 		return $value->format("H:i:s");
 	}

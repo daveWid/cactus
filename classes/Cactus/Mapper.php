@@ -12,6 +12,16 @@ namespace Cactus;
 abstract class Mapper
 {
 	/**
+	 * @var \Cactus\Converter  The class used to convert strings into native php types
+	 */
+	public static $converter = null;
+
+	/**
+	 * @var \Cactus\Reverter  The class used to revert data back into strings.
+	 */
+	public static $reverter = null;
+
+	/**
 	 * @var \Cactus\Adapter  The adapter used to fetch data
 	 */
 	public $adapter;
@@ -48,6 +58,16 @@ abstract class Mapper
 	 */
 	public function __construct(\Cactus\Adapter $adapter = null)
 	{
+		if (self::$converter === null)
+		{
+			self::$converter = new \Cactus\Converter;
+		}
+
+		if (self::$reverter === null)
+		{
+			self::$reverter = new \Cactus\Reverter;
+		}
+
 		if ($adapter !== null)
 		{
 			$this->adapter = $adapter;
@@ -116,7 +136,7 @@ abstract class Mapper
 			if (array_key_exists($key, $this->columns) AND $this->columns[$key] !== false)
 			{
 				$method = $this->columns[$key];
-				$value = \Cactus\Converter::$method($value);
+				$value = self::$converter->$method($value);
 			}
 
 			$converted->{$key} = $value;
@@ -140,7 +160,7 @@ abstract class Mapper
 			if (array_key_exists($key, $this->columns) AND $this->columns[$key] !== false)
 			{
 				$method = $this->columns[$key];
-				$value = \Cactus\Reverter::$method($value);
+				$value = self::$reverter->$method($value);
 			}
 
 			$reverted[$key] = $value;
