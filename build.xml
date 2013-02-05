@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Cactus" default="package" basedir=".">
-	<property name="version" value="0.4.1" />
+	<property name="version" value="0.4.2" />
 
 	<!-- Packages up the code to be uploaded -->
 	<target name="package">	

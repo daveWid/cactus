@@ -2,15 +2,54 @@
     "hash": "7d55ad4282ec791f3c50905c0b8d0e8f",
     "packages": [
         {
-            "package": "davewid/peyote",
-            "version": "0.5.0"
+            "name": "davewid/peyote",
+            "version": "0.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/daveWid/Peyote",
+                "reference": "0.5.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/daveWid/Peyote/zipball/0.5.2",
+                "reference": "0.5.2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "time": "2013-02-05 13:50:53",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Peyote": "classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dave Widmer",
+                    "email": "dave@davewidmer.net",
+                    "homepage": "http://www.davewidmer.net"
+                }
+            ],
+            "description": "A database query builder for PHP 5.3+",
+            "homepage": "https://github.com/daveWid/Peyote",
+            "keywords": [
+                "database",
+                "mysql",
+                "query builder"
+            ]
         }
     ],
     "packages-dev": null,
     "aliases": [
 
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": [
 
     ]
