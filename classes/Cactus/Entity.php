@@ -198,7 +198,7 @@ class Entity
 		foreach ($data as $key => $value)
 		{
 			$method = $this->getDataType($key);
-			if ($method !== false && $value)
+			if ($method !== false && $value !== null)
 			{
 				$value = self::$reverter->$method($value);
 			}
