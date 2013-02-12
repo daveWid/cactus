@@ -14,7 +14,7 @@
 	],
 	"require":{
 		"php": ">=5.3",
-		"davewid/peyote": "0.5.*"
+		"davewid/peyote": "0.6.*"
 	},
 	"autoload": {
 		"psr-0": { "Cactus": "classes/" }
