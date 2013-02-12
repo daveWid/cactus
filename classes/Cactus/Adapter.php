@@ -48,6 +48,14 @@ interface Adapter
 	public function delete($query, array $params = array());
 
 	/**
+	 * Runs a raw query.
+	 *
+	 * @param  string $query The query
+	 * @return boolean       Success
+	 */
+	public function query($query);
+
+	/**
 	 * Gets a list of all of the queries that have been run.
 	 *
 	 * @return array

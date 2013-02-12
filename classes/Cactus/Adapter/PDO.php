@@ -44,7 +44,7 @@ class PDO implements \Cactus\Adapter
 	 */
 	public function select($query, array $params = array())
 	{
-		$statement = $this->run($query, $params);
+		list($statement) = $this->run($query, $params);
 		return $statement->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
@@ -57,7 +57,7 @@ class PDO implements \Cactus\Adapter
 	 */
 	public function insert($query, array $params = array())
 	{
-		$statement = $this->run($query, $params);
+		list($statement) = $this->run($query, $params);
 		return array((int) $this->connection->lastInsertId(), $statement->rowCount());
 	}
 
@@ -70,7 +70,7 @@ class PDO implements \Cactus\Adapter
 	 */
 	public function update($query, array $params = array())
 	{
-		$statement = $this->run($query, $params);
+		list($statement) = $this->run($query, $params);
 		return $statement->rowCount();
 	}
 
@@ -83,8 +83,20 @@ class PDO implements \Cactus\Adapter
 	 */
 	public function delete($query, array $params = array())
 	{
-		$statement = $this->run($query, $params);
+		list($statement) = $this->run($query, $params);
 		return $statement->rowCount();
+	}
+
+	/**
+	 * Runs a raw query.
+	 *
+	 * @param  string $query The query
+	 * @return boolean       Success
+	 */
+	public function query($query)
+	{
+		list($statement, $success) = $this->run($query, array());
+		return $success;
 	}
 
 	/**
@@ -103,7 +115,7 @@ class PDO implements \Cactus\Adapter
 	 * @throws \Cactus\Exception
 	 *
 	 * @param  string $query  The SQL query to run
-	 * @return \PDOStatement
+	 * @return array          [\PDOStatement, (boolean) success]
 	 */
 	private function run($query, array $params)
 	{
@@ -111,12 +123,12 @@ class PDO implements \Cactus\Adapter
 			$this->queries[] = $query;
 
 			$statement = $this->connection->prepare($query);
-			$statement->execute($params);
+			$success = $statement->execute($params);
 		} catch(\PDOException $e) {
 			throw new \Cactus\Exception($e->getMessage());
 		}
 
-		return $statement;
+		return array($statement, $success);
 	}
 
 }
