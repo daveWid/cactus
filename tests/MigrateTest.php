@@ -1,8 +1,8 @@
 <?php
 
-class TasksTest extends DatabaseTest
+class MigrateTest extends DatabaseTest
 {
-	public $tasks;
+	public $migrate;
 	public $path;
 	public $adapter;
 
@@ -11,18 +11,18 @@ class TasksTest extends DatabaseTest
 		$adapter = new \Cactus\Adapter\PDO($this->getConnection()->getConnection());
 
 		$this->path = dirname(__FILE__).DIRECTORY_SEPARATOR.'tasks';
-		$this->tasks = new \Cactus\Tasks($this->path, $adapter);
+		$this->migrate = new \Cactus\Task\Migrate($this->path, $adapter);
 		$this->adapter = $adapter;
 	}
 
 	public function testPathAddsDS()
 	{
-		$this->assertSame($this->path.DIRECTORY_SEPARATOR, $this->tasks->getPath());
+		$this->assertSame($this->path.DIRECTORY_SEPARATOR, $this->migrate->getPath());
 	}
 
 	public function testMigrate()
 	{
-		$output = $this->tasks->migrate();
+		$output = $this->migrate->migrate();
 		$this->assertSame(array(
 			'Migration #001 Setup: Success'
 		), $output);
@@ -36,7 +36,7 @@ class TasksTest extends DatabaseTest
 
 	public function testRollback()
 	{
-		$output = $this->tasks->rollback();
+		$output = $this->migrate->rollback();
 		$this->assertSame(array(
 			'Rollback #001 Setup: Success'
 		), $output);
@@ -52,13 +52,13 @@ class TasksTest extends DatabaseTest
 
 	public function testNoMigrationsRun()
 	{
-		$output = $this->tasks->migrate('001');
+		$output = $this->migrate->migrate('001');
 		$this->assertEmpty($output);
 	}
 
 	public function testNoRollbacksRun()
 	{
-		$output = $this->tasks->rollback('001');
+		$output = $this->migrate->rollback('001');
 		$this->assertEmpty($output);
 	}
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace Cactus;
+namespace Cactus\Task;
 
 /**
- * Utility tasks that can be run.
+ * Database Migration.
  *
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class Tasks
+class Migrate
 {
 	/**
 	 * @var string  Absolute path to the tasks folder
