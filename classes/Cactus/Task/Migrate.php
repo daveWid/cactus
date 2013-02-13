@@ -16,11 +16,6 @@ class Migrate
 	private $path;
 
 	/**
-	 * @var string  The path to the migrations folder
-	 */
-	private $migration_path;
-
-	/**
 	 * @var \Cactus\Adapter  The adapter used for the migrations
 	 */
 	private $adapter;
@@ -32,7 +27,6 @@ class Migrate
 	public function __construct($path, \Cactus\Adapter $adapter)
 	{
 		$this->path = rtrim(realpath($path), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-		$this->migration_path = $this->path . 'migrations' . DIRECTORY_SEPARATOR;
 		$this->adapter = $adapter;
 	}
 
@@ -79,7 +73,7 @@ class Migrate
 	{
 		/** @link http://www.php.net/manual/en/function.scandir.php */
 		$flag = $reverse ? 1 : 0;
-		$files = array_diff(scandir($this->migration_path, $flag), array('.', '..', '.DS_Store'));
+		$files = array_diff(scandir($this->path, $flag), array('.', '..', '.DS_Store'));
 
 		$found = array();
 
@@ -111,12 +105,11 @@ class Migrate
 	private function runMigrations($migrations, $fn)
 	{
 		$output = array();
-		$path = $this->path.'migrations'.DIRECTORY_SEPARATOR;
 		$type = $fn === 'up' ? 'Migration' : 'Rollback';
 
 		foreach ($migrations as $info)
 		{
-			include_once $path.$info['basename'];
+			include_once $this->path.$info['basename'];
 			$migration = new $info['classname']($this->adapter);
 			$message = $migration->{$fn}() === true ? "Success" : "Failed";
 			$output[] = "{$type} #{$info['id']} {$info['name']}: {$message}";

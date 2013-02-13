@@ -10,7 +10,7 @@ class MigrateTest extends DatabaseTest
 	{
 		$adapter = new \Cactus\Adapter\PDO($this->getConnection()->getConnection());
 
-		$this->path = dirname(__FILE__).DIRECTORY_SEPARATOR.'tasks';
+		$this->path = dirname(__FILE__).DIRECTORY_SEPARATOR.'tasks'.DIRECTORY_SEPARATOR.'migrations';
 		$this->migrate = new \Cactus\Task\Migrate($this->path, $adapter);
 		$this->adapter = $adapter;
 	}
