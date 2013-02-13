@@ -8,36 +8,8 @@ namespace Cactus\Task;
  * @package    Cactus
  * @author     Dave Widmer <dave@davewidmer.net>
  */
-class Migrate
+class Migrate extends \Cactus\Task
 {
-	/**
-	 * @var string  Absolute path to the tasks folder
-	 */
-	private $path;
-
-	/**
-	 * @var \Cactus\Adapter  The adapter used for the migrations
-	 */
-	private $adapter;
-
-	/**
-	 * @param string          $path    The path to the tasks folder
-	 * @param \Cactus\Adapter $adapter The adapter to connect to the data source
-	 */
-	public function __construct($path, \Cactus\Adapter $adapter)
-	{
-		$this->path = rtrim(realpath($path), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-		$this->adapter = $adapter;
-	}
-
-	/**
-	 * @return string  The absolute path to the tasks directory.
-	 */
-	public function getPath()
-	{
-		return $this->path;
-	}
-
 	/**
 	 * Migrates a database up to a current state.
 	 *
@@ -46,19 +18,21 @@ class Migrate
 	 */
 	public function migrate($from = 0)
 	{
-		$migrations = $this->findMigrations($from);
+		$files = $this->getFiles();
+		$migrations = $this->findMigrations($from, $files);
 		return $this->runMigrations($migrations, 'up');
 	}
 
 	/**
 	 * Rolls back a migration.
 	 *
-	 * @param  integer         $to       The version to rollback to
-	 * @return array                     List if debug style messages
+	 * @param  string $to  The version to rollback to
+	 * @return array       List if debug style messages
 	 */
 	public function rollback($to = 0)
 	{
-		$migrations = $this->findMigrations($to, true);
+		$files = $this->getFiles(true);
+		$migrations = $this->findMigrations($to, $files);
 		return $this->runMigrations($migrations, 'down');
 	}
 
@@ -66,15 +40,11 @@ class Migrate
 	 * Find the given migrations.
 	 *
 	 * @param  string  $version The version limit
-	 * @param  boolean $reverse Reverse the migration numbers?
+	 * @param  array   $files   The files to search through
 	 * @return array            List of migration files
 	 */
-	private function findMigrations($version, $reverse = false)
+	private function findMigrations($version, $files)
 	{
-		/** @link http://www.php.net/manual/en/function.scandir.php */
-		$flag = $reverse ? 1 : 0;
-		$files = array_diff(scandir($this->path, $flag), array('.', '..', '.DS_Store'));
-
 		$found = array();
 
 		foreach ($files as $file)
