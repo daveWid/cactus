@@ -75,14 +75,16 @@ class Migrate extends \Cactus\Task
 	private function runMigrations($migrations, $fn)
 	{
 		$output = array();
-		$type = $fn === 'up' ? 'Migration' : 'Rollback';
 
 		foreach ($migrations as $info)
 		{
 			include_once $this->path.$info['basename'];
 			$migration = new $info['classname']($this->adapter);
-			$message = $migration->{$fn}() === true ? "Success" : "Failed";
-			$output[] = "{$type} #{$info['id']} {$info['name']}: {$message}";
+			$output[] = array(
+				'name' => $info['name'],
+				'id' => $info['id'],
+				'success' => $migration->{$fn}()
+			);
 		}
 
 		return $output;

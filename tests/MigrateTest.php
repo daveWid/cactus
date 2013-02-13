@@ -24,8 +24,10 @@ class MigrateTest extends DatabaseTest
 	{
 		$output = $this->migrate->migrate();
 		$this->assertSame(array(
-			'Migration #001 Setup: Success'
-		), $output);
+			'name' => "Setup",
+			'id' => '001',
+			'success' => true
+		), $output[0]);
 	}
 
 	public function testMigrationWorked()
@@ -38,8 +40,10 @@ class MigrateTest extends DatabaseTest
 	{
 		$output = $this->migrate->rollback();
 		$this->assertSame(array(
-			'Rollback #001 Setup: Success'
-		), $output);
+			'name' => "Setup",
+			'id' => '001',
+			'success' => true
+		), $output[0]);
 	}
 
 	/**
