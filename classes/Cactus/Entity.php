@@ -172,7 +172,7 @@ class Entity
 	private function convert($name, $value)
 	{
 		$method = $this->getDataType($name);
-		if ($method !== false)
+		if ($method !== false && $value !== null)
 		{
 			$value = self::$converter->$method($value);
 		}
