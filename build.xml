@@ -2,12 +2,15 @@
 <project name="Cactus" default="package" basedir=".">
 	<property name="version" value="0.4.2" />
 
-	<!-- Packages up the code to be uploaded -->
-	<target name="package">	
+	<target name="package" description="Creates a zip package for distribution">
 		<property name="file" value="developer/packages/Cactus-${version}.zip" />
 
 		<mkdir dir="developer/packages" />
 		<delete file="${file}" />
+
+		<copy todir="${project.basedir}/classes/">
+			<fileset dir="${project.basedir}/vendor/davewid/peyote/classes/" />
+		</copy>
 
 		<zip destfile="${file}">
 			<fileset dir="${project.basedir}/">
@@ -18,5 +21,8 @@
 				<exclude name=".DS_Store" />
 			</fileset>
 		</zip>
+
+		<delete dir="${project.basedir}/classes/Peyote" includeemptydirs="true" failonerror="true" />
+
 	</target>
 </project>
