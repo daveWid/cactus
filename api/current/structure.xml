@@ -1,0 +1,2076 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project version="2.0.0a1" title="Cactus">
+  <file path="Cactus/Adapter/PDO.php" hash="a7fb71138abd46e35150d3431be74b81" package="Default">
+    <parse_markers>
+      <critical line="16" code="50019">No short description for property $connection</critical>
+      <critical line="21" code="50019">No short description for property $queries</critical>
+      <error line="26" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $connection in __construct()</error>
+      <error line="37" code="50014">Name of argument $params does not match with the DocBlock's name $data in select()</error>
+      <notice line="37" code="50013">Parameter $data could not be found in select()</notice>
+      <error line="112" code="50015">Argument $params is missing from the Docblock of run()</error>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Adapter/PDO.php</error>
+    </parse_markers>
+    <class final="false" abstract="false" namespace="Cactus\Adapter" line="14" package="Cactus">
+      <name>PDO</name>
+      <full_name>\Cactus\Adapter\PDO</full_name>
+      <extends/>
+      <extends>\Cactus\Adapter</extends>
+      <docblock line="5">
+        <description><![CDATA[A PDO Adapter implementation.]]></description>
+        <long-description><![CDATA[<p>This adapter will run whatever query you throw at it, so all of the data
+validation/sanitation should be done before your run it through the adapter.</p>]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <property final="false" static="false" visibility="private" line="19" package="Default">
+        <name>$connection</name>
+        <default><![CDATA[null]]></default>
+        <docblock line="16">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="16" name="var" description="The PDO connection object" type="\PDO">
+            <type by_reference="false">\PDO</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="private" line="24" package="Default">
+        <name>$queries</name>
+        <default><![CDATA[array()]]></default>
+        <docblock line="21">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="21" name="var" description="An internal list of queries run" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Adapter" line="31" package="">
+        <name>__construct</name>
+        <type>function</type>
+        <docblock line="26">
+          <description><![CDATA[Creates a new PDO Adapter with the connection information passed in.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="26" name="param" description="The PDO connection information." type="\PDO" variable="$connection">
+            <type by_reference="false">\PDO</type>
+          </tag>
+        </docblock>
+        <argument line="31">
+          <name>$connection</name>
+          <default><![CDATA[]]></default>
+          <type>PDO</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Adapter" line="45" package="">
+        <name>select</name>
+        <type>function</type>
+        <docblock line="37">
+          <description><![CDATA[Runs a query to find data in the dataset.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="37" name="param" description="The query to run." type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="37" name="param" description="An array of data to bind to the query" type="array" variable="$data">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="37" name="param" description="A list of parameters to bind to the query" type="array" variable="$params">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="37" name="return" description="The result set from the query" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="45">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="45">
+          <name>$params</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Adapter" line="58" package="">
+        <name>insert</name>
+        <type>function</type>
+        <docblock line="51">
+          <description><![CDATA[Runs a query that will add data to the dataset]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="51" name="param" description="The query to run." type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="51" name="param" description="A list of parameters to bind to the query" type="array" variable="$params">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="51" name="return" description="array($insert_id, $affected_rows);" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="58">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="58">
+          <name>$params</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Adapter" line="71" package="">
+        <name>update</name>
+        <type>function</type>
+        <docblock line="64">
+          <description><![CDATA[Runs a query that will update data]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="64" name="param" description="The query to run" type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="64" name="param" description="A list of parameters to bind to the query" type="array" variable="$params">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="64" name="return" description="The number of affected rows" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+        <argument line="71">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="71">
+          <name>$params</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Adapter" line="84" package="">
+        <name>delete</name>
+        <type>function</type>
+        <docblock line="77">
+          <description><![CDATA[Runs a query that will remove data.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="77" name="param" description="The query to run" type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="77" name="param" description="A list of parameters to bind to the query" type="array" variable="$params">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="77" name="return" description="The number of deleted rows" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+        <argument line="84">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="84">
+          <name>$params</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Adapter" line="96" package="">
+        <name>query</name>
+        <type>function</type>
+        <docblock line="90">
+          <description><![CDATA[Runs a raw query.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="90" name="param" description="The query" type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="90" name="return" description="Success" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="96">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Adapter" line="107" package="">
+        <name>getQueries</name>
+        <type>function</type>
+        <docblock line="102">
+          <description><![CDATA[Gets a list of all of the queries that have been run.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="102" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="Cactus\Adapter" line="120" package="">
+        <name>run</name>
+        <type>function</type>
+        <docblock line="112">
+          <description><![CDATA[Runs a SQL query and handles any errors.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="112" name="throws" description="" type="\Cactus\Exception">
+            <type by_reference="false">\Cactus\Exception</type>
+          </tag>
+          <tag line="112" name="param" description="The SQL query to run" type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="112" name="return" description="[\PDOStatement, (boolean) success]" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="120">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="120">
+          <name>$params</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Cactus/Adapter.php" hash="e5173b290c53c10605ae756ce1f63b95" package="Default">
+    <parse_markers>
+      <error line="13" code="50014">Name of argument $params does not match with the DocBlock's name $data in select()</error>
+      <notice line="13" code="50013">Parameter $data could not be found in select()</notice>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Adapter.php</error>
+    </parse_markers>
+    <interface namespace="Cactus" line="11" package="Cactus">
+      <name>Adapter</name>
+      <full_name>\Cactus\Adapter</full_name>
+      <extends/>
+      <docblock line="5">
+        <description><![CDATA[The interface that data source adapters must follow.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="21" package="">
+        <name>select</name>
+        <type>function</type>
+        <docblock line="13">
+          <description><![CDATA[Runs a query to find data in the dataset.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="13" name="param" description="The query to run." type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="13" name="param" description="An array of data to bind to the query" type="array" variable="$data">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="13" name="param" description="A list of parameters to bind to the query" type="array" variable="$params">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="13" name="return" description="The result set from the query" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="21">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="21">
+          <name>$params</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="30" package="">
+        <name>insert</name>
+        <type>function</type>
+        <docblock line="23">
+          <description><![CDATA[Runs a query that will add data to the dataset]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="23" name="param" description="The query to run." type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="23" name="param" description="A list of parameters to bind to the query" type="array" variable="$params">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="23" name="return" description="array($insert_id, $affected_rows);" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="30">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="30">
+          <name>$params</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="39" package="">
+        <name>update</name>
+        <type>function</type>
+        <docblock line="32">
+          <description><![CDATA[Runs a query that will update data]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="32" name="param" description="The query to run" type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="32" name="param" description="A list of parameters to bind to the query" type="array" variable="$params">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="32" name="return" description="The number of affected rows" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+        <argument line="39">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="39">
+          <name>$params</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="48" package="">
+        <name>delete</name>
+        <type>function</type>
+        <docblock line="41">
+          <description><![CDATA[Runs a query that will remove data.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="41" name="param" description="The query to run" type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="41" name="param" description="A list of parameters to bind to the query" type="array" variable="$params">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="41" name="return" description="The number of deleted rows" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+        <argument line="48">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="48">
+          <name>$params</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="56" package="">
+        <name>query</name>
+        <type>function</type>
+        <docblock line="50">
+          <description><![CDATA[Runs a raw query.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="50" name="param" description="The query" type="string" variable="$query">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="50" name="return" description="Success" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="56">
+          <name>$query</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="63" package="">
+        <name>getQueries</name>
+        <type>function</type>
+        <docblock line="58">
+          <description><![CDATA[Gets a list of all of the queries that have been run.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="58" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+    </interface>
+  </file>
+  <file path="Cactus/Collection.php" hash="2b7f3abd14479cb22bac70680fc08e99" package="Default">
+    <parse_markers>
+      <critical line="13" code="50019">No short description for property $data</critical>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Collection.php</error>
+    </parse_markers>
+    <class final="false" abstract="false" namespace="Cactus" line="11" package="Cactus">
+      <name>Collection</name>
+      <full_name>\Cactus\Collection</full_name>
+      <extends/>
+      <extends>\Iterator</extends>
+      <extends>\Countable</extends>
+      <extends>\ArrayAccess</extends>
+      <docblock line="5">
+        <description><![CDATA[A collection of Cactus Entities]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <property final="false" static="false" visibility="private" line="16" package="Default">
+        <name>$data</name>
+        <default><![CDATA[array()]]></default>
+        <docblock line="13">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="13" name="var" description="The internal result array" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="23" package="">
+        <name>__construct</name>
+        <type>function</type>
+        <docblock line="18">
+          <description><![CDATA[Adds data to the collection.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="18" name="param" description="The data to set" type="array" variable="$data">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="23">
+          <name>$data</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="33" package="">
+        <name>count</name>
+        <type>function</type>
+        <docblock line="28">
+          <description><![CDATA[Gets the number of items in the result set.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="28" name="return" description="The number of items in the result set" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="43" package="">
+        <name>add</name>
+        <type>function</type>
+        <docblock line="38">
+          <description><![CDATA[Add an item to the result set.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="38" name="param" description="The item to add to the result set" type="mixed" variable="$item">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="43">
+          <name>$item</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="54" package="">
+        <name>current</name>
+        <type>function</type>
+        <docblock line="48">
+          <description><![CDATA[Return the current element]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="48" name="link" description="http://php.net/manual/en/iterator.current.php" link="http://php.net/manual/en/iterator.current.php"/>
+          <tag line="48" name="return" description="Can return any type." type="mixed">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="64" package="">
+        <name>next</name>
+        <type>function</type>
+        <docblock line="59">
+          <description><![CDATA[Move forward to next element]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="59" name="link" description="http://php.net/manual/en/iterator.next.php" link="http://php.net/manual/en/iterator.next.php"/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="75" package="">
+        <name>key</name>
+        <type>function</type>
+        <docblock line="69">
+          <description><![CDATA[Return the key of the current element]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="69" name="link" description="http://php.net/manual/en/iterator.key.php" link="http://php.net/manual/en/iterator.key.php"/>
+          <tag line="69" name="return" description="scalar on success, integer 0 on failure." type="\Cactus\scalar">
+            <type by_reference="false">\Cactus\scalar</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="86" package="">
+        <name>valid</name>
+        <type>function</type>
+        <docblock line="80">
+          <description><![CDATA[Checks if current position is valid]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="80" name="link" description="http://php.net/manual/en/iterator.valid.php" link="http://php.net/manual/en/iterator.valid.php"/>
+          <tag line="80" name="return" description="Returns true on success or false on failure." type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="97" package="">
+        <name>rewind</name>
+        <type>function</type>
+        <docblock line="92">
+          <description><![CDATA[Rewind the Iterator to the first element]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="92" name="link" description="http://php.net/manual/en/iterator.rewind.php" link="http://php.net/manual/en/iterator.rewind.php"/>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="109" package="">
+        <name>offsetExists</name>
+        <type>function</type>
+        <docblock line="102">
+          <description><![CDATA[Whether a offset exists.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="102" name="link" description="http://php.net/manual/en/arrayaccess.offsetexists.php" link="http://php.net/manual/en/arrayaccess.offsetexists.php"/>
+          <tag line="102" name="param" description="An offset to check for" type="mixed" variable="$offset">
+            <type by_reference="false">mixed</type>
+          </tag>
+          <tag line="102" name="return" description="true on success or false on failure." type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="109">
+          <name>$offset</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="121" package="">
+        <name>offsetGet</name>
+        <type>function</type>
+        <docblock line="114">
+          <description><![CDATA[Offset to retrieve]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="114" name="link" description="http://php.net/manual/en/arrayaccess.offsetget.php" link="http://php.net/manual/en/arrayaccess.offsetget.php"/>
+          <tag line="114" name="param" description="The offset to retrieve." type="mixed" variable="$offset">
+            <type by_reference="false">mixed</type>
+          </tag>
+          <tag line="114" name="return" description="Can return all value types." type="mixed">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="121">
+          <name>$offset</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="133" package="">
+        <name>offsetSet</name>
+        <type>function</type>
+        <docblock line="126">
+          <description><![CDATA[Offset to set]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="126" name="link" description="http://php.net/manual/en/arrayaccess.offsetset.php" link="http://php.net/manual/en/arrayaccess.offsetset.php"/>
+          <tag line="126" name="param" description="The offset to assign the value to." type="mixed" variable="$offset">
+            <type by_reference="false">mixed</type>
+          </tag>
+          <tag line="126" name="param" description="The value to set." type="mixed" variable="$value">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="133">
+          <name>$offset</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="133">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="144" package="">
+        <name>offsetUnset</name>
+        <type>function</type>
+        <docblock line="138">
+          <description><![CDATA[Offset to unset]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="138" name="link" description="http://php.net/manual/en/arrayaccess.offsetunset.php" link="http://php.net/manual/en/arrayaccess.offsetunset.php"/>
+          <tag line="138" name="param" description="The offset to unset." type="mixed" variable="$offset">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="144">
+          <name>$offset</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Cactus/Converter.php" hash="707966c423c7ac096f34251242280401" package="Default">
+    <parse_markers>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Converter.php</error>
+    </parse_markers>
+    <class final="false" abstract="false" namespace="Cactus" line="11" package="Cactus">
+      <name>Converter</name>
+      <full_name>\Cactus\Converter</full_name>
+      <extends/>
+      <docblock line="5">
+        <description><![CDATA[Converts string over to native php data types.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="19" package="">
+        <name>boolean</name>
+        <type>function</type>
+        <docblock line="13">
+          <description><![CDATA[Converts a string value to boolean.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="13" name="param" description="A 0 or 1 as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="13" name="return" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="19">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="30" package="">
+        <name>string</name>
+        <type>function</type>
+        <docblock line="24">
+          <description><![CDATA[Converts a string to a "string"?]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="24" name="param" description="The string value" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="24" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="30">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="41" package="">
+        <name>date</name>
+        <type>function</type>
+        <docblock line="35">
+          <description><![CDATA[Converts a string date to a DateTime object.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="35" name="param" description="A Y-m-d date as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="35" name="return" description="" type="\DateTime">
+            <type by_reference="false">\DateTime</type>
+          </tag>
+        </docblock>
+        <argument line="41">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="52" package="">
+        <name>dateTime</name>
+        <type>function</type>
+        <docblock line="46">
+          <description><![CDATA[Converts a string date to a DateTime object.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="46" name="param" description="A Y-m-d H:i:s date as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="46" name="return" description="" type="\DateTime">
+            <type by_reference="false">\DateTime</type>
+          </tag>
+        </docblock>
+        <argument line="52">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="63" package="">
+        <name>float</name>
+        <type>function</type>
+        <docblock line="57">
+          <description><![CDATA[Converts a string float value to a real float.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="57" name="param" description="The float value as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="57" name="return" description="" type="float">
+            <type by_reference="false">float</type>
+          </tag>
+        </docblock>
+        <argument line="63">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="74" package="">
+        <name>integer</name>
+        <type>function</type>
+        <docblock line="68">
+          <description><![CDATA[Converts a string integer value to a real integer.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="68" name="param" description="The integer value as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="68" name="return" description="" type="float">
+            <type by_reference="false">float</type>
+          </tag>
+        </docblock>
+        <argument line="74">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="85" package="">
+        <name>time</name>
+        <type>function</type>
+        <docblock line="79">
+          <description><![CDATA[Converts a string time to a DateTime object.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="79" name="param" description="A H:i:s time as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="79" name="return" description="" type="\DateTime">
+            <type by_reference="false">\DateTime</type>
+          </tag>
+        </docblock>
+        <argument line="85">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Cactus/Entity.php" hash="0162d1df2ce17e01f249bd1e0565c7d1" package="Default">
+    <parse_markers>
+      <critical line="13" code="50019">No short description for property $converter</critical>
+      <critical line="18" code="50019">No short description for property $reverter</critical>
+      <critical line="23" code="50019">No short description for property $dataStructure</critical>
+      <critical line="28" code="50019">No short description for property $is_new</critical>
+      <critical line="33" code="50019">No short description for property $data</critical>
+      <critical line="38" code="50019">No short description for property $modified</critical>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Entity.php</error>
+    </parse_markers>
+    <class final="false" abstract="false" namespace="Cactus" line="11" package="Cactus">
+      <name>Entity</name>
+      <full_name>\Cactus\Entity</full_name>
+      <extends/>
+      <docblock line="5">
+        <description><![CDATA[The entity class is a representation of data from a data source as an object.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <property final="false" static="true" visibility="public" line="16" package="Default">
+        <name>$converter</name>
+        <default><![CDATA[null]]></default>
+        <docblock line="13">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="13" name="var" description="The class used to convert strings into native php types" type="\Cactus\Converter">
+            <type by_reference="false">\Cactus\Converter</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="true" visibility="public" line="21" package="Default">
+        <name>$reverter</name>
+        <default><![CDATA[null]]></default>
+        <docblock line="18">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="18" name="var" description="The class used to revert data back into strings." type="\Cactus\Reverter">
+            <type by_reference="false">\Cactus\Reverter</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="public" line="26" package="Default">
+        <name>$dataStructure</name>
+        <default><![CDATA[array()]]></default>
+        <docblock line="23">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="23" name="var" description="The data structure for all internal data" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="private" line="31" package="Default">
+        <name>$is_new</name>
+        <default><![CDATA[false]]></default>
+        <docblock line="28">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="28" name="var" description="Is this a new object?" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="private" line="36" package="Default">
+        <name>$data</name>
+        <default><![CDATA[array()]]></default>
+        <docblock line="33">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="33" name="var" description="The internal data storage array" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="private" line="41" package="Default">
+        <name>$modified</name>
+        <default><![CDATA[array()]]></default>
+        <docblock line="38">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="38" name="var" description="A list of properties that have been modified." type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="50" package="">
+        <name>__construct</name>
+        <type>function</type>
+        <docblock line="43">
+          <description><![CDATA[If data is passed into the entity it will be marked as new, otherwise it
+is an existing "row" of data.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="43" name="param" description="Initial data for a new entity." type="array" variable="$data">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="43" name="param" description="The data structure of the entity properties" type="array" variable="$structure">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="50">
+          <name>$data</name>
+          <default><![CDATA[null]]></default>
+          <type>array</type>
+        </argument>
+        <argument line="50">
+          <name>$structure</name>
+          <default><![CDATA[null]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="79" package="">
+        <name>isNew</name>
+        <type>function</type>
+        <docblock line="74">
+          <description><![CDATA[Is this a new Entity?]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="74" name="return" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="89" package="">
+        <name>__get</name>
+        <type>function</type>
+        <docblock line="84">
+          <description><![CDATA[Magic "getter".]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="84" name="param" description="The property name to get." type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="89">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="100" package="">
+        <name>asArray</name>
+        <type>function</type>
+        <docblock line="94">
+          <description><![CDATA[Gets the data as an array.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="94" name="param" description="A list of keys to pull out in case all of the data isn't needed." type="array" variable="$keys">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="94" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="100">
+          <name>$keys</name>
+          <default><![CDATA[null]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="122" package="">
+        <name>__set</name>
+        <type>function</type>
+        <docblock line="116">
+          <description><![CDATA[Magic "setter"]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="116" name="param" description="The property name" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="116" name="param" description="The property value" type="mixed" variable="$value">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="122">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="122">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="140" package="">
+        <name>fill</name>
+        <type>function</type>
+        <docblock line="135">
+          <description><![CDATA[Sets an array of properties.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="135" name="param" description="The data to set" type="array" variable="$data">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="140">
+          <name>$data</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="153" package="">
+        <name>getModifiedData</name>
+        <type>function</type>
+        <docblock line="148">
+          <description><![CDATA[Gets an array of all of the internal data that have been modified.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="148" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="Cactus" line="172" package="">
+        <name>convert</name>
+        <type>function</type>
+        <docblock line="165">
+          <description><![CDATA[Converts strings over to native php data types.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="165" name="param" description="The name of the property" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="165" name="param" description="The current value" type="mixed" variable="$value">
+            <type by_reference="false">mixed</type>
+          </tag>
+          <tag line="165" name="return" description="The converted value" type="mixed">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="172">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="172">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="189" package="">
+        <name>revert</name>
+        <type>function</type>
+        <docblock line="183">
+          <description><![CDATA[Reverts all native php types back to their string values.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="183" name="param" description="The data to revert. Uses internal data if nothing is passed in." type="array" variable="$data">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="183" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="189">
+          <name>$data</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="217" package="">
+        <name>reset</name>
+        <type>function</type>
+        <docblock line="212">
+          <description><![CDATA[Resets all of the modified data.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="212" name="return" description="" type="\Cactus\Entity">
+            <type by_reference="false">\Cactus\Entity</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="Cactus" line="229" package="">
+        <name>getDataType</name>
+        <type>function</type>
+        <docblock line="223">
+          <description><![CDATA[Gets the data type from the data structure.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="223" name="param" description="The property name to get the type of" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="223" name="return" description="A string data type or boolean false" type="mixed">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="229">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Cactus/Exception.php" hash="8adb0102c822115b5bf687dc9cbbd658" package="Default">
+    <parse_markers>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Exception.php</error>
+    </parse_markers>
+    <class final="false" abstract="false" namespace="Cactus" line="11" package="Cactus">
+      <name>Exception</name>
+      <full_name>\Cactus\Exception</full_name>
+      <extends>\Exception</extends>
+      <docblock line="5">
+        <description><![CDATA[Exceptions for the Cactus library.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+    </class>
+  </file>
+  <file path="Cactus/Mapper/MySQL.php" hash="c19815bf3ae9c249dd56db6bc0182cd8" package="Default">
+    <parse_markers>
+      <error line="79" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $entity in save()</error>
+      <error line="92" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $entity in create()</error>
+      <error line="112" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $entity in update()</error>
+      <error line="131" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $entity in delete()</error>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Mapper/MySQL.php</error>
+    </parse_markers>
+    <class final="false" abstract="false" namespace="Cactus\Mapper" line="14" package="Cactus">
+      <name>MySQL</name>
+      <full_name>\Cactus\Mapper\MySQL</full_name>
+      <extends>\Cactus\Mapper</extends>
+      <docblock line="5">
+        <description><![CDATA[A Mapper that uses MySQL. Cool enne?]]></description>
+        <long-description><![CDATA[<p>This class has no SQL Injection protection so please sanitize the data before
+you send data to the database.</p>]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Mapper" line="22" package="">
+        <name>get</name>
+        <type>function</type>
+        <docblock line="16">
+          <description><![CDATA[Attempt to get a row of data by using the passed in key.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="16" name="param" description="The value of the primary key that is used to find the data" type="mixed" variable="$key">
+            <type by_reference="false">mixed</type>
+          </tag>
+          <tag line="16" name="return" description="or null" type="\Cactus\Entity">
+            <type by_reference="false">\Cactus\Entity</type>
+          </tag>
+        </docblock>
+        <argument line="22">
+          <name>$key</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Mapper" line="45" package="">
+        <name>all</name>
+        <type>function</type>
+        <docblock line="38">
+          <description><![CDATA[Get all of the records in the data set.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="38" name="param" description="The column to sort on" type="string" variable="$column">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="38" name="param" description="The direction to sort on (ASC or DESC)" type="string" variable="$direction">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="38" name="return" description="" type="\Cactus\Collection">
+            <type by_reference="false">\Cactus\Collection</type>
+          </tag>
+        </docblock>
+        <argument line="45">
+          <name>$column</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+        <argument line="45">
+          <name>$direction</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Mapper" line="66" package="">
+        <name>find</name>
+        <type>function</type>
+        <docblock line="60">
+          <description><![CDATA[Gets all of the records that satisfy the search parameters.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="60" name="param" description="The search parameters" type="array" variable="$params">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="60" name="return" description="" type="\Cactus\Collection">
+            <type by_reference="false">\Cactus\Collection</type>
+          </tag>
+        </docblock>
+        <argument line="66">
+          <name>$params</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Mapper" line="85" package="">
+        <name>save</name>
+        <type>function</type>
+        <docblock line="79">
+          <description><![CDATA[Saves an entity.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="79" name="param" description="The entity to save" type="\Cactus\Entity" variable="$entity">
+            <type by_reference="false">\Cactus\Entity</type>
+          </tag>
+          <tag line="79" name="return" description="create = array($id, $affected) | update = $affected" type="mixed">
+            <type by_reference="false">mixed</type>
+          </tag>
+        </docblock>
+        <argument line="85">
+          <name>$entity</name>
+          <default><![CDATA[]]></default>
+          <type>Entity</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Cactus\Mapper" line="98" package="">
+        <name>create</name>
+        <type>function</type>
+        <docblock line="92">
+          <description><![CDATA[Creates a new row.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="92" name="param" description="The entity to create" type="\Cactus\Entity" variable="$entity">
+            <type by_reference="false">\Cactus\Entity</type>
+          </tag>
+          <tag line="92" name="return" description="array($id, $affected)" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="98">
+          <name>$entity</name>
+          <default><![CDATA[]]></default>
+          <type>Entity</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Cactus\Mapper" line="118" package="">
+        <name>update</name>
+        <type>function</type>
+        <docblock line="112">
+          <description><![CDATA[Updates an existing entity.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="112" name="param" description="The entity to update" type="\Cactus\Entity" variable="$entity">
+            <type by_reference="false">\Cactus\Entity</type>
+          </tag>
+          <tag line="112" name="return" description="Affected rows" type="int">
+            <type by_reference="false">int</type>
+          </tag>
+        </docblock>
+        <argument line="118">
+          <name>$entity</name>
+          <default><![CDATA[]]></default>
+          <type>Entity</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Mapper" line="137" package="">
+        <name>delete</name>
+        <type>function</type>
+        <docblock line="131">
+          <description><![CDATA[Deletes an entity.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="131" name="param" description="The entity to delete" type="\Cactus\Entity" variable="$entity">
+            <type by_reference="false">\Cactus\Entity</type>
+          </tag>
+          <tag line="131" name="return" description="Was the delete successful?" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="137">
+          <name>$entity</name>
+          <default><![CDATA[]]></default>
+          <type>Entity</type>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Cactus/Mapper.php" hash="66e02d2f8832f2f5b65da56b6f0ccd72" package="Default">
+    <parse_markers>
+      <critical line="14" code="50019">No short description for property $adapter</critical>
+      <critical line="19" code="50019">No short description for property $objectClass</critical>
+      <critical line="24" code="50019">No short description for property $table</critical>
+      <critical line="29" code="50019">No short description for property $primary_key</critical>
+      <critical line="34" code="50019">No short description for property $columns</critical>
+      <critical line="39" code="50019">No short description for property $rules</critical>
+      <error line="44" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $adapter in __construct()</error>
+      <error line="132" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $entity in prepareData()</error>
+      <error line="169" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $entity in save()</error>
+      <error line="176" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $entity in delete()</error>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Mapper.php</error>
+    </parse_markers>
+    <class final="false" abstract="true" namespace="Cactus" line="12" package="Cactus">
+      <name>Mapper</name>
+      <full_name>\Cactus\Mapper</full_name>
+      <extends/>
+      <docblock line="5">
+        <description><![CDATA[The mapper class is the gateway for defining data structures as well as knowing
+how to get them.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <property final="false" static="false" visibility="public" line="17" package="Default">
+        <name>$adapter</name>
+        <default><![CDATA[]]></default>
+        <docblock line="14">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="14" name="var" description="The adapter used to fetch data" type="\Cactus\Adapter">
+            <type by_reference="false">\Cactus\Adapter</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="public" line="22" package="Default">
+        <name>$objectClass</name>
+        <default><![CDATA["\Cactus\Entity"]]></default>
+        <docblock line="19">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="19" name="var" description="The object class to return rows as" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="27" package="Default">
+        <name>$table</name>
+        <default><![CDATA[]]></default>
+        <docblock line="24">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="24" name="var" description="The database table" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="32" package="Default">
+        <name>$primary_key</name>
+        <default><![CDATA[]]></default>
+        <docblock line="29">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="29" name="var" description="The name of the primary key column" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="37" package="Default">
+        <name>$columns</name>
+        <default><![CDATA[array()]]></default>
+        <docblock line="34">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="34" name="var" description="A listing of columns in the data" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="42" package="Default">
+        <name>$rules</name>
+        <default><![CDATA[array()]]></default>
+        <docblock line="39">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="39" name="var" description="A list of validation rules." type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="49" package="">
+        <name>__construct</name>
+        <type>function</type>
+        <docblock line="44">
+          <description><![CDATA[Creates a new mapper. You can optionally pass in the data source adapter.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="44" name="param" description="The data adapter." type="\Cactus\Adapter" variable="$adapter">
+            <type by_reference="false">\Cactus\Adapter</type>
+          </tag>
+        </docblock>
+        <argument line="49">
+          <name>$adapter</name>
+          <default><![CDATA[null]]></default>
+          <type>Adapter</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Cactus" line="62" package="">
+        <name>init</name>
+        <type>function</type>
+        <docblock line="59">
+          <description><![CDATA[An initilization function so we don't have to override the constructor.]]></description>
+          <long-description><![CDATA[]]></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="69" package="">
+        <name>getValidationRules</name>
+        <type>function</type>
+        <docblock line="64">
+          <description><![CDATA[Gets the validation rules.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="64" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="79" package="">
+        <name>getColumns</name>
+        <type>function</type>
+        <docblock line="74">
+          <description><![CDATA[Gets the column list of the mapper.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="74" name="return" description="" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Cactus" line="90" package="">
+        <name>formCollection</name>
+        <type>function</type>
+        <docblock line="84">
+          <description><![CDATA[Takes the result array and converts it and makes a collection out of it.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="84" name="param" description="An array of results" type="array" variable="$result">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="84" name="return" description="" type="\Cactus\Collection">
+            <type by_reference="false">\Cactus\Collection</type>
+          </tag>
+        </docblock>
+        <argument line="90">
+          <name>$result</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="113" package="">
+        <name>filter</name>
+        <type>function</type>
+        <docblock line="105">
+          <description><![CDATA[Filters the data to make sure only fields that are specified in the mapper
+get set in the query.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="105" name="param" description="The data to filter." type="mixed" variable="$data">
+            <type by_reference="false">mixed</type>
+          </tag>
+          <tag line="105" name="param" description="The columns to filter on." type="array" variable="$columns">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="105" name="return" description="The filtered data" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="113">
+          <name>$data</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="113">
+          <name>$columns</name>
+          <default><![CDATA[array()]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Cactus" line="138" package="">
+        <name>prepareData</name>
+        <type>function</type>
+        <docblock line="132">
+          <description><![CDATA[Prepares the data to return to the data store (as strings).]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="132" name="param" description="The entity to prepare" type="\Cactus\Entity" variable="$entity">
+            <type by_reference="false">\Cactus\Entity</type>
+          </tag>
+          <tag line="132" name="return" description="The modified/filtered/reverted data..." type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="138">
+          <name>$entity</name>
+          <default><![CDATA[]]></default>
+          <type>Entity</type>
+        </argument>
+      </method>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="Cactus" line="150" package="">
+        <name>get</name>
+        <type>function</type>
+        <docblock line="144">
+          <description><![CDATA[Attempt to get a row of data by using the passed in key.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="144" name="param" description="The value of the primary key that is used to find the data" type="mixed" variable="$key">
+            <type by_reference="false">mixed</type>
+          </tag>
+          <tag line="144" name="return" description="" type="\Cactus\Entity">
+            <type by_reference="false">\Cactus\Entity</type>
+          </tag>
+        </docblock>
+        <argument line="150">
+          <name>$key</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="Cactus" line="159" package="">
+        <name>all</name>
+        <type>function</type>
+        <docblock line="152">
+          <description><![CDATA[Get all of the records in the data set.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="152" name="param" description="The column to sort on" type="string" variable="$column">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="152" name="param" description="The direction to sort on (ASC or DESC)" type="string" variable="$direction">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="152" name="return" description="" type="\Cactus\Collection">
+            <type by_reference="false">\Cactus\Collection</type>
+          </tag>
+        </docblock>
+        <argument line="159">
+          <name>$column</name>
+          <default><![CDATA[null]]></default>
+          <type/>
+        </argument>
+        <argument line="159">
+          <name>$direction</name>
+          <default><![CDATA['DESC']]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="Cactus" line="167" package="">
+        <name>find</name>
+        <type>function</type>
+        <docblock line="161">
+          <description><![CDATA[Gets all of the records that satisfy the search parameters.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="161" name="param" description="The search parameters" type="array" variable="$params">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="161" name="return" description="" type="\Cactus\Collection">
+            <type by_reference="false">\Cactus\Collection</type>
+          </tag>
+        </docblock>
+        <argument line="167">
+          <name>$params</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="Cactus" line="174" package="">
+        <name>save</name>
+        <type>function</type>
+        <docblock line="169">
+          <description><![CDATA[Saves an entity.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="169" name="param" description="The entity to save" type="\Cactus\Entity" variable="$entity">
+            <type by_reference="false">\Cactus\Entity</type>
+          </tag>
+        </docblock>
+        <argument line="174">
+          <name>$entity</name>
+          <default><![CDATA[]]></default>
+          <type>Entity</type>
+        </argument>
+      </method>
+      <method final="false" abstract="true" static="false" visibility="public" namespace="Cactus" line="182" package="">
+        <name>delete</name>
+        <type>function</type>
+        <docblock line="176">
+          <description><![CDATA[Deletes an entity.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="176" name="param" description="The entity to delete" type="\Cactus\Entity" variable="$entity">
+            <type by_reference="false">\Cactus\Entity</type>
+          </tag>
+          <tag line="176" name="return" description="Was the delete successful?" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="182">
+          <name>$entity</name>
+          <default><![CDATA[]]></default>
+          <type>Entity</type>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Cactus/Migration.php" hash="5b685c992ba62756ed632ecfe41619a0" package="Default">
+    <parse_markers>
+      <critical line="13" code="50019">No short description for property $adapter</critical>
+      <error line="18" code="50010">No DocBlock was found for method __construct()</error>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Migration.php</error>
+    </parse_markers>
+    <class final="false" abstract="true" namespace="Cactus" line="11" package="Cactus">
+      <name>Migration</name>
+      <full_name>\Cactus\Migration</full_name>
+      <extends/>
+      <docblock line="5">
+        <description><![CDATA[Database Migration class.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="16" package="Default">
+        <name>$adapter</name>
+        <default><![CDATA[]]></default>
+        <docblock line="13">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="13" name="var" description="" type="\Cactus\Adapter">
+            <type by_reference="false">\Cactus\Adapter</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="18" package="">
+        <name>__construct</name>
+        <type>function</type>
+        <argument line="18">
+          <name>$adapter</name>
+          <default><![CDATA[]]></default>
+          <type>Adapter</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="28" package="">
+        <name>up</name>
+        <type>function</type>
+        <docblock line="23">
+          <description><![CDATA[Runs a migration.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="23" name="return" description="Success" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="38" package="">
+        <name>down</name>
+        <type>function</type>
+        <docblock line="33">
+          <description><![CDATA[Takes a migration down (reverses it)]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="33" name="return" description="Success" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="Cactus/Reverter.php" hash="354d0eafd348bac77df3bb9d4b2db7dd" package="Default">
+    <parse_markers>
+      <error line="35" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $value in date()</error>
+      <error line="46" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $value in dateTime()</error>
+      <error line="79" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $value in time()</error>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Reverter.php</error>
+    </parse_markers>
+    <class final="false" abstract="false" namespace="Cactus" line="11" package="Cactus">
+      <name>Reverter</name>
+      <full_name>\Cactus\Reverter</full_name>
+      <extends/>
+      <docblock line="5">
+        <description><![CDATA[Reverts php data types back to strings.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="19" package="">
+        <name>boolean</name>
+        <type>function</type>
+        <docblock line="13">
+          <description><![CDATA[Converts a boolean value to string.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="13" name="param" description="A 0 or 1 as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="13" name="return" description="" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="19">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="30" package="">
+        <name>string</name>
+        <type>function</type>
+        <docblock line="24">
+          <description><![CDATA[Converts a string to a "string"?]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="24" name="param" description="The string value" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="24" name="return" description="" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+        <argument line="30">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="41" package="">
+        <name>date</name>
+        <type>function</type>
+        <docblock line="35">
+          <description><![CDATA[Converts a DateTime object string date to a string.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="35" name="param" description="A Y-m-d date as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="35" name="return" description="" type="\DateTime">
+            <type by_reference="false">\DateTime</type>
+          </tag>
+        </docblock>
+        <argument line="41">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type>DateTime</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="52" package="">
+        <name>dateTime</name>
+        <type>function</type>
+        <docblock line="46">
+          <description><![CDATA[Converts a DateTime object to a string date.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="46" name="param" description="A Y-m-d H:i:s date as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="46" name="return" description="" type="\DateTime">
+            <type by_reference="false">\DateTime</type>
+          </tag>
+        </docblock>
+        <argument line="52">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type>DateTime</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="63" package="">
+        <name>float</name>
+        <type>function</type>
+        <docblock line="57">
+          <description><![CDATA[Converts a float to a string.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="57" name="param" description="The float value as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="57" name="return" description="" type="float">
+            <type by_reference="false">float</type>
+          </tag>
+        </docblock>
+        <argument line="63">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="74" package="">
+        <name>integer</name>
+        <type>function</type>
+        <docblock line="68">
+          <description><![CDATA[Converts an integer to a string.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="68" name="param" description="The integer value as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="68" name="return" description="" type="float">
+            <type by_reference="false">float</type>
+          </tag>
+        </docblock>
+        <argument line="74">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="85" package="">
+        <name>time</name>
+        <type>function</type>
+        <docblock line="79">
+          <description><![CDATA[Converts a DateTime object to a string.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="79" name="param" description="A H:i:s time as a string" type="string" variable="$value">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="79" name="return" description="" type="\DateTime">
+            <type by_reference="false">\DateTime</type>
+          </tag>
+        </docblock>
+        <argument line="85">
+          <name>$value</name>
+          <default><![CDATA[]]></default>
+          <type>DateTime</type>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Cactus/Seed.php" hash="2ca124130c490e98148851e3c63c883b" package="Default">
+    <parse_markers>
+      <critical line="13" code="50019">No short description for property $adapter</critical>
+      <error line="18" code="50010">No DocBlock was found for method __construct()</error>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Seed.php</error>
+    </parse_markers>
+    <class final="false" abstract="true" namespace="Cactus" line="11" package="Cactus">
+      <name>Seed</name>
+      <full_name>\Cactus\Seed</full_name>
+      <extends/>
+      <docblock line="5">
+        <description><![CDATA[A base class for all data seeding classes.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="16" package="Default">
+        <name>$adapter</name>
+        <default><![CDATA[]]></default>
+        <docblock line="13">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="13" name="var" description="" type="\Cactus\Adapter">
+            <type by_reference="false">\Cactus\Adapter</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="18" package="">
+        <name>__construct</name>
+        <type>function</type>
+        <argument line="18">
+          <name>$adapter</name>
+          <default><![CDATA[]]></default>
+          <type>Adapter</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="28" package="">
+        <name>run</name>
+        <type>function</type>
+        <docblock line="23">
+          <description><![CDATA[Runs the seed.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="23" name="return" description="Success" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="Cactus/Task/Migrate.php" hash="81707a2ab14da9fce5ec05703d1a1b5f" package="Default">
+    <parse_markers>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Task/Migrate.php</error>
+    </parse_markers>
+    <class final="false" abstract="false" namespace="Cactus\Task" line="11" package="Cactus">
+      <name>Migrate</name>
+      <full_name>\Cactus\Task\Migrate</full_name>
+      <extends>\Cactus\Task</extends>
+      <docblock line="5">
+        <description><![CDATA[Database Migration.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Task" line="19" package="">
+        <name>migrate</name>
+        <type>function</type>
+        <docblock line="13">
+          <description><![CDATA[Migrates a database up to a current state.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="13" name="param" description="The migration version" type="string" variable="$from">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="13" name="return" description="List of debug style messages." type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="19">
+          <name>$from</name>
+          <default><![CDATA[0]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Task" line="32" package="">
+        <name>rollback</name>
+        <type>function</type>
+        <docblock line="26">
+          <description><![CDATA[Rolls back a migration.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="26" name="param" description="The version to rollback to" type="string" variable="$to">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="26" name="return" description="List if debug style messages" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="32">
+          <name>$to</name>
+          <default><![CDATA[0]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="Cactus\Task" line="46" package="">
+        <name>findMigrations</name>
+        <type>function</type>
+        <docblock line="39">
+          <description><![CDATA[Find the given migrations.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="39" name="param" description="The version limit" type="string" variable="$version">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="39" name="param" description="The files to search through" type="array" variable="$files">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="39" name="return" description="List of migration files" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="46">
+          <name>$version</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="46">
+          <name>$files</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="Cactus\Task" line="75" package="">
+        <name>runMigrations</name>
+        <type>function</type>
+        <docblock line="68">
+          <description><![CDATA[Runs the given migrations.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="68" name="param" description="The list of migrations" type="array" variable="$migrations">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="68" name="param" description="The migration function to run (up, down)" type="string" variable="$fn">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="68" name="return" description="An array of output messages" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="75">
+          <name>$migrations</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="75">
+          <name>$fn</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <file path="Cactus/Task/Seed.php" hash="a1fa51697e5979ff5eac462aac388ac1" package="Default">
+    <parse_markers>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Task/Seed.php</error>
+    </parse_markers>
+    <class final="false" abstract="false" namespace="Cactus\Task" line="11" package="Cactus">
+      <name>Seed</name>
+      <full_name>\Cactus\Task\Seed</full_name>
+      <extends>\Cactus\Task</extends>
+      <docblock line="5">
+        <description><![CDATA[Seed a database with some default data.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Task" line="21" package="">
+        <name>single</name>
+        <type>function</type>
+        <docblock line="13">
+          <description><![CDATA[Runs a single seed class.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="13" name="throws" description="" type="\Cactus\Exception">
+            <type by_reference="false">\Cactus\Exception</type>
+          </tag>
+          <tag line="13" name="param" description="The name of the seed class to run" type="string" variable="$name">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="13" name="return" description="Success" type="boolean">
+            <type by_reference="false">boolean</type>
+          </tag>
+        </docblock>
+        <argument line="21">
+          <name>$name</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Task" line="41" package="">
+        <name>multiple</name>
+        <type>function</type>
+        <docblock line="35">
+          <description><![CDATA[Run the given list of seed classes.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="35" name="param" description="The list of classes" type="array" variable="$list">
+            <type by_reference="false">array</type>
+          </tag>
+          <tag line="35" name="return" description="[[$name =&gt; (boolean) success]]" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="41">
+          <name>$list</name>
+          <default><![CDATA[]]></default>
+          <type>array</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus\Task" line="57" package="">
+        <name>all</name>
+        <type>function</type>
+        <docblock line="52">
+          <description><![CDATA[Runs all of the seed classes.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="52" name="return" description="[[$name =&gt; (boolean) success]]" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+      </method>
+    </class>
+  </file>
+  <file path="Cactus/Task.php" hash="0721b35fdec67c37376f5953f2a1ceb0" package="Default">
+    <parse_markers>
+      <critical line="13" code="50019">No short description for property $path</critical>
+      <critical line="18" code="50019">No short description for property $adapter</critical>
+      <error line="23" code="50012">No short description for method __construct()</error>
+      <error line="23" code="50016">The type hint of the argument is incorrect for the type definition of the @param tag with argument $adapter in __construct()</error>
+      <error line="33" code="50012">No short description for method getPath()</error>
+      <error line="41" code="50012">No short description for method getAdapter()</error>
+      <error line="1" code="50007">No page-level DocBlock was found in file Cactus/Task.php</error>
+    </parse_markers>
+    <class final="false" abstract="true" namespace="Cactus" line="11" package="Cactus">
+      <name>Task</name>
+      <full_name>\Cactus\Task</full_name>
+      <extends/>
+      <docblock line="5">
+        <description><![CDATA[An abstract class to use as the base for all tasks.]]></description>
+        <long-description><![CDATA[]]></long-description>
+        <tag line="5" name="package" description="Cactus"/>
+        <tag line="5" name="author" description="Dave Widmer &lt;dave@davewidmer.net&gt;"/>
+      </docblock>
+      <property final="false" static="false" visibility="protected" line="16" package="Default">
+        <name>$path</name>
+        <default><![CDATA[]]></default>
+        <docblock line="13">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="13" name="var" description="Absolute path to the tasks folder" type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </property>
+      <property final="false" static="false" visibility="protected" line="21" package="Default">
+        <name>$adapter</name>
+        <default><![CDATA[]]></default>
+        <docblock line="18">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="18" name="var" description="The adapter used for the migrations" type="\Cactus\Adapter">
+            <type by_reference="false">\Cactus\Adapter</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="27" package="">
+        <name>__construct</name>
+        <type>function</type>
+        <docblock line="23">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="23" name="param" description="The path to the tasks folder" type="string" variable="$path">
+            <type by_reference="false">string</type>
+          </tag>
+          <tag line="23" name="param" description="The adapter to connect to the data source" type="\Cactus\Adapter" variable="$adapter">
+            <type by_reference="false">\Cactus\Adapter</type>
+          </tag>
+        </docblock>
+        <argument line="27">
+          <name>$path</name>
+          <default><![CDATA[]]></default>
+          <type/>
+        </argument>
+        <argument line="27">
+          <name>$adapter</name>
+          <default><![CDATA[]]></default>
+          <type>Adapter</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="36" package="">
+        <name>getPath</name>
+        <type>function</type>
+        <docblock line="33">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="33" name="return" description="The absolute path to the tasks directory." type="string">
+            <type by_reference="false">string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Cactus" line="44" package="">
+        <name>getAdapter</name>
+        <type>function</type>
+        <docblock line="41">
+          <description><![CDATA[]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="41" name="return" description="The adapter used to connect to the data source." type="\Cactus\Adapter">
+            <type by_reference="false">\Cactus\Adapter</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="protected" namespace="Cactus" line="55" package="">
+        <name>getFiles</name>
+        <type>function</type>
+        <docblock line="49">
+          <description><![CDATA[Return all of the files in the path directory.]]></description>
+          <long-description><![CDATA[]]></long-description>
+          <tag line="49" name="param" description="Find in reverse order?" type="boolean" variable="$reverse">
+            <type by_reference="false">boolean</type>
+          </tag>
+          <tag line="49" name="return" description="File list" type="array">
+            <type by_reference="false">array</type>
+          </tag>
+        </docblock>
+        <argument line="55">
+          <name>$reverse</name>
+          <default><![CDATA[false]]></default>
+          <type/>
+        </argument>
+      </method>
+    </class>
+  </file>
+  <package name="" full_name=""/>
+  <package name="Cactus" full_name="Cactus"/>
+  <package name="Default" full_name="Default"/>
+  <namespace name="Cactus" full_name="Cactus">
+    <namespace name="Adapter" full_name="Cactus\Adapter"/>
+    <namespace name="Mapper" full_name="Cactus\Mapper"/>
+    <namespace name="Task" full_name="Cactus\Task"/>
+  </namespace>
+  <marker>todo</marker>
+  <marker>fixme</marker>
+</project>
