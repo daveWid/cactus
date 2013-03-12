@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Cactus" default="package" basedir=".">
-	<property name="version" value="0.4.2" />
+	<property name="version" value="0.5.0" />
 
 	<target name="package" description="Creates a zip package for distribution">
 		<property name="file" value="developer/packages/Cactus-${version}.zip" />
